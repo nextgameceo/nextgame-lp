@@ -1,0 +1,698 @@
+.container {
+  width: 1040px;
+  max-width: calc(100% - 48px);
+  margin: 0 auto;
+  padding: 120px 0 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: fadeSlideUp 0.8s ease both;
+}
+
+.headerEn {
+  font-family: var(--font-orbitron);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: var(--color-current);
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(109, 190, 214, 0.3);
+  width: fit-content;
+}
+
+.headerTitle {
+  font-family: var(--font-orbitron);
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.headerLead {
+  font-size: 0.9rem;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.6);
+  max-width: 720px;
+}
+
+.headerBadge {
+  display: inline-block;
+  width: fit-content;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  color: rgba(109, 190, 214, 0.7);
+  padding: 8px 16px;
+  border: 1px solid rgba(109, 190, 214, 0.2);
+  border-radius: 4px;
+  background: rgba(109, 190, 214, 0.04);
+}
+
+/* KPI */
+.kpiRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: rgba(109, 190, 214, 0.08);
+  border: 1px solid rgba(109, 190, 214, 0.12);
+}
+
+.kpi {
+  background: #060608;
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  text-align: center;
+  transition: background 200ms ease;
+}
+
+.kpi:hover {
+  background: rgba(109, 190, 214, 0.03);
+}
+
+.kpiNumber {
+  font-family: var(--font-orbitron);
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+.kpiLabel {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.03em;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* Section */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sectionEn {
+  font-family: var(--font-orbitron);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: rgba(109, 190, 214, 0.5);
+}
+
+.sectionTitle {
+  font-family: var(--font-orbitron);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.sectionLead {
+  font-size: 0.88rem;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.5);
+  max-width: 640px;
+}
+
+/* Cards */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(109, 190, 214, 0.08);
+  border: 1px solid rgba(109, 190, 214, 0.1);
+}
+
+.card {
+  background: #060608;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: background 200ms ease;
+}
+
+.card:hover {
+  background: rgba(109, 190, 214, 0.02);
+}
+
+.cardEn {
+  font-family: var(--font-orbitron);
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: rgba(109, 190, 214, 0.3);
+}
+
+.cardTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.cardText {
+  font-size: 0.82rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Revenue List */
+.revenueList {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(109, 190, 214, 0.1);
+}
+
+.revenueItem {
+  display: grid;
+  grid-template-columns: 60px 1fr auto;
+  gap: 24px;
+  padding: 28px 24px;
+  border-bottom: 1px solid rgba(109, 190, 214, 0.06);
+  align-items: start;
+  transition: background 200ms ease;
+}
+
+.revenueItem:last-child {
+  border-bottom: none;
+}
+
+.revenueItem:hover {
+  background: rgba(109, 190, 214, 0.02);
+}
+
+.revenueLeft {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.revenueNum {
+  font-family: var(--font-orbitron);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--color-current);
+  opacity: 0.6;
+}
+
+.revenueLine {
+  width: 1px;
+  flex: 1;
+  min-height: 40px;
+  background: rgba(109, 190, 214, 0.15);
+}
+
+.revenueBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.revenueTag {
+  font-family: var(--font-orbitron);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: rgba(109, 190, 214, 0.5);
+}
+
+.revenueTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.4;
+}
+
+.revenueText {
+  font-size: 0.82rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.revenueAmount {
+  text-align: right;
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+
+.revenueAmountNum {
+  font-family: var(--font-orbitron);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-current);
+  white-space: nowrap;
+}
+
+.revenueAmountLabel {
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.25);
+  white-space: nowrap;
+  margin-top: 4px;
+}
+
+/* Chart */
+.chartWrap {
+  background: rgba(109, 190, 214, 0.02);
+  border: 1px solid rgba(109, 190, 214, 0.1);
+  border-radius: 16px;
+  padding: 28px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chartLegendRow {
+  display: flex;
+  gap: 20px;
+  padding-left: 4px;
+  flex-wrap: wrap;
+}
+
+.chartLegendRevenue {
+  font-family: var(--font-orbitron);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: rgba(109, 190, 214, 0.8);
+}
+
+.chartLegendExpense {
+  font-family: var(--font-orbitron);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: rgba(255, 100, 100, 0.7);
+}
+
+.chartLegendProfit {
+  font-family: var(--font-orbitron);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: rgba(100, 220, 150, 0.8);
+}
+
+.chartSvgWrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.chartSvg {
+  width: 100%;
+  height: auto;
+  min-width: 480px;
+  display: block;
+}
+
+.chartNote {
+  font-size: 0.72rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.25);
+  padding-top: 8px;
+  border-top: 1px solid rgba(109, 190, 214, 0.06);
+}
+
+/* Sim Table */
+.simTable {
+  border: 1px solid rgba(109, 190, 214, 0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.simHeader {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1.3fr 1.3fr 1.4fr;
+  background: rgba(109, 190, 214, 0.06);
+  border-bottom: 1px solid rgba(109, 190, 214, 0.1);
+  min-width: 520px;
+}
+
+.simHeaderCell {
+  font-family: var(--font-orbitron);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  color: rgba(109, 190, 214, 0.6);
+  padding: 12px 14px;
+}
+
+.simRow {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1.3fr 1.3fr 1.4fr;
+  border-bottom: 1px solid rgba(109, 190, 214, 0.05);
+  transition: background 150ms ease;
+  min-width: 520px;
+}
+
+.simRow:last-child {
+  border-bottom: none;
+}
+
+.simRow:hover {
+  background: rgba(109, 190, 214, 0.02);
+}
+
+.simCell {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 14px;
+  line-height: 1.6;
+}
+
+.simNegative {
+  color: rgba(255, 130, 130, 0.8);
+}
+
+.simBreakeven {
+  color: rgba(255, 200, 80, 0.9);
+  font-weight: 600;
+}
+
+.simPositive {
+  color: rgba(100, 220, 150, 0.9);
+  font-weight: 600;
+}
+
+/* Funding */
+.fundingGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.fundingUse,
+.fundingSource {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.fundingSubTitle {
+  font-family: var(--font-orbitron);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--color-current);
+  opacity: 0.7;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(109, 190, 214, 0.1);
+}
+
+.fundingItems {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(109, 190, 214, 0.1);
+}
+
+.fundingItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 13px 18px;
+  border-bottom: 1px solid rgba(109, 190, 214, 0.05);
+  gap: 12px;
+  transition: background 150ms ease;
+}
+
+.fundingItem:last-child {
+  border-bottom: none;
+}
+
+.fundingItem:hover {
+  background: rgba(109, 190, 214, 0.02);
+}
+
+.fundingTotal {
+  background: rgba(109, 190, 214, 0.04);
+  border-top: 1px solid rgba(109, 190, 214, 0.12) !important;
+}
+
+.fundingTotal .fundingItemLabel,
+.fundingTotal .fundingItemAmount {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.fundingItemLabel {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.5;
+}
+
+.fundingItemAmount {
+  font-family: var(--font-orbitron);
+  font-size: 0.72rem;
+  color: var(--color-current);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Roadmap */
+.roadmap {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(109, 190, 214, 0.1);
+}
+
+.roadmapItem {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 20px;
+  padding: 24px 24px 24px 20px;
+  border-bottom: 1px solid rgba(109, 190, 214, 0.06);
+  transition: background 200ms ease;
+}
+
+.roadmapItem:last-child {
+  border-bottom: none;
+}
+
+.roadmapItem:hover {
+  background: rgba(109, 190, 214, 0.02);
+}
+
+.roadmapLeft {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.roadmapNum {
+  font-family: var(--font-orbitron);
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  color: var(--color-current);
+  opacity: 0.6;
+}
+
+.roadmapLine {
+  width: 1px;
+  flex: 1;
+  min-height: 24px;
+  background: rgba(109, 190, 214, 0.12);
+}
+
+.roadmapBody {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-bottom: 4px;
+}
+
+.roadmapTag {
+  font-family: var(--font-orbitron);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: rgba(109, 190, 214, 0.5);
+}
+
+.roadmapTitle {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.5;
+}
+
+.roadmapText {
+  font-size: 0.8rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* Message */
+.message {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 40px;
+  border: 1px solid rgba(109, 190, 214, 0.12);
+  background: rgba(109, 190, 214, 0.02);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.message::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(109, 190, 214, 0.04), transparent 70%);
+  pointer-events: none;
+}
+
+.messageText {
+  font-size: 0.9rem;
+  line-height: 2;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.messageSignature {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.35);
+  padding-top: 16px;
+  border-top: 1px solid rgba(109, 190, 214, 0.08);
+  letter-spacing: 0.1em;
+}
+
+/* CTA */
+.cta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+/* Animation */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 768px) {
+  .container {
+    padding: 100px 0 60px;
+    gap: 56px;
+    max-width: calc(100% - 32px);
+  }
+
+  .kpiRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .kpi {
+    padding: 20px 12px;
+  }
+
+  .kpiNumber {
+    font-size: 1rem;
+  }
+
+  .kpiLabel {
+    font-size: 0.62rem;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .revenueItem {
+    grid-template-columns: 36px 1fr;
+    grid-template-rows: auto auto;
+    gap: 12px 16px;
+    padding: 20px 16px;
+  }
+
+  .revenueAmount {
+    grid-column: 2;
+    grid-row: 2;
+    text-align: left;
+  }
+
+  .revenueAmountNum {
+    font-size: 0.75rem;
+    white-space: normal;
+  }
+
+  .revenueAmountLabel {
+    white-space: normal;
+  }
+
+  .chartWrap {
+    padding: 16px 12px;
+    border-radius: 12px;
+  }
+
+  .fundingGrid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .fundingItem {
+    padding: 12px 14px;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .fundingItemLabel {
+    font-size: 0.75rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .fundingItemAmount {
+    font-size: 0.75rem;
+  }
+
+  .roadmapItem {
+    padding: 18px 14px;
+    gap: 12px;
+  }
+
+  .roadmapTitle {
+    font-size: 0.85rem;
+  }
+
+  .roadmapText {
+    font-size: 0.78rem;
+  }
+
+  .message {
+    padding: 24px 18px;
+  }
+
+  .messageText {
+    font-size: 0.85rem;
+    line-height: 1.9;
+  }
+
+  .cta {
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 0;
+  }
+
+  .sectionTitle {
+    font-size: 1.3rem;
+  }
+
+  .sectionLead {
+    font-size: 0.83rem;
+  }
+}

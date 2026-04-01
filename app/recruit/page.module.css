@@ -1,0 +1,306 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+/* ===== ヘッダー ===== */
+.header {
+  padding-bottom: 48px;
+  border-bottom: 1px solid rgba(109, 190, 214, 0.1);
+}
+
+.headerEn {
+  font-family: var(--font-orbitron);
+  font-size: 0.65rem;
+  letter-spacing: 0.4em;
+  color: var(--color-current);
+  margin-bottom: 8px;
+}
+
+.headerTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.headerLead {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.8;
+  max-width: 560px;
+}
+
+/* ===== セクション共通 ===== */
+.sectionHeader {
+  margin-bottom: 32px;
+}
+
+.sectionEn {
+  font-family: var(--font-orbitron);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: var(--color-current);
+  opacity: 0.6;
+  margin-bottom: 8px;
+}
+
+.sectionTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* ===== 募集カード ===== */
+.positions {
+  display: flex;
+  flex-direction: column;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: rgba(109, 190, 214, 0.08);
+  border: 1px solid rgba(109, 190, 214, 0.1);
+}
+
+.card {
+  background: #060608;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  transition: background 200ms ease;
+}
+
+.card:hover {
+  background: rgba(109, 190, 214, 0.03);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(109, 190, 214, 0.08);
+}
+
+.roleTitle {
+  font-family: var(--font-orbitron);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+}
+
+.cardBadge {
+  padding: 4px 12px;
+  border: 1px solid rgba(109, 190, 214, 0.4);
+  font-family: var(--font-orbitron);
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--color-current);
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.cardRow {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.cardLabel {
+  font-family: var(--font-orbitron);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: rgba(109, 190, 214, 0.5);
+  padding-top: 4px;
+}
+
+.cardValue {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.8;
+}
+
+.cardValue p {
+  margin: 0.5rem 0;
+}
+
+.cardValue ul {
+  margin: 0.5rem 0 0.5rem 1.2rem;
+}
+
+.cardValue li {
+  list-style: disc;
+  margin: 0.3rem 0;
+}
+
+.cardValue h2,
+.cardValue h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 1.2rem 0 0.5rem;
+}
+
+/* ===== 選考フロー ===== */
+.processList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  list-style: none;
+  padding: 0;
+  position: relative;
+}
+
+.processList::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, var(--color-current) 0%, rgba(109, 190, 214, 0.05) 100%);
+}
+
+.processItem {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 24px;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(109, 190, 214, 0.06);
+  position: relative;
+}
+
+.processItem:last-child {
+  border-bottom: none;
+}
+
+.processNumber {
+  font-family: var(--font-orbitron);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--color-current);
+  letter-spacing: 0.1em;
+  padding-top: 4px;
+  z-index: 1;
+  background: #060608;
+  width: 40px;
+  text-align: center;
+}
+
+.processContent {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.processTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.processText {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 1.7;
+}
+
+/* ===== フッターCTA ===== */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 48px;
+  border: 1px solid rgba(109, 190, 214, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 100% at 0% 50%, rgba(109, 190, 214, 0.05), transparent);
+  pointer-events: none;
+}
+
+.footerText {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 1;
+}
+
+.message {
+  font-family: var(--font-orbitron);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+
+.messageSub {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.empty {
+  padding: 48px 24px;
+  border: 1px dashed rgba(109, 190, 214, 0.15);
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 0.85rem;
+  text-align: center;
+  font-family: var(--font-orbitron);
+  letter-spacing: 0.1em;
+}
+
+@media (max-width: 640px) {
+  .container {
+    gap: 56px;
+  }
+
+  .headerTitle {
+    font-size: 1.5rem;
+  }
+
+  .card {
+    padding: 24px;
+  }
+
+  .cardRow {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 32px 24px;
+  }
+
+  .message {
+    font-size: 1.3rem;
+  }
+
+  .processList::before {
+    left: 16px;
+  }
+
+  .processItem {
+    grid-template-columns: 32px 1fr;
+    gap: 16px;
+  }
+}

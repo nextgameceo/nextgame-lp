@@ -1,0 +1,321 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+/* ===== ヘッダー ===== */
+.header {
+  padding-bottom: 48px;
+  border-bottom: 1px solid rgba(109, 190, 214, 0.1);
+}
+
+.headerEn {
+  font-family: var(--font-orbitron);
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--color-current);
+  margin-bottom: 8px;
+}
+
+.headerTitle {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 24px;
+  letter-spacing: 0.15em;
+}
+
+.headerLead {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.9;
+  max-width: 560px;
+}
+
+/* ===== 統計 ===== */
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: rgba(109, 190, 214, 0.08);
+  border: 1px solid rgba(109, 190, 214, 0.1);
+  width: 100%;
+}
+
+.stat {
+  background: #060608;
+  padding: 32px 12px;
+  text-align: center;
+  transition: background 200ms ease;
+  min-width: 0;
+}
+
+.stat:hover {
+  background: rgba(109, 190, 214, 0.03);
+}
+
+.statNumber {
+  font-family: var(--font-orbitron);
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--color-current);
+  line-height: 1.2;
+}
+
+.statLabel {
+  margin-top: 8px;
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+}
+
+/* ===== セクション共通 ===== */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sectionEn {
+  font-family: var(--font-orbitron);
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--color-current);
+}
+
+.sectionTitle {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.15em;
+  margin-bottom: 8px;
+}
+
+.sectionLead {
+  font-size: 0.88rem;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.4);
+  max-width: 560px;
+}
+
+/* ===== キャリアステップ ===== */
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 24px;
+  padding: 32px 0;
+  border-bottom: 1px solid rgba(109, 190, 214, 0.06);
+}
+
+.step:last-child {
+  border-bottom: none;
+}
+
+.stepLeft {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stepNumber {
+  font-family: var(--font-orbitron);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--color-current);
+  letter-spacing: 0.1em;
+  flex-shrink: 0;
+}
+
+.stepLine {
+  width: 1px;
+  flex: 1;
+  min-height: 24px;
+  background: linear-gradient(180deg, rgba(109, 190, 214, 0.3) 0%, transparent 100%);
+  margin-top: 8px;
+}
+
+.stepBody {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 8px;
+}
+
+.stepWage {
+  font-family: var(--font-orbitron);
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--color-current);
+}
+
+.stepTitle {
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.12em;
+}
+
+.stepText {
+  font-size: 0.88rem;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 4px;
+}
+
+.stepBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid rgba(109, 190, 214, 0.25);
+  font-size: 0.78rem;
+  color: var(--color-current);
+  width: fit-content;
+  margin-top: 4px;
+}
+
+/* ===== 評価カード ===== */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(109, 190, 214, 0.08);
+  border: 1px solid rgba(109, 190, 214, 0.1);
+}
+
+.card {
+  background: #060608;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: background 200ms ease;
+}
+
+.card:hover {
+  background: rgba(109, 190, 214, 0.03);
+}
+
+.cardEn {
+  font-family: var(--font-orbitron);
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: rgba(109, 190, 214, 0.3);
+}
+
+.cardTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.cardText {
+  font-size: 0.82rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ===== 代表メッセージ ===== */
+.message {
+  padding: 40px;
+  border-left: 2px solid rgba(109, 190, 214, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+.message::before {
+  content: '"';
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  font-family: var(--font-orbitron);
+  font-size: 4rem;
+  color: rgba(109, 190, 214, 0.06);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.messageText {
+  font-size: 1rem;
+  line-height: 2.1;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+.messageSignature {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.1em;
+}
+
+/* ===== CTA ===== */
+.cta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 16px;
+  border-top: 1px solid rgba(109, 190, 214, 0.08);
+}
+
+@media (max-width: 640px) {
+  .container {
+    gap: 56px;
+  }
+
+  .headerEn {
+    font-size: 1.3rem;
+  }
+
+  .statsRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .statNumber {
+    font-size: 1rem;
+  }
+
+  .statLabel {
+    font-size: 0.6rem;
+  }
+
+  .sectionEn {
+    font-size: 1.1rem;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .step {
+    grid-template-columns: 32px 1fr;
+    gap: 16px;
+    padding: 24px 0;
+  }
+
+  .stepWage {
+    font-size: 1rem;
+  }
+
+  .message {
+    padding: 24px 24px 24px 28px;
+  }
+}

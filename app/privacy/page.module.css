@@ -1,0 +1,143 @@
+.container {
+  width: 800px;
+  max-width: calc(100% - 48px);
+  margin: 0 auto;
+  padding: 120px 0 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeSlideUp 0.8s ease both;
+}
+
+.label {
+  width: fit-content;
+  padding: 6px 14px;
+  font-family: var(--font-orbitron);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--color-current);
+}
+
+.card {
+  background: rgba(8, 9, 10, 0.8);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  animation: fadeSlideUp 0.8s ease 0.2s both;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.section:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-current);
+  letter-spacing: 0.05em;
+}
+
+.section p {
+  font-size: 0.9rem;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.list li {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.75);
+  padding-left: 16px;
+  position: relative;
+}
+
+.list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--color-current);
+  opacity: 0.6;
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 20px;
+  border-radius: 12px;
+  background: rgba(109, 190, 214, 0.05);
+  border: 1px solid rgba(109, 190, 214, 0.15);
+}
+
+.contact p {
+  display: flex;
+  gap: 16px;
+  font-size: 0.9rem !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.contact p span {
+  font-weight: 700;
+  color: var(--color-current) !important;
+  min-width: 60px;
+}
+
+.date {
+  font-size: 0.8rem !important;
+  color: rgba(255, 255, 255, 0.35) !important;
+  text-align: right;
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 100px 0 60px;
+  }
+
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .card {
+    padding: 24px;
+  }
+}

@@ -1,0 +1,38 @@
+.title {
+  font-size: 2rem;
+  text-align: center;
+  font-weight: bold;
+  font-family: 'system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif';
+  margin-bottom: 24px;
+}
+
+.text {
+  font-size: 1rem;
+  text-align: center;
+}
+
+.container {
+  position: relative;
+  background-color: #1f1f1f;
+  width: 840px;
+  margin: -40px auto 0;
+  padding: 160px 80px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--color-accent-soft);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 640px) {
+  .title {
+    text-align: left;
+  }
+
+  .text {
+    text-align: left;
+  }
+  .container {
+    width: calc(100% - 32px);
+    margin: -40px auto 0;
+    padding: 40px 16px;
+  }
+}

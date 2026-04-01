@@ -1,0 +1,383 @@
+.container {
+  width: 1040px;
+  max-width: calc(100% - 48px);
+  margin: 0 auto;
+  padding: 120px 0 80px;
+}
+
+/* Hero */
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 80px;
+  animation: fadeSlideUp 0.8s ease both;
+}
+
+.heroLabel {
+  width: fit-content;
+  font-family: var(--font-orbitron);
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--color-current);
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(109, 190, 214, 0.3);
+}
+
+.heroTitle {
+  font-family: var(--font-orbitron);
+  font-size: clamp(3rem, 10vw, 6.5rem);
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.heroTitleJa {
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', YuGothic, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.1em;
+}
+
+.heroLead {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.8;
+  max-width: 600px;
+}
+
+/* Profile */
+.profile {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 48px;
+  align-items: center;
+  margin-bottom: 80px;
+  padding: 48px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(109, 190, 214, 0.12);
+  border-radius: 24px;
+  animation: fadeSlideUp 0.8s ease 0.2s both;
+}
+
+.profileImageWrap {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  flex-shrink: 0;
+}
+
+.profileImage {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  position: relative;
+  z-index: 1;
+}
+
+.profileImageRing {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid rgba(109, 190, 214, 0.3);
+  z-index: 0;
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profileRole {
+  font-family: var(--font-orbitron);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: var(--color-current);
+  opacity: 0.8;
+}
+
+.profileName {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+.profileNameEn {
+  font-family: var(--font-orbitron);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.25);
+  letter-spacing: 0.15em;
+}
+
+.profileDesc {
+  font-size: 0.88rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.55);
+  margin-top: 8px;
+  max-width: 480px;
+}
+
+/* Section */
+.section {
+  padding: 80px 0;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.sectionNumber {
+  font-family: var(--font-orbitron);
+  font-size: 5rem;
+  font-weight: 800;
+  color: rgba(109, 190, 214, 0.06);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.sectionTitleWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+.sectionTag {
+  display: inline-block;
+  width: fit-content;
+  font-family: var(--font-orbitron);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: var(--color-current);
+  padding: 4px 12px;
+  border: 1px solid rgba(109, 190, 214, 0.3);
+  border-radius: 2px;
+}
+
+.sectionTitle {
+  font-family: var(--font-orbitron);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+.sectionTitleJa {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.08em;
+}
+
+/* Body */
+.sectionBody {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding-left: calc(5rem + 24px);
+}
+
+.bodyText {
+  font-size: 0.92rem;
+  line-height: 2;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Episode List */
+.episodeList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.episodeItem {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(109, 190, 214, 0.12);
+  border-radius: 12px;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.episodeLabel {
+  font-family: var(--font-orbitron);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--color-current);
+}
+
+.episodeText {
+  font-size: 0.88rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Mission Box */
+.missionBox {
+  background: rgba(109, 190, 214, 0.04);
+  border-left: 3px solid var(--color-current);
+  border-radius: 0 12px 12px 0;
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.missionLabel {
+  font-family: var(--font-orbitron);
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  color: var(--color-current);
+  opacity: 0.7;
+}
+
+.missionText {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.7;
+}
+
+/* Quote Box */
+.quoteBox {
+  background: linear-gradient(160deg, rgba(109, 190, 214, 0.06) 0%, rgba(109, 190, 214, 0.02) 100%);
+  border: 1px solid rgba(109, 190, 214, 0.2);
+  border-radius: 20px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.quoteBox::before {
+  content: '"';
+  position: absolute;
+  top: -20px;
+  left: 24px;
+  font-size: 8rem;
+  font-family: var(--font-orbitron);
+  color: rgba(109, 190, 214, 0.05);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.quoteText {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.8;
+  position: relative;
+  z-index: 1;
+}
+
+.signature {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(109, 190, 214, 0.1);
+  width: 100%;
+  justify-content: center;
+}
+
+.signatureImageWrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid rgba(109, 190, 214, 0.3);
+  flex-shrink: 0;
+}
+
+.signatureImage {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+}
+
+.signatureRole {
+  display: block;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.1em;
+}
+
+.signatureName {
+  display: block;
+  font-family: var(--font-orbitron);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.05em;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(109, 190, 214, 0.15), transparent);
+}
+
+/* Animation */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .container {
+    padding: 100px 0 60px;
+  }
+
+  .heroTitle {
+    font-size: 3rem;
+  }
+
+  .profile {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    padding: 32px 24px;
+    gap: 24px;
+  }
+
+  .profileDesc {
+    max-width: 100%;
+  }
+
+  .sectionBody {
+    padding-left: 0;
+  }
+
+  .sectionNumber {
+    font-size: 3rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.6rem;
+  }
+
+  .quoteBox {
+    padding: 28px 20px;
+  }
+
+  .quoteText {
+    font-size: 0.9rem;
+  }
+}

@@ -1,0 +1,29 @@
+.wrap {
+  padding: 0;
+}
+
+.header {
+  padding-bottom: 48px;
+  border-bottom: 1px solid rgba(109, 190, 214, 0.1);
+  margin-bottom: 0;
+}
+
+.headerEn {
+  font-family: var(--font-orbitron);
+  font-size: 0.65rem;
+  letter-spacing: 0.4em;
+  color: var(--color-current);
+  margin-bottom: 8px;
+}
+
+.headerJa {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+@media (max-width: 640px) {
+  .headerJa {
+    font-size: 1.5rem;
+  }
+}
