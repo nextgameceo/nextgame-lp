@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    esmExternals: false,
-  },
   images: {
     remotePatterns: [
       {
@@ -18,7 +15,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://w.soundcloud.com https://soundcloud.com;",
+            value: "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://w.soundcloud.com https://soundcloud.com; connect-src 'self' https://generativelanguage.googleapis.com;",
           },
           {
             key: 'Cache-Control',
