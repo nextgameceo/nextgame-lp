@@ -33,24 +33,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid message' }, { status: 400 });
     }
 
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
-      console.error('ANTHROPIC_API_KEY is not set');
+      console.error('GROQ_API_KEY is not set');
       return NextResponse.json({ error: 'API key not configured' }, { status: 500 });
     }
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
+        'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001', // 軽量・高速・安い
+        model: 'llama-3.3-70b-versatile',
         max_tokens: 500,
-        system: SYSTEM_PROMPT,
+        temperature: 0.7,
         messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
           { role: 'user', content: message },
         ],
       }),
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       const errorBody = await response.json().catch(() => null);
-      console.error('Anthropic API error:', {
+      console.error('Groq API error:', {
         status: response.status,
         statusText: response.statusText,
         body: errorBody,
@@ -73,10 +73,10 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await response.json();
-    const reply = data.content?.[0]?.text;
+    const reply = data.choices?.[0]?.message?.content;
 
     if (!reply) {
-      console.error('Unexpected Anthropic response structure:', JSON.stringify(data));
+      console.error('Unexpected Groq response:', JSON.stringify(data));
       return NextResponse.json({ error: 'Empty response from AI' }, { status: 500 });
     }
 
