@@ -29,13 +29,18 @@ export async function POST(request: NextRequest) {
   try {
     const { message } = await request.json();
 
+    if (!message || typeof message !== 'string') {
+      return NextResponse.json({ error: 'Invalid message' }, { status: 400 });
+    }
+
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
+      console.error('GEMINI_API_KEY is not set');
       return NextResponse.json({ error: 'API key not configured' }, { status: 500 });
     }
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -55,16 +60,34 @@ export async function POST(request: NextRequest) {
     );
 
     if (!response.ok) {
-      console.error('Gemini API error:', await response.text());
-      return NextResponse.json({ error: 'AI error' }, { status: 500 });
+      const errorBody = await response.json().catch(() => null);
+      console.error('Gemini API error:', {
+        status: response.status,
+        statusText: response.statusText,
+        body: errorBody,
+      });
+      return NextResponse.json(
+        {
+          error: 'AI error',
+          detail: errorBody?.error?.message ?? response.statusText,
+        },
+        { status: response.status }
+      );
     }
 
     const data = await response.json();
-    const reply = data.candidates[0].content.parts[0].text;
+
+    // candidatesが空・欠損している場合のガード
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!reply) {
+      console.error('Unexpected Gemini response structure:', JSON.stringify(data));
+      return NextResponse.json({ error: 'Empty response from AI' }, { status: 500 });
+    }
 
     return NextResponse.json({ reply });
+
   } catch (error) {
-    console.error('Chat error:', error);
+    console.error('Chat error:', error instanceof Error ? error.message : error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
+    }
 }
