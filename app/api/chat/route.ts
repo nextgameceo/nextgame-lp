@@ -33,35 +33,32 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid message' }, { status: 400 });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
-      console.error('GEMINI_API_KEY is not set');
+      console.error('ANTHROPIC_API_KEY is not set');
       return NextResponse.json({ error: 'API key not configured' }, { status: 500 });
     }
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: 'user',
-              parts: [{ text: `${SYSTEM_PROMPT}\n\nユーザーの質問: ${message}` }],
-            },
-          ],
-          generationConfig: {
-            maxOutputTokens: 500,
-            temperature: 0.7,
-          },
-        }),
-      }
-    );
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001', // 軽量・高速・安い
+        max_tokens: 500,
+        system: SYSTEM_PROMPT,
+        messages: [
+          { role: 'user', content: message },
+        ],
+      }),
+    });
 
     if (!response.ok) {
       const errorBody = await response.json().catch(() => null);
-      console.error('Gemini API error:', {
+      console.error('Anthropic API error:', {
         status: response.status,
         statusText: response.statusText,
         body: errorBody,
@@ -76,11 +73,10 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await response.json();
+    const reply = data.content?.[0]?.text;
 
-    // candidatesが空・欠損している場合のガード
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!reply) {
-      console.error('Unexpected Gemini response structure:', JSON.stringify(data));
+      console.error('Unexpected Anthropic response structure:', JSON.stringify(data));
       return NextResponse.json({ error: 'Empty response from AI' }, { status: 500 });
     }
 
@@ -89,5 +85,5 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Chat error:', error instanceof Error ? error.message : error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-    }
+  }
 }
