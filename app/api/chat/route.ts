@@ -1,3 +1,5 @@
+import { NextRequest, NextResponse } from 'next/server';
+
 const SYSTEM_PROMPT = `あなたはNEXTGAME株式会社の公式サポートAIです。
 以下の情報だけをもとに、丁寧かつ正確な日本語で回答してください。
 情報にない内容は絶対に推測・創作せず「詳しくはお問い合わせください」と案内してください。
@@ -94,3 +96,66 @@ A: 一般的なB型は内職や軽作業が中心ですが、NEXTGAMEはAI・Web
 - 丁寧語（です・ます調）を使う
 - 工賃を聞かれたら必ず具体的な数字を含めて答える
 - 箇条書きより自然な文章で回答する`;
+
+export async function POST(request: NextRequest) {
+  try {
+    const { message } = await request.json();
+
+    if (!message || typeof message !== 'string') {
+      return NextResponse.json({ error: 'Invalid message' }, { status: 400 });
+    }
+
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) {
+      console.error('GROQ_API_KEY is not set');
+      return NextResponse.json({ error: 'API key not configured' }, { status: 500 });
+    }
+
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        max_tokens: 500,
+        temperature: 0.7,
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'user', content: message },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      const errorBody = await response.json().catch(() => null);
+      console.error('Groq API error:', {
+        status: response.status,
+        statusText: response.statusText,
+        body: errorBody,
+      });
+      return NextResponse.json(
+        {
+          error: 'AI error',
+          detail: errorBody?.error?.message ?? response.statusText,
+        },
+        { status: response.status }
+      );
+    }
+
+    const data = await response.json();
+    const reply = data.choices?.[0]?.message?.content;
+
+    if (!reply) {
+      console.error('Unexpected Groq response:', JSON.stringify(data));
+      return NextResponse.json({ error: 'Empty response from AI' }, { status: 500 });
+    }
+
+    return NextResponse.json({ reply });
+
+  } catch (error) {
+    console.error('Chat error:', error instanceof Error ? error.message : error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
