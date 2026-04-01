@@ -16,7 +16,7 @@ export default function ChatBot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'こんにちは！NEXTGAME のチャットボットです。ご質問やお問い合わせはありますか？',
+      text: 'こんにちは！NEXTGAME のAIアシスタントです。サービスや就労支援についてお気軽にご質問ください。',
       sender: 'bot',
       timestamp: new Date(),
     },
@@ -48,39 +48,28 @@ export default function ChatBot() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/send-line-notification', {
+      const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: inputValue,
-          timestamp: new Date().toISOString(),
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: inputValue }),
       });
 
       if (response.ok) {
+        const data = await response.json();
         const botMessage: Message = {
           id: (Date.now() + 1).toString(),
-          text: 'ご質問ありがとうございます。お問い合わせ内容を確認させていただきました。担当者からご連絡させていただきます。',
+          text: data.reply,
           sender: 'bot',
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, botMessage]);
       } else {
-        const errorMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          text: '申し訳ございません。エラーが発生しました。もう一度お試しください。',
-          sender: 'bot',
-          timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, errorMessage]);
+        throw new Error('API error');
       }
-    } catch (error) {
-      console.error('Error sending message:', error);
+    } catch {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: '申し訳ございません。通信エラーが発生しました。',
+        text: '申し訳ございません。エラーが発生しました。お問い合わせフォームよりご連絡ください。',
         sender: 'bot',
         timestamp: new Date(),
       };
@@ -112,7 +101,7 @@ export default function ChatBot() {
       {isOpen && (
         <div className={styles.chatbotWindow}>
           <div className={styles.chatbotHeader}>
-            <h3>NEXTGAME サポート</h3>
+            <h3>NEXTGAME AIサポート</h3>
             <button
               className={styles.closeButton}
               onClick={() => setIsOpen(false)}
