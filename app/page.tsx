@@ -5,7 +5,6 @@ import TopNewsList from '@/app/_components/TopNewsList';
 import styles from './page.module.css';
 import ButtonLink from '@/app/_components/ButtonLink';
 import FadeInSection from '@/app/_components/FadeInSection';
-import YoutubePlayer from '@/app/_components/YoutubePlayer';
 
 export default async function Page() {
   const data = await getNewsList({
@@ -36,10 +35,6 @@ export default async function Page() {
               あなたのアイデアを資産へ
             </p>
           </div>
-
-          {/* YouTube PV */}
-          <YoutubePlayer videoId="kPMuXnHZ_4A" /> 
-
           <div className={styles.heroScroll}>scroll</div>
         </div>
         <Image
