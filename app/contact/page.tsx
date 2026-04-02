@@ -1,7 +1,6 @@
+import { Suspense } from 'react';
 import styles from './page.module.css';
 import ContactForm from '@/app/_components/ContactForm';
-
-
 
 export default function Page() {
   return (
@@ -11,7 +10,9 @@ export default function Page() {
         <br />
         内容確認後、担当者より通常3営業日以内にご連絡いたします。
       </p>
-      <ContactForm />
+      <Suspense fallback={<div />}>
+        <ContactForm />
+      </Suspense>
     </div>
   );
 }
