@@ -6,6 +6,8 @@ import styles from './page.module.css';
 import ButtonLink from '@/app/_components/ButtonLink';
 import FadeInSection from '@/app/_components/FadeInSection';
 
+export const revalidate = 0;
+
 export default async function Page() {
   const data = await getNewsList({
     limit: TOP_NEWS_LIMIT,
