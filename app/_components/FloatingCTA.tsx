@@ -1,18 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 
-const services = [
-  { en: "WEB", ja: "Web運用サブスク", href: "/contact?type=business&service=web", icon: "🌐" },
-  { en: "MUSIC", ja: "楽曲制作・配信", href: "/contact?type=business&service=music", icon: "🎵" },
-  { en: "AI", ja: "AI導入コンサル", href: "/contact?type=business&service=ai", icon: "🤖" },
-  { en: "OTHER", ja: "その他のお問い合わせ", href: "/contact", icon: "📩" },
-];
-
 export default function FloatingCTA() {
-  const [open, setOpen] = useState(false);
-
   return (
     <>
       <style>{`
@@ -22,63 +12,10 @@ export default function FloatingCTA() {
           left: 0;
           width: 100%;
           z-index: 9998;
-        }
-
-        .ng-dropdown {
-          overflow: hidden;
-          max-height: 0;
-          transition: max-height 350ms cubic-bezier(0.22,1,0.36,1);
-          background: rgba(4,10,20,0.98);
+          background: rgba(6,14,28,0.95);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
-          border-top: 1px solid rgba(109,190,214,0.15);
-        }
-        .ng-dropdown.open {
-          max-height: 300px;
-        }
-
-        .ng-dropdown-item {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 14px 24px;
-          text-decoration: none;
-          border-bottom: 1px solid rgba(109,190,214,0.08);
-          transition: background 200ms ease;
-        }
-        .ng-dropdown-item:last-child {
-          border-bottom: none;
-        }
-        .ng-dropdown-item:hover {
-          background: rgba(109,190,214,0.08);
-        }
-
-        .ng-dropdown-icon {
-          font-size: 1.1rem;
-          width: 28px;
-          text-align: center;
-          flex-shrink: 0;
-        }
-
-        .ng-dropdown-text {
-          display: flex;
-          flex-direction: column;
-          gap: 1px;
-        }
-
-        .ng-dropdown-en {
-          font-family: var(--font-orbitron, monospace);
-          font-size: 0.55rem;
-          font-weight: 700;
-          letter-spacing: 0.18em;
-          color: #6dbed6;
-        }
-
-        .ng-dropdown-ja {
-          font-size: 0.82rem;
-          font-weight: 500;
-          color: rgba(255,255,255,0.9);
-          letter-spacing: 0.03em;
+          border-top: 1px solid rgba(109,190,214,0.25);
         }
 
         .ng-main-bar {
@@ -87,17 +24,12 @@ export default function FloatingCTA() {
           justify-content: center;
           gap: 10px;
           padding: 12px 24px;
-          background: rgba(6,14,28,0.95);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          border-top: 1px solid rgba(109,190,214,0.25);
-          cursor: pointer;
-          border: none;
+          text-decoration: none;
           width: 100%;
           transition: background 200ms ease;
         }
         .ng-main-bar:hover {
-          background: rgba(9,20,40,0.98);
+          background: rgba(109,190,214,0.06);
         }
 
         .ng-main-pulse {
@@ -145,48 +77,16 @@ export default function FloatingCTA() {
           color: rgba(255,255,255,0.85);
           letter-spacing: 0.04em;
         }
-
-        .ng-main-caret {
-          margin-left: 8px;
-          color: rgba(109,190,214,0.7);
-          transition: transform 350ms cubic-bezier(0.22,1,0.36,1);
-          font-size: 0.7rem;
-        }
-        .ng-main-caret.open {
-          transform: rotate(180deg);
-        }
       `}</style>
 
       <div className="ng-fixed-bar">
-        <div className={`ng-dropdown${open ? " open" : ""}`}>
-          {services.map((s) => (
-            <Link
-              key={s.en}
-              href={s.href}
-              className="ng-dropdown-item"
-              onClick={() => setOpen(false)}
-            >
-              <span className="ng-dropdown-icon">{s.icon}</span>
-              <span className="ng-dropdown-text">
-                <span className="ng-dropdown-en">{s.en}</span>
-                <span className="ng-dropdown-ja">{s.ja}</span>
-              </span>
-            </Link>
-          ))}
-        </div>
-
-        <button
-          className="ng-main-bar"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-        >
+        <Link href="/contact" className="ng-main-bar">
           <span className="ng-main-pulse" />
           <span className="ng-main-label">
             <span className="ng-main-en">CONTACT</span>
-            <span className="ng-main-ja">お問い合わせ・サービスを選ぶ</span>
+            <span className="ng-main-ja">お問い合わせ・無料相談はこちら</span>
           </span>
-          <span className={`ng-main-caret${open ? " open" : ""}`}>▲</span>
-        </button>
+        </Link>
       </div>
     </>
   );
