@@ -8,9 +8,16 @@ function validateEmail(email: string) {
 const SUPPORT_EMAIL = "support@nextgame-limited.com";
 const DEFAULT_FROM = "NextGame Contact <support@nextgame-limited.com>";
 
+const SERVICE_LABELS: Record<string, string> = {
+  web: "Web運用サブスク",
+  music: "楽曲制作・配信",
+  ai: "AI導入コンサル",
+  other: "その他",
+};
+
 export async function POST(request: NextRequest) {
   const json = await request.json();
-  const { lastname, firstname, company, email, message } = json;
+  const { lastname, firstname, company, email, service, message } = json;
 
   if (!lastname) {
     return NextResponse.json({ status: "error", message: "姓を入力してください" }, { status: 400 });
@@ -38,6 +45,7 @@ export async function POST(request: NextRequest) {
 
   const from = process.env.RESEND_FROM ?? DEFAULT_FROM;
   const to = process.env.RESEND_TO ?? SUPPORT_EMAIL;
+  const serviceLabel = SERVICE_LABELS[service] ?? service ?? "-";
 
   const subject = `【お問い合わせ】${company ? `${company} ` : ""}${lastname}${firstname} 様`;
 
@@ -47,6 +55,7 @@ export async function POST(request: NextRequest) {
 氏名: ${lastname} ${firstname}
 会社名: ${company ?? "-"}
 メールアドレス: ${email}
+ご相談内容: ${serviceLabel}
 
 メッセージ:
 ${message}
