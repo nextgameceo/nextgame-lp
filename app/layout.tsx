@@ -176,7 +176,7 @@ export default function RootLayout({ children }: Props) {
         <ChatBot />
         <div style={{
           position: 'fixed',
-          bottom: '8px',
+          bottom: '64px',
           right: '8px',
           fontSize: '0.55rem',
           color: 'rgba(255,255,255,0.15)',
