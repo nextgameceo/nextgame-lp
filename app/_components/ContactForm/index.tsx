@@ -1,5 +1,5 @@
 'use client';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import styles from './index.module.css';
 
@@ -11,7 +11,7 @@ const SERVICE_OPTIONS = [
   { value: 'other', label: 'その他' },
 ];
 
-export default function ContactForm() {
+function ContactFormInner() {
   const searchParams = useSearchParams();
   const initialService = searchParams.get('service') || '';
 
@@ -113,5 +113,13 @@ export default function ContactForm() {
         <input type="submit" value="送信する" className={styles.button} />
       </div>
     </form>
+  );
+}
+
+export default function ContactForm() {
+  return (
+    <Suspense fallback={<div />}>
+      <ContactFormInner />
+    </Suspense>
   );
 }
