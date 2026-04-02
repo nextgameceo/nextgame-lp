@@ -12,80 +12,90 @@ export default function FloatingCTA() {
           left: 0;
           width: 100%;
           z-index: 9998;
-          background: rgba(6,14,28,0.95);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          border-top: 1px solid rgba(109,190,214,0.25);
         }
 
-        .ng-main-bar {
+        .ng-cta-link {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 10px;
-          padding: 12px 24px;
+          gap: 14px;
+          padding: 16px 24px;
           text-decoration: none;
           width: 100%;
-          transition: background 200ms ease;
+          background: linear-gradient(90deg, #0e7490 0%, #6dbed6 50%, #0e7490 100%);
+          background-size: 200% auto;
+          animation: ng-shine 3s linear infinite;
+          border-top: 1px solid rgba(109,190,214,0.5);
+          transition: filter 200ms ease;
         }
-        .ng-main-bar:hover {
-          background: rgba(109,190,214,0.06);
+        .ng-cta-link:hover {
+          filter: brightness(1.15);
         }
 
-        .ng-main-pulse {
-          position: relative;
-          width: 7px;
-          height: 7px;
+        @keyframes ng-shine {
+          0%   { background-position: 0% center; }
+          100% { background-position: 200% center; }
+        }
+
+        .ng-cta-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: rgba(255,255,255,0.15);
           flex-shrink: 0;
         }
-        .ng-main-pulse::before,
-        .ng-main-pulse::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          border-radius: 50%;
-        }
-        .ng-main-pulse::before {
-          background: #6dbed6;
-          box-shadow: 0 0 6px #6dbed6;
-        }
-        .ng-main-pulse::after {
-          background: rgba(109,190,214,0.35);
-          animation: ng-pulse-fixed 2s ease-out infinite;
-        }
-        @keyframes ng-pulse-fixed {
-          0%   { transform: scale(1); opacity: 1; }
-          100% { transform: scale(3); opacity: 0; }
+        .ng-cta-icon svg {
+          width: 20px;
+          height: 20px;
+          color: #ffffff;
         }
 
-        .ng-main-label {
+        .ng-cta-text {
           display: flex;
           flex-direction: column;
           align-items: flex-start;
-          gap: 1px;
+          gap: 2px;
         }
-        .ng-main-en {
+        .ng-cta-en {
           font-family: var(--font-orbitron, monospace);
-          font-size: 0.6rem;
+          font-size: 0.62rem;
           font-weight: 700;
-          letter-spacing: 0.22em;
-          color: #6dbed6;
+          letter-spacing: 0.25em;
+          color: rgba(255,255,255,0.75);
         }
-        .ng-main-ja {
-          font-size: 0.78rem;
-          font-weight: 500;
-          color: rgba(255,255,255,0.85);
-          letter-spacing: 0.04em;
+        .ng-cta-ja {
+          font-size: 0.95rem;
+          font-weight: 700;
+          color: #ffffff;
+          letter-spacing: 0.05em;
+        }
+
+        .ng-cta-arrow {
+          font-size: 1.2rem;
+          color: rgba(255,255,255,0.8);
+          margin-left: 4px;
+          transition: transform 200ms ease;
+        }
+        .ng-cta-link:hover .ng-cta-arrow {
+          transform: translateX(4px);
         }
       `}</style>
 
       <div className="ng-fixed-bar">
-        <Link href="/contact" className="ng-main-bar">
-          <span className="ng-main-pulse" />
-          <span className="ng-main-label">
-            <span className="ng-main-en">CONTACT</span>
-            <span className="ng-main-ja">お問い合わせ・無料相談はこちら</span>
+        <Link href="/contact" className="ng-cta-link">
+          <span className="ng-cta-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
           </span>
+          <span className="ng-cta-text">
+            <span className="ng-cta-en">FREE CONSULTATION</span>
+            <span className="ng-cta-ja">無料相談・お問い合わせ</span>
+          </span>
+          <span className="ng-cta-arrow">→</span>
         </Link>
       </div>
     </>
