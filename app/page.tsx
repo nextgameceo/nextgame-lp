@@ -5,7 +5,7 @@ import TopNewsList from ‘@/app/_components/TopNewsList’;
 import styles from ‘./page.module.css’;
 import ButtonLink from ‘@/app/_components/ButtonLink’;
 import FadeInSection from ‘@/app/_components/FadeInSection’;
-import HeroCanvas from ‘@/components/HeroCanvas’; // ★ 追加
+import HeroCanvas from ‘@/app/_components/HeroCanvas’;
 
 export const revalidate = 0;
 
@@ -18,7 +18,7 @@ return (
 <>
 {/* Hero */}
 <section className={styles.top}>
-<HeroCanvas /> {/* ★ 追加 — パーティクルアニメーション背景 */}
+<HeroCanvas />
 <div className={styles.heroContent}>
 <div className={styles.heroLogoWrap}>
 <Image
@@ -63,7 +63,7 @@ priority
         </div>
         <div className={styles.sectionRight}>
           <p className={styles.sectionDescription}>
-            貴社のホームページはまだWordPressですか？{'\n\n'}制作会社に100万円以上を支払い、出来上がったサイトを「あとはご自身で」と渡される時代は終わりました。{'\n\n'}NEXTGAMEは初期費用ゼロ。設計・デザイン・開発・運用・改善まで、すべてを一括でサポートします。{'\n\n'}契約した翌月から、動き続けるWebサイトへ。作って終わりではなく、毎日進化する資産として。
+            {`貴社のホームページはまだWordPressですか？\n\n制作会社に100万円以上を支払い、出来上がったサイトを「あとはご自身で」と渡される時代は終わりました。\n\nNEXTGAMEは初期費用ゼロ。設計・デザイン・開発・運用・改善まで、すべてを一括でサポートします。\n\n契約した翌月から、動き続けるWebサイトへ。作って終わりではなく、毎日進化する資産として。`}
           </p>
           <div>
             <ButtonLink href="/business">Read More</ButtonLink>
@@ -87,7 +87,7 @@ priority
           </div>
           <div className={styles.sectionRight}>
             <p className={styles.sectionDescription}>
-              利用者の皆様が、これからの未来に適応したスキルを取得し、アイデアで稼げる未来をビジョンとしています。{'\n\n'}弊社は従来の単純作業中心の作業所ではなく、利用者の皆様に工賃を支払いつつ、実際の業務を通じて、プロンプトエンジニアリングスキルをOJT教育し、経済的に自立が出来る支援を行います。{'\n\n'}またNEXTGAMEは、通所実績とスキルに応じて工賃が上がる仕組みを用意しています。{'\n\n'}段階的なキャリアアップを経て、最終的には業務委託・個人事業主として独立するキャリアパスプランを設計します。
+              {`利用者の皆様が、これからの未来に適応したスキルを取得し、アイデアで稼げる未来をビジョンとしています。\n\n弊社は従来の単純作業中心の作業所ではなく、利用者の皆様に工賃を支払いつつ、実際の業務を通じて、プロンプトエンジニアリングスキルをOJT教育し、経済的に自立が出来る支援を行います。\n\nまたNEXTGAMEは、通所実績とスキルに応じて工賃が上がる仕組みを用意しています。\n\n段階的なキャリアアップを経て、最終的には業務委託・個人事業主として独立するキャリアパスプランを設計します。`}
             </p>
             <div>
               <ButtonLink href="/wage">Read More</ButtonLink>
@@ -111,7 +111,7 @@ priority
         </div>
         <div className={styles.sectionRight}>
           <p className={styles.sectionDescription}>
-            NEXTGAME株式会社は、AI特化型の就労継続支援B型事業所です。{'\n\n'}楽曲制作でAIプロンプトを学び、GitHubで実績を積み、個人事業主として独立するキャリアパスを提供しています。{'\n\n'}「通うための場所」ではなく、「稼ぐスキルを会得する場所」を目指しています。
+            {`NEXTGAME株式会社は、AI特化型の就労継続支援B型事業所です。\n\n楽曲制作でAIプロンプトを学び、GitHubで実績を積み、個人事業主として独立するキャリアパスを提供しています。\n\n「通うための場所」ではなく、「稼ぐスキルを会得する場所」を目指しています。`}
           </p>
           <div>
             <ButtonLink href="/about">Read More</ButtonLink>
@@ -158,7 +158,7 @@ priority
           </div>
           <div className={styles.sectionRight}>
             <p className={styles.sectionDescription}>
-              福祉業界の構造を変える、本気の仲間を募集しています。{'\n\n'}AIとITで利用者の経済的自立を実現する、未だかつてない挑戦に共に取り組みませんか？{'\n\n'}業界最高峰の給与水準で、あなたの覚悟に応えます。
+              {`福祉業界の構造を変える、本気の仲間を募集しています。\n\nAIとITで利用者の経済的自立を実現する、未だかつてない挑戦に共に取り組みませんか？\n\n業界最高峰の給与水準で、あなたの覚悟に応えます。`}
             </p>
             <div>
               <ButtonLink href="/recruit">Read More</ButtonLink>
@@ -183,7 +183,7 @@ priority
           </div>
           <div className={styles.sectionRight}>
             <p className={styles.sectionDescription}>
-              NEXTGAMEは、AIとITスキルを活用し、障害のある方が本当に稼げる就労環境を創ることを目的とした次世代型の就労支援事業です。{'\n\n'}日本では現在、障害者人口の増加と共に、就労支援サービスの需要が急速に拡大しています。{'\n\n'}しかし多くのB型作業所では、平均工賃が月額2万円前後に留まるなど、持続的な収益モデルの構築が大きな課題となっています。{'\n\n'}NEXTGAMEはこの課題に対し、AI・ITスキルを中心とした高付加価値業務を提供することで、利用者の収入向上と事業の持続可能性を両立する新しいモデルを構築します。{'\n\n'}本ホームページは、NEXTGAMEの事業構想・ビジョン・事業モデルをまとめた、オンライン事業計画書として公開しています。{'\n\n'}現在、事業立ち上げ資金として3,500万円の資金調達を計画しています。{'\n\n'}社会課題の解決と持続可能な事業成長を両立する新しい福祉モデルにご関心をお持ちの投資家・金融機関の皆様は、ぜひ詳細をご覧ください。
+              {`NEXTGAMEは、AIとITスキルを活用し、障害のある方が本当に稼げる就労環境を創ることを目的とした次世代型の就労支援事業です。\n\n日本では現在、障害者人口の増加と共に、就労支援サービスの需要が急速に拡大しています。\n\nしかし多くのB型作業所では、平均工賃が月額2万円前後に留まるなど、持続的な収益モデルの構築が大きな課題となっています。\n\nNEXTGAMEはこの課題に対し、AI・ITスキルを中心とした高付加価値業務を提供することで、利用者の収入向上と事業の持続可能性を両立する新しいモデルを構築します。\n\n本ホームページは、NEXTGAMEの事業構想・ビジョン・事業モデルをまとめた、オンライン事業計画書として公開しています。\n\n現在、事業立ち上げ資金として3,500万円の資金調達を計画しています。\n\n社会課題の解決と持続可能な事業成長を両立する新しい福祉モデルにご関心をお持ちの投資家・金融機関の皆様は、ぜひ詳細をご覧ください。`}
             </p>
             <div>
               <ButtonLink href="/investors">詳細を見る</ButtonLink>
