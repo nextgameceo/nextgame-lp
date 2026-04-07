@@ -1,516 +1,986 @@
-import FadeIn from '@/app/_components/FadeIn';
-import ContactForm from '@/app/_components/ContactForm';
+import FadeIn from ‘@/app/_components/FadeIn’;
 
 export const revalidate = 0;
 
-const PROBLEMS = [
-  { icon: '💸', text: 'ホームページに高額を払ったのに集客・問い合わせがゼロに近い' },
-  { icon: '🔒', text: '制作会社に頼むと高くて遅い。修正のたびに追加費用が発生する' },
-  { icon: '📉', text: '作ったまま放置。古い情報が掲載され続けているが更新方法がわからない' },
-  { icon: '😤', text: 'SEO・SNS運用をやりたいが何から始めればいいか全くわからない' },
-  { icon: '🎵', text: 'ブランドに合ったBGM・楽曲がなく、世界観や雰囲気が伝わらない' },
+const LINE_URL = ‘https://lin.ee/SJDJXQv’;
+
+const FAQ = [
+{ q: ‘相談は本当に無料ですか？’, a: ‘完全無料です。費用が発生するのはご契約後のみ。相談・見積もりは何度でも無料でお応えします。’ },
+{ q: ‘営業電話はかかってきますか？’, a: ‘かかってきません。LINEでのやり取りのみ。しつこい連絡は一切しません。’ },
+{ q: ‘制作期間はどれくらいですか？’, a: ‘LPなら最短3日、コーポレートサイトは2〜3週間が目安です。’ },
+{ q: ‘予算が少ないのですが大丈夫ですか？’, a: ‘10万円台から対応可能です。まずご予算をLINEで教えてください。最適なプランをご提案します。’ },
+{ q: ‘制作後のサポートはありますか？’, a: ‘あります。運用・更新・SEO改善まで月額でサポートするプランをご用意しています。’ },
+{ q: ‘どんな業種でも対応できますか？’, a: ‘飲食・美容・士業・EC・建設など幅広く対応実績があります。まずご相談ください。’ },
 ];
 
-const STRENGTHS = [
-  {
-    num: '01',
-    title: '圧倒的なコストパフォーマンス',
-    body: 'AIを最大限に活用することで、従来の制作会社の1/3〜1/5のコストを実現。品質は一切妥協しません。',
-    accent: '費用を抑えて成果を最大化',
-  },
-  {
-    num: '02',
-    title: '業界最短クラスの納期',
-    body: 'ランディングページなら最短3日で納品。ビジネスチャンスを逃さないスピード感でお応えします。',
-    accent: 'LP最短3日〜',
-  },
-  {
-    num: '03',
-    title: '作って終わりにしない運用',
-    body: '公開後の更新・SEO改善・アクセス解析・SNS連携まで一括サポート。毎月進化するWebサイトを提供します。',
-    accent: '公開後も伴走します',
-  },
+const PROBLEMS = [
+{ num: ‘01’, text: ‘HPに100万払ったのに\n問い合わせがゼロ’ },
+{ num: ‘02’, text: ‘更新のたびに\n制作会社に追加費用’ },
+{ num: ‘03’, text: ‘SEO対策を頼んだら\n半年経っても順位変わらず’ },
+{ num: ‘04’, text: ‘SNS運用を外注したら\n月20万で成果なし’ },
+];
+
+const COMPARE = [
+{ item: ‘制作費用’, other: ‘50〜200万円’, ng: ‘10万円〜’ },
+{ item: ‘納期’, other: ‘1〜3ヶ月’, ng: ‘最短3日’ },
+{ item: ‘修正対応’, other: ‘有料・遅い’, ng: ‘無料・即対応’ },
+{ item: ‘運用サポート’, other: ‘別途契約’, ng: ‘込みプランあり’ },
+{ item: ‘担当者’, other: ‘営業→下請け’, ng: ‘直接対応’ },
+{ item: ‘相談方法’, other: ‘電話・メール’, ng: ‘LINE即レス’ },
 ];
 
 const SERVICES = [
-  {
-    icon: '🖥️',
-    title: 'Web制作',
-    sub: 'ランディングページ・コーポレートサイト',
-    items: ['LP（ランディングページ）', 'コーポレートサイト', 'ECサイト・予約サイト', 'サイトリニューアル・改善'],
-    cta: '制作を相談する',
-  },
-  {
-    icon: '📈',
-    title: 'Web運用',
-    sub: 'SEO・MEO・SNS運用代行',
-    items: ['SEO対策・コンテンツ改善', 'MEO対策（Googleマップ）', 'SNS運用代行', 'アクセス解析・月次レポート'],
-    cta: '運用を相談する',
-  },
-  {
-    icon: '🎵',
-    title: '楽曲制作',
-    sub: 'ブランドサウンド・BGM制作',
-    items: ['店舗BGM・環境音楽', 'CM・動画用楽曲', 'ブランドジングル', 'ポッドキャスト用音楽'],
-    cta: '楽曲を相談する',
-  },
-  {
-    icon: '🤖',
-    title: 'AI導入支援',
-    sub: '業務効率化・AI活用コンサル',
-    items: ['業務効率化のAI提案', 'AIツール選定・設定', 'プロンプト設計・研修', 'ChatGPT・Claude活用支援'],
-    cta: 'AI活用を相談する',
-  },
+{ icon: ‘🖥️’, name: ‘LP制作’, price: ‘10万円〜’, desc: ‘最短3日。CVに特化した設計’ },
+{ icon: ‘🏢’, name: ‘HP制作’, price: ‘20万円〜’, desc: ‘CMS込み。自分で更新可能’ },
+{ icon: ‘🔍’, name: ‘SEO対策’, price: ‘3万円〜/月’, desc: ‘検索上位を狙う継続支援’ },
+{ icon: ‘📍’, name: ‘MEO対策’, price: ‘2万円〜/月’, desc: ‘Googleマップ上位表示’ },
+{ icon: ‘📱’, name: ‘SNS運用’, price: ‘3万円〜/月’, desc: ‘Instagram・X投稿代行’ },
+{ icon: ‘⚙️’, name: ‘Web運用代行’, price: ‘2万円〜/月’, desc: ‘更新・分析・改善まで一括’ },
 ];
 
 const RESULTS = [
-  { category: '飲食店 / MEO＋LP改善', kpi: '予約数 2.3倍', period: '施策開始から3ヶ月で達成' },
-  { category: 'コーポレートサイト / SEO改善', kpi: '問い合わせ 4倍', period: 'CV導線最適化＋記事SEOで半年' },
-  { category: '個人事業主 / LP制作＋SNS', kpi: '新規顧客 月+8件', period: 'LP公開から2ヶ月で安定化' },
-];
-
-const PRICING = [
-  {
-    name: 'ライトプラン',
-    price: '15万円〜',
-    desc: 'LP・1ページサイト',
-    items: ['デザイン・コーディング一式', 'スマホ完全対応', 'お問い合わせフォーム', '公開サポート・修正2回'],
-    highlight: false,
-    note: '',
-  },
-  {
-    name: 'スタンダードプラン',
-    price: '30万円〜',
-    desc: 'コーポレートサイト（5〜10P）',
-    items: ['全ページ制作・CMS導入', 'SEO初期設定', 'Google Analytics設定', '公開後1ヶ月サポート付き'],
-    highlight: true,
-    note: '最も人気',
-  },
-  {
-    name: '運用プラン',
-    price: '3万円〜/月',
-    desc: '継続改善・運用サポート',
-    items: ['月次アクセスレポート', 'コンテンツ更新代行', 'SEO継続改善', '優先対応・チャットサポート'],
-    highlight: false,
-    note: '',
-  },
+{ cat: ‘飲食店’, result: ‘予約2.3倍’, period: ‘3ヶ月’, tag: ‘MEO＋LP改善’ },
+{ cat: ‘美容サロン’, result: ‘問い合わせ4倍’, period: ‘2ヶ月’, tag: ‘SEO＋HP改善’ },
+{ cat: ‘個人事業主’, result: ‘新規8件/月増’, period: ‘2ヶ月’, tag: ‘LP制作’ },
+{ cat: ‘整骨院’, result: ‘来院数1.8倍’, period: ‘4ヶ月’, tag: ‘MEO対策’ },
 ];
 
 const FLOW = [
-  { step: '01', title: 'お問い合わせ', body: 'フォームまたはSNSからお気軽に' },
-  { step: '02', title: 'ヒアリング', body: 'オンライン30分〜。課題をお聞きします' },
-  { step: '03', title: 'ご提案・見積もり', body: '最適なプランを無料でご提案' },
-  { step: '04', title: '制作・実装', body: '進捗をリアルタイムで共有します' },
-  { step: '05', title: '納品・運用開始', body: '公開後もしっかり伴走します' },
-];
-
-const VOICES = [
-  { text: '短期間で想像以上のクオリティのサイトが完成しました。問い合わせも増えて本当に助かっています。', from: '飲食店オーナー様' },
-  { text: 'コストを大幅に抑えながら、大手制作会社と遜色ないデザインで驚きました。', from: '個人事業主様' },
-  { text: '対応が早く、細かい修正にも柔軟に応えてもらえました。次回もお願いします。', from: '美容サロン様' },
+{ step: ‘01’, title: ‘LINEで相談’, body: ‘30秒で完了。無料’ },
+{ step: ‘02’, title: ‘ヒアリング’, body: ‘LINE上で完結’ },
+{ step: ‘03’, title: ‘無料提案’, body: ‘最短翌日’ },
+{ step: ‘04’, title: ‘制作開始’, body: ‘最短3日で納品’ },
+{ step: ‘05’, title: ‘運用開始’, body: ‘公開後も伴走’ },
 ];
 
 export default function Page() {
-  return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap');
+return (
+<>
+<style>{`
+@import url(‘https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@400;500;700;900&display=swap’);
 
-        .ng-btn-primary {
-          display: inline-block;
-          background: linear-gradient(135deg, #6dbed6 0%, #3a9ab8 100%);
-          color: #060e1c !important;
-          font-weight: 900;
-          font-size: 1rem;
-          padding: 16px 40px;
-          border-radius: 4px;
-          text-decoration: none;
-          letter-spacing: 0.04em;
-          cursor: pointer;
-          border: none;
-          transition: transform 0.2s ease, box-shadow 0.2s ease;
-          box-shadow: 0 0 28px rgba(109,190,214,0.4);
-        }
-        .ng-btn-primary:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 0 48px rgba(109,190,214,0.7);
-        }
-        .ng-btn-outline {
-          display: inline-block;
-          background: transparent;
-          color: #6dbed6;
-          font-weight: 700;
-          font-size: 0.95rem;
-          padding: 14px 36px;
-          border-radius: 4px;
-          border: 1.5px solid #6dbed6;
-          text-decoration: none;
-          cursor: pointer;
-          transition: background 0.2s, color 0.2s;
-        }
-        .ng-btn-outline:hover { background: #6dbed6; color: #060e1c; }
-        .ng-card {
-          background: rgba(109,190,214,0.04);
-          border: 1px solid rgba(109,190,214,0.13);
-          border-radius: 12px;
-          transition: border-color 0.25s, transform 0.25s, background 0.25s;
-        }
-        .ng-card:hover {
-          border-color: rgba(109,190,214,0.45);
-          background: rgba(109,190,214,0.08);
-          transform: translateY(-5px);
-        }
-        .ng-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
-        .ng-grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; }
-        .ng-grid-5 { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; }
-        @keyframes ng-pulse { 0%,100%{opacity:0.5;} 50%{opacity:1;} }
-        @keyframes ng-float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
-        .ng-hero-title {
-          font-family: 'Bebas Neue', sans-serif;
-          font-size: clamp(3.2rem, 9vw, 6.5rem);
-          line-height: 1.0;
-          letter-spacing: 0.04em;
-          background: linear-gradient(135deg, #ffffff 0%, #6dbed6 40%, #3a9ab8 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-        .ng-section-label {
-          font-size: 0.75rem;
-          letter-spacing: 0.22em;
-          color: #6dbed6;
-          margin-bottom: 12px;
-          display: block;
-        }
-        .ng-section-title {
-          font-size: clamp(1.7rem, 3.8vw, 2.5rem);
-          font-weight: 900;
-          line-height: 1.3;
-          color: #ffffff;
-        }
-        .ng-divider {
-          width: 48px;
-          height: 2px;
-          background: linear-gradient(to right, #6dbed6, transparent);
-          margin: 20px auto 0;
-        }
-        @media (max-width: 768px) {
-          .ng-grid-3 { grid-template-columns: 1fr; }
-          .ng-grid-2 { grid-template-columns: 1fr; }
-          .ng-grid-5 { grid-template-columns: repeat(2,1fr); }
-          .ng-hide-sp { display: none !important; }
-        }
-        @media (max-width: 480px) {
-          .ng-grid-5 { grid-template-columns: 1fr; }
-        }
-      `}</style>
+```
+    :root {
+      --orange: #FF6B2B;
+      --orange-dark: #E85A1B;
+      --dark: #0D0D0D;
+      --dark2: #141414;
+      --dark3: #1A1A1A;
+      --border: rgba(255,255,255,0.08);
+      --text: #F0F0F0;
+      --muted: #888;
+      --green: #06C755;
+    }
 
-      {/* ── HERO ── */}
-      <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '100px 24px 80px', background: '#060e1c' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(109,190,214,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(109,190,214,0.035) 1px,transparent 1px)', backgroundSize: '64px 64px' }} />
-        <div style={{ position: 'absolute', top: '15%', left: '8%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle,rgba(109,190,214,0.1) 0%,transparent 68%)', animation: 'ng-pulse 5s ease-in-out infinite' }} />
-        <div style={{ position: 'absolute', bottom: '8%', right: '4%', width: 350, height: 350, borderRadius: '50%', background: 'radial-gradient(circle,rgba(109,190,214,0.07) 0%,transparent 68%)', animation: 'ng-pulse 7s ease-in-out infinite 3s' }} />
-        <div style={{ position: 'relative', textAlign: 'center', maxWidth: 920, width: '100%' }}>
-          <FadeIn>
-            <span style={{ display: 'inline-block', background: 'rgba(109,190,214,0.1)', border: '1px solid rgba(109,190,214,0.28)', borderRadius: 100, padding: '7px 22px', marginBottom: 36, fontSize: '0.78rem', letterSpacing: '0.18em', color: '#6dbed6' }}>
-              AI × WEB制作 × 楽曲制作
-            </span>
-          </FadeIn>
-          <FadeIn delay={0.1}>
-            <h1 className="ng-hero-title">低コスト×最短納期で</h1>
-            <h1 className="ng-hero-title" style={{ marginBottom: 28 }}>&ldquo;売れる&rdquo;サイトを。</h1>
-          </FadeIn>
-          <FadeIn delay={0.2}>
-            <p style={{ fontSize: 'clamp(1rem, 2.2vw, 1.15rem)', color: '#9ac4d4', lineHeight: 1.9, marginBottom: 48, maxWidth: 580, margin: '0 auto 48px' }}>
-              中小企業・個人事業主向けに、AIを活用した<br />
-              高品質なWeb制作・運用・楽曲制作を提供します。
-            </p>
-          </FadeIn>
-          <FadeIn delay={0.28}>
-            <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 20 }}>
-              <a href="#contact" className="ng-btn-primary" style={{ fontSize: '1.05rem', padding: '18px 48px' }}>無料で相談する →</a>
-              <a href="#services" className="ng-btn-outline">サービスを見る</a>
-            </div>
-            <p style={{ fontSize: '0.78rem', color: 'rgba(109,190,214,0.6)' }}>✓ 相談・見積もり完全無料　✓ 最短翌日ご提案　✓ しつこい営業なし</p>
-          </FadeIn>
+    /* ── 固定LINE CTA ── */
+    .lp-fixed {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 999;
+      padding: 12px 16px 20px;
+      background: linear-gradient(to top, #0D0D0D 60%, transparent);
+      pointer-events: none;
+    }
+    .lp-fixed a {
+      pointer-events: all;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--green);
+      color: #ffffff;
+      font-weight: 900;
+      font-size: 1.05rem;
+      padding: 18px 24px;
+      border-radius: 100px;
+      text-decoration: none;
+      box-shadow: 0 4px 32px rgba(6,199,85,0.5);
+      letter-spacing: 0.03em;
+      animation: lp-bounce 2.5s ease-in-out infinite;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    @keyframes lp-bounce {
+      0%,100% { transform: translateY(0); box-shadow: 0 4px 32px rgba(6,199,85,0.5); }
+      50% { transform: translateY(-3px); box-shadow: 0 8px 40px rgba(6,199,85,0.7); }
+    }
+
+    /* ── ボタン共通 ── */
+    .lp-btn-line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--green);
+      color: #ffffff;
+      font-weight: 900;
+      font-size: 1rem;
+      padding: 18px 32px;
+      border-radius: 100px;
+      text-decoration: none;
+      box-shadow: 0 4px 24px rgba(6,199,85,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.03em;
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      white-space: nowrap;
+    }
+    .lp-btn-line:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 36px rgba(6,199,85,0.6);
+    }
+    .lp-btn-orange {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--orange);
+      color: #ffffff;
+      font-weight: 900;
+      font-size: 1rem;
+      padding: 18px 32px;
+      border-radius: 100px;
+      text-decoration: none;
+      box-shadow: 0 4px 24px rgba(255,107,43,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.03em;
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .lp-btn-orange:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 36px rgba(255,107,43,0.6);
+    }
+
+    /* ── セクション共通 ── */
+    .lp-section { padding: 72px 20px; }
+    .lp-section-dark { background: var(--dark); }
+    .lp-section-dark2 { background: var(--dark2); }
+    .lp-section-dark3 { background: var(--dark3); }
+    .lp-inner { max-width: 600px; margin: 0 auto; }
+    .lp-inner-wide { max-width: 800px; margin: 0 auto; }
+
+    .lp-label {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--orange);
+      background: rgba(255,107,43,0.1);
+      border: 1px solid rgba(255,107,43,0.3);
+      border-radius: 100px;
+      padding: 5px 14px;
+      margin-bottom: 20px;
+    }
+    .lp-h2 {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      font-weight: 900;
+      line-height: 1.4;
+      color: #ffffff;
+      margin-bottom: 12px;
+    }
+    .lp-h2 em {
+      font-style: normal;
+      color: var(--orange);
+    }
+    .lp-sub {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 40px;
+    }
+    .lp-divider {
+      width: 40px;
+      height: 3px;
+      background: var(--orange);
+      margin: 16px 0 32px;
+      border-radius: 2px;
+    }
+
+    /* ── HERO ── */
+    .lp-hero {
+      position: relative;
+      background: var(--dark);
+      padding: 80px 20px 100px;
+      overflow: hidden;
+      text-align: center;
+    }
+    .lp-hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,107,43,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,107,43,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+    .lp-hero-glow {
+      position: absolute;
+      top: -100px; left: 50%;
+      transform: translateX(-50%);
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(255,107,43,0.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .lp-tag {
+      display: inline-block;
+      background: rgba(255,107,43,0.15);
+      border: 1px solid rgba(255,107,43,0.4);
+      color: var(--orange);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+    .lp-catch {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: clamp(1.9rem, 7vw, 3rem);
+      font-weight: 900;
+      line-height: 1.3;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .lp-catch em {
+      font-style: normal;
+      color: var(--orange);
+    }
+    .lp-catch-sub {
+      font-size: clamp(0.85rem, 3vw, 1rem);
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 32px;
+    }
+    .lp-hero-badges {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+    .lp-badge {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-size: 0.78rem;
+      color: #ccc;
+      font-weight: 500;
+    }
+    .lp-badge strong { color: #fff; }
+    .lp-hero-note {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 14px;
+    }
+    .lp-hero-note span { color: var(--orange); font-weight: 700; }
+
+    /* ── 限定バナー ── */
+    .lp-limit {
+      background: linear-gradient(135deg, rgba(255,107,43,0.15), rgba(255,107,43,0.05));
+      border: 1px solid rgba(255,107,43,0.3);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .lp-limit-title {
+      font-size: 0.72rem;
+      color: var(--orange);
+      letter-spacing: 0.15em;
+      margin-bottom: 8px;
+    }
+    .lp-limit-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      color: #ffffff;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .lp-limit-sub { font-size: 0.82rem; color: var(--muted); }
+
+    /* ── 悩み ── */
+    .lp-problem-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .lp-problem-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+    }
+    .lp-problem-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      color: rgba(255,107,43,0.4);
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .lp-problem-text {
+      font-size: 0.92rem;
+      color: var(--text);
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+
+    /* ── 比較表 ── */
+    .lp-compare {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 40px;
+    }
+    .lp-compare th {
+      padding: 12px 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .lp-compare th:first-child { text-align: left; color: var(--muted); }
+    .lp-compare th:nth-child(2) { color: var(--muted); background: rgba(255,255,255,0.03); }
+    .lp-compare th:nth-child(3) { color: #ffffff; background: rgba(255,107,43,0.15); border-radius: 8px 8px 0 0; }
+    .lp-compare td {
+      padding: 14px 10px;
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+    .lp-compare td:first-child { color: var(--muted); font-size: 0.8rem; }
+    .lp-compare td:nth-child(2) { color: #666; text-align: center; background: rgba(255,255,255,0.02); }
+    .lp-compare td:nth-child(3) { color: var(--orange); font-weight: 700; text-align: center; background: rgba(255,107,43,0.06); }
+
+    /* ── サービス ── */
+    .lp-service-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .lp-service-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 16px;
+      transition: border-color 0.2s;
+    }
+    .lp-service-card:hover { border-color: rgba(255,107,43,0.4); }
+    .lp-service-icon { font-size: 1.6rem; margin-bottom: 8px; }
+    .lp-service-name { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .lp-service-price { font-size: 0.78rem; color: var(--orange); font-weight: 700; margin-bottom: 6px; }
+    .lp-service-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+
+    /* ── 実績 ── */
+    .lp-result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .lp-result-card {
+      background: linear-gradient(135deg, rgba(255,107,43,0.1), rgba(255,107,43,0.03));
+      border: 1px solid rgba(255,107,43,0.2);
+      border-radius: 12px;
+      padding: 20px 16px;
+      text-align: center;
+    }
+    .lp-result-cat { font-size: 0.7rem; color: var(--orange); margin-bottom: 8px; letter-spacing: 0.05em; }
+    .lp-result-kpi { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: #fff; line-height: 1; margin-bottom: 4px; }
+    .lp-result-period { font-size: 0.72rem; color: var(--muted); margin-bottom: 4px; }
+    .lp-result-tag { display: inline-block; font-size: 0.68rem; color: var(--orange); background: rgba(255,107,43,0.1); padding: 2px 8px; border-radius: 100px; }
+
+    /* ── 料金 ── */
+    .lp-pricing-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .lp-pricing-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      gap: 12px;
+    }
+    .lp-pricing-item.featured {
+      border-color: var(--orange);
+      background: rgba(255,107,43,0.06);
+    }
+    .lp-pricing-name { font-size: 0.9rem; font-weight: 700; color: #fff; }
+    .lp-pricing-price { font-size: 1.1rem; font-weight: 900; color: var(--orange); white-space: nowrap; }
+    .lp-pricing-badge {
+      font-size: 0.65rem;
+      background: var(--orange);
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 100px;
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+
+    /* ── FLOW ── */
+    .lp-flow-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-bottom: 40px;
+    }
+    .lp-flow-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      position: relative;
+      padding-bottom: 24px;
+    }
+    .lp-flow-item:last-child { padding-bottom: 0; }
+    .lp-flow-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .lp-flow-circle {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(255,107,43,0.15);
+      border: 1.5px solid var(--orange);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      color: var(--orange);
+      flex-shrink: 0;
+    }
+    .lp-flow-line {
+      width: 1px;
+      flex: 1;
+      min-height: 24px;
+      background: linear-gradient(to bottom, rgba(255,107,43,0.4), rgba(255,107,43,0.05));
+      margin-top: 4px;
+    }
+    .lp-flow-content { padding-top: 8px; }
+    .lp-flow-title { font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .lp-flow-body { font-size: 0.8rem; color: var(--muted); }
+
+    /* ── FAQ ── */
+    .lp-faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .lp-faq-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .lp-faq-q {
+      padding: 18px 20px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .lp-faq-q-icon { color: var(--orange); flex-shrink: 0; font-weight: 900; }
+    .lp-faq-a {
+      padding: 0 20px 18px 44px;
+      font-size: 0.83rem;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    /* ── LINE登録メリット ── */
+    .lp-line-merit {
+      background: linear-gradient(135deg, rgba(6,199,85,0.1), rgba(6,199,85,0.03));
+      border: 1px solid rgba(6,199,85,0.25);
+      border-radius: 16px;
+      padding: 28px 24px;
+      margin-bottom: 28px;
+    }
+    .lp-line-merit-title {
+      font-size: 0.78rem;
+      color: var(--green);
+      letter-spacing: 0.1em;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+    .lp-line-merit-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .lp-line-merit-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+    .lp-line-merit-check { color: var(--green); font-weight: 900; flex-shrink: 0; }
+
+    /* ── 安心 ── */
+    .lp-trust-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 36px;
+    }
+    .lp-trust-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+    .lp-trust-icon { font-size: 1.4rem; margin-bottom: 6px; }
+    .lp-trust-text { font-size: 0.78rem; color: #ccc; line-height: 1.5; }
+
+    /* ── クロージング ── */
+    .lp-closing {
+      background: linear-gradient(135deg, #1A0A00, #0D0D0D);
+      padding: 72px 20px 120px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .lp-closing-glow {
+      position: absolute;
+      bottom: -100px; left: 50%;
+      transform: translateX(-50%);
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(255,107,43,0.1) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .lp-closing-catch {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: clamp(1.4rem, 5vw, 1.9rem);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.45;
+      margin-bottom: 12px;
+    }
+    .lp-closing-catch em { font-style: normal; color: var(--orange); }
+    .lp-closing-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 36px; line-height: 1.7; }
+    .lp-btn-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    @keyframes lp-fadein {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    @media (min-width: 600px) {
+      .lp-service-grid { grid-template-columns: repeat(3,1fr); }
+      .lp-result-grid { grid-template-columns: repeat(4,1fr); }
+      .lp-trust-grid { grid-template-columns: repeat(4,1fr); }
+    }
+  `}</style>
+
+  {/* ── 固定LINE CTA ── */}
+  <div className="lp-fixed">
+    <a href={LINE_URL} target="_blank" rel="noopener noreferrer">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z"/></svg>
+      30秒で無料相談する →
+    </a>
+  </div>
+
+  {/* ── HERO ── */}
+  <section className="lp-hero">
+    <div className="lp-hero-grid" />
+    <div className="lp-hero-glow" />
+    <div style={{ position: 'relative', zIndex: 1, maxWidth: 560, margin: '0 auto' }}>
+      <FadeIn>
+        <div className="lp-tag">📣 毎月5社限定・先着順</div>
+        <h1 className="lp-catch">
+          ホームページ制作、<br />
+          <em>3分の1の費用</em>で<br />
+          問い合わせを3倍に。
+        </h1>
+        <p className="lp-catch-sub">
+          AIを活用した次世代のWeb制作会社。<br />
+          中小企業・個人事業主・店舗オーナー専門。
+        </p>
+      </FadeIn>
+      <FadeIn delay={0.1}>
+        <div className="lp-hero-badges">
+          <div className="lp-badge"><strong>最短3日</strong>で納品</div>
+          <div className="lp-badge">費用<strong>10万円〜</strong></div>
+          <div className="lp-badge"><strong>営業</strong>一切なし</div>
+          <div className="lp-badge">LINE<strong>即レス</strong></div>
         </div>
-        <div style={{ position: 'absolute', bottom: 28, left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, animation: 'ng-float 2.5s ease-in-out infinite' }}>
-          <div style={{ width: 1, height: 44, background: 'linear-gradient(to bottom, #6dbed6, transparent)' }} />
-          <span style={{ fontSize: '0.65rem', letterSpacing: '0.22em', color: 'rgba(109,190,214,0.5)' }}>SCROLL</span>
+      </FadeIn>
+      <FadeIn delay={0.15}>
+        <div className="lp-limit" style={{ marginBottom: 28 }}>
+          <div className="lp-limit-title">⚠️ 今月の受付枠</div>
+          <div className="lp-limit-num">残2社</div>
+          <div className="lp-limit-sub">枠が埋まり次第、受付終了</div>
         </div>
-      </section>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center' }}>
+          <a href={LINE_URL} target="_blank" rel="noopener noreferrer" className="lp-btn-line">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z"/></svg>
+            30秒で無料相談する →
+          </a>
+          <a href={LINE_URL} target="_blank" rel="noopener noreferrer" className="lp-btn-orange">
+            費用を無料で見積もる →
+          </a>
+        </div>
+        <p className="lp-hero-note">
+          <span>✓ 完全無料</span>　<span>✓ しつこい営業なし</span>　<span>✓ 相談だけでもOK</span>
+        </p>
+      </FadeIn>
+    </div>
+  </section>
 
-      {/* ── PROBLEMS ── */}
-      <section id="problems" style={{ padding: '100px 24px', background: 'linear-gradient(180deg,#060e1c 0%,#091422 100%)' }}>
-        <div style={{ maxWidth: 820, margin: '0 auto' }}>
-          <FadeIn>
-            <div style={{ textAlign: 'center', marginBottom: 60 }}>
-              <span className="ng-section-label">PROBLEMS</span>
-              <h2 className="ng-section-title">こんなお悩み、<br />ありませんか？</h2>
-              <div className="ng-divider" />
+  {/* ── 悩み共感 ── */}
+  <section className="lp-section lp-section-dark2">
+    <div className="lp-inner">
+      <FadeIn>
+        <div className="lp-label">PROBLEMS</div>
+        <h2 className="lp-h2">こんな悩み、<br /><em>ありませんか？</em></h2>
+        <div className="lp-divider" />
+      </FadeIn>
+      <div className="lp-problem-list">
+        {PROBLEMS.map((p, i) => (
+          <FadeIn key={i} delay={i * 0.06}>
+            <div className="lp-problem-item">
+              <div className="lp-problem-num">{p.num}</div>
+              <div className="lp-problem-text">{p.text}</div>
             </div>
           </FadeIn>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {PROBLEMS.map((p, i) => (
-              <FadeIn key={i} delay={i * 0.07}>
-                <div className="ng-card" style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '22px 28px' }}>
-                  <span style={{ fontSize: '1.7rem', flexShrink: 0 }}>{p.icon}</span>
-                  <p style={{ color: '#c0dce8', fontSize: '0.98rem', lineHeight: 1.6 }}>{p.text}</p>
-                </div>
-              </FadeIn>
+        ))}
+      </div>
+      <FadeIn delay={0.3}>
+        <div style={{ textAlign: 'center', padding: '24px 0 0' }}>
+          <p style={{ fontSize: '1rem', fontWeight: 900, color: '#fff', marginBottom: 6 }}>
+            その悩み、<em style={{ color: 'var(--orange)', fontStyle: 'normal' }}>全部解決できます。</em>
+          </p>
+          <p style={{ fontSize: '0.82rem', color: 'var(--muted)', marginBottom: 24 }}>まずLINEで相談してみてください。</p>
+          <a href={LINE_URL} target="_blank" rel="noopener noreferrer" className="lp-btn-line">
+            LINEで今すぐ聞く →
+          </a>
+        </div>
+      </FadeIn>
+    </div>
+  </section>
+
+  {/* ── 解決策 ── */}
+  <section className="lp-section lp-section-dark3">
+    <div className="lp-inner">
+      <FadeIn>
+        <div className="lp-label">SOLUTION</div>
+        <h2 className="lp-h2">AIで、<em>常識を壊す。</em></h2>
+        <div className="lp-divider" />
+        <div style={{ background: 'rgba(255,107,43,0.06)', border: '1px solid rgba(255,107,43,0.2)', borderRadius: 16, padding: 28, marginBottom: 32 }}>
+          <p style={{ fontSize: '0.95rem', color: 'var(--text)', lineHeight: 2, marginBottom: 0 }}>
+            従来の制作会社は<strong style={{ color: '#fff' }}>「高い・遅い・使えない」</strong>が当たり前。<br /><br />
+            NEXTGAMEはAIを最大活用することで、<br />
+            <strong style={{ color: 'var(--orange)' }}>費用を3分の1以下</strong>に圧縮。<br />
+            <strong style={{ color: 'var(--orange)' }}>納期を10分の1</strong>に短縮。<br />
+            <strong style={{ color: 'var(--orange)' }}>品質は大手以上</strong>を実現します。
+          </p>
+        </div>
+      </FadeIn>
+    </div>
+  </section>
+
+  {/* ── 他社比較 ── */}
+  <section className="lp-section lp-section-dark2">
+    <div className="lp-inner">
+      <FadeIn>
+        <div className="lp-label">COMPARISON</div>
+        <h2 className="lp-h2">他社と<em>比べてください。</em></h2>
+        <div className="lp-divider" />
+      </FadeIn>
+      <FadeIn delay={0.1}>
+        <table className="lp-compare">
+          <thead>
+            <tr>
+              <th></th>
+              <th>一般制作会社</th>
+              <th>NEXTGAME</th>
+            </tr>
+          </thead>
+          <tbody>
+            {COMPARE.map((c, i) => (
+              <tr key={i}>
+                <td>{c.item}</td>
+                <td>❌ {c.other}</td>
+                <td>✅ {c.ng}</td>
+              </tr>
             ))}
-          </div>
+          </tbody>
+        </table>
+      </FadeIn>
+      <FadeIn delay={0.2}>
+        <div style={{ textAlign: 'center' }}>
+          <a href={LINE_URL} target="_blank" rel="noopener noreferrer" className="lp-btn-orange">
+            集客の悩みを相談する →
+          </a>
         </div>
-      </section>
+      </FadeIn>
+    </div>
+  </section>
 
-      {/* ── SOLUTION ── */}
-      <section id="solution" style={{ padding: '100px 24px', position: 'relative', overflow: 'hidden', background: '#091422' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 50%, rgba(109,190,214,0.07) 0%, transparent 65%)' }} />
-        <div style={{ maxWidth: 820, margin: '0 auto', position: 'relative' }}>
-          <FadeIn>
-            <div style={{ textAlign: 'center', marginBottom: 52 }}>
-              <span className="ng-section-label">SOLUTION</span>
-              <h2 className="ng-section-title">その課題、<br /><span style={{ color: '#6dbed6' }}>AIで解決できます。</span></h2>
-              <div className="ng-divider" />
+  {/* ── サービス ── */}
+  <section className="lp-section lp-section-dark">
+    <div className="lp-inner-wide">
+      <FadeIn>
+        <div style={{ textAlign: 'center' }}>
+          <div className="lp-label">SERVICES</div>
+          <h2 className="lp-h2">サービス一覧</h2>
+          <div className="lp-divider" style={{ margin: '16px auto 32px' }} />
+        </div>
+      </FadeIn>
+      <div className="lp-service-grid">
+        {SERVICES.map((s, i) => (
+          <FadeIn key={i} delay={i * 0.06}>
+            <div className="lp-service-card">
+              <div className="lp-service-icon">{s.icon}</div>
+              <div className="lp-service-name">{s.name}</div>
+              <div className="lp-service-price">{s.price}</div>
+              <div className="lp-service-desc">{s.desc}</div>
             </div>
           </FadeIn>
-          <FadeIn delay={0.12}>
-            <div style={{ background: 'linear-gradient(135deg,rgba(109,190,214,0.09),rgba(109,190,214,0.03))', border: '1px solid rgba(109,190,214,0.22)', borderRadius: 16, padding: 'clamp(32px,5vw,56px)', textAlign: 'center' }}>
-              <p style={{ fontSize: 'clamp(1rem,2vw,1.12rem)', color: '#c0dce8', lineHeight: 2.1 }}>
-                NEXTGAMEはAIツールを最大活用することで、<br />
-                <strong style={{ color: '#ffffff' }}>高品質・低コスト・短納期</strong>を同時に実現します。<br /><br />
-                「作るだけ」で終わらず、<strong style={{ color: '#6dbed6' }}>集客・運用・改善まで</strong>一括サポート。<br />
-                ホームページを「費用」から<strong style={{ color: '#ffffff' }}>「売上を生む投資」</strong>へと変えます。
-              </p>
-              <div style={{ marginTop: 40 }}>
-                <a href="#contact" className="ng-btn-primary">まずは無料相談 →</a>
+        ))}
+      </div>
+      <FadeIn delay={0.3}>
+        <div style={{ textAlign: 'center' }}>
+          <a href={LINE_URL} target="_blank" rel="noopener noreferrer" className="lp-btn-line">
+            まずは話を聞く →
+          </a>
+        </div>
+      </FadeIn>
+    </div>
+  </section>
+
+  {/* ── 実績 ── */}
+  <section className="lp-section lp-section-dark2">
+    <div className="lp-inner-wide">
+      <FadeIn>
+        <div style={{ textAlign: 'center' }}>
+          <div className="lp-label">RESULTS</div>
+          <h2 className="lp-h2"><em>数字</em>で証明します。</h2>
+          <div className="lp-divider" style={{ margin: '16px auto 32px' }} />
+        </div>
+      </FadeIn>
+      <div className="lp-result-grid">
+        {RESULTS.map((r, i) => (
+          <FadeIn key={i} delay={i * 0.08}>
+            <div className="lp-result-card">
+              <div className="lp-result-cat">{r.cat}</div>
+              <div className="lp-result-kpi">{r.result}</div>
+              <div className="lp-result-period">{r.period}で達成</div>
+              <div className="lp-result-tag">{r.tag}</div>
+            </div>
+          </FadeIn>
+        ))}
+      </div>
+      <FadeIn delay={0.3}>
+        <div style={{ textAlign: 'center' }}>
+          <a href={LINE_URL} target="_blank" rel="noopener noreferrer" className="lp-btn-orange">
+            最短で集客を始める →
+          </a>
+        </div>
+      </FadeIn>
+    </div>
+  </section>
+
+  {/* ── 料金 ── */}
+  <section className="lp-section lp-section-dark">
+    <div className="lp-inner">
+      <FadeIn>
+        <div className="lp-label">PRICING</div>
+        <h2 className="lp-h2">明確な<em>料金体系。</em></h2>
+        <p className="lp-sub">追加費用なし。見積もり無料。</p>
+        <div className="lp-divider" />
+      </FadeIn>
+      <div className="lp-pricing-list">
+        {[
+          { name: 'LP制作', price: '10万円〜', featured: false },
+          { name: 'ホームページ制作', price: '20万円〜', featured: true, badge: '人気No.1' },
+          { name: 'SEO・MEO対策', price: '2万円〜/月', featured: false },
+          { name: 'Web運用代行', price: '2万円〜/月', featured: false },
+        ].map((p, i) => (
+          <FadeIn key={i} delay={i * 0.07}>
+            <div className={`lp-pricing-item${p.featured ? ' featured' : ''}`}>
+              <div>
+                {p.badge && <div className="lp-pricing-badge">{p.badge}</div>}
+                <div className="lp-pricing-name">{p.name}</div>
+              </div>
+              <div className="lp-pricing-price">{p.price}</div>
+            </div>
+          </FadeIn>
+        ))}
+      </div>
+      <FadeIn delay={0.3}>
+        <div style={{ textAlign: 'center' }}>
+          <a href={LINE_URL} target="_blank" rel="noopener noreferrer" className="lp-btn-line">
+            費用を無料で見積もる →
+          </a>
+        </div>
+      </FadeIn>
+    </div>
+  </section>
+
+  {/* ── 流れ ── */}
+  <section className="lp-section lp-section-dark2">
+    <div className="lp-inner">
+      <FadeIn>
+        <div className="lp-label">FLOW</div>
+        <h2 className="lp-h2">相談から<em>最短3日</em>で公開。</h2>
+        <div className="lp-divider" />
+      </FadeIn>
+      <div className="lp-flow-list">
+        {FLOW.map((f, i) => (
+          <FadeIn key={i} delay={i * 0.07}>
+            <div className="lp-flow-item">
+              <div className="lp-flow-left">
+                <div className="lp-flow-circle">{f.step}</div>
+                {i < FLOW.length - 1 && <div className="lp-flow-line" />}
+              </div>
+              <div className="lp-flow-content">
+                <div className="lp-flow-title">{f.title}</div>
+                <div className="lp-flow-body">{f.body}</div>
               </div>
             </div>
           </FadeIn>
+        ))}
+      </div>
+      <FadeIn delay={0.4}>
+        <div style={{ textAlign: 'center' }}>
+          <a href={LINE_URL} target="_blank" rel="noopener noreferrer" className="lp-btn-orange">
+            プロに聞く →
+          </a>
         </div>
-      </section>
+      </FadeIn>
+    </div>
+  </section>
 
-      {/* ── STRENGTHS ── */}
-      <section id="strengths" style={{ padding: '100px 24px', background: '#060e1c' }}>
-        <div style={{ maxWidth: 1040, margin: '0 auto' }}>
-          <FadeIn>
-            <div style={{ textAlign: 'center', marginBottom: 60 }}>
-              <span className="ng-section-label">WHY NEXTGAME</span>
-              <h2 className="ng-section-title">選ばれる3つの理由</h2>
-              <div className="ng-divider" />
+  {/* ── FAQ ── */}
+  <section className="lp-section lp-section-dark">
+    <div className="lp-inner">
+      <FadeIn>
+        <div className="lp-label">FAQ</div>
+        <h2 className="lp-h2">よくある<em>質問。</em></h2>
+        <div className="lp-divider" />
+      </FadeIn>
+      <div className="lp-faq-list">
+        {FAQ.map((f, i) => (
+          <FadeIn key={i} delay={i * 0.06}>
+            <div className="lp-faq-item">
+              <div className="lp-faq-q">
+                <span className="lp-faq-q-icon">Q</span>
+                {f.q}
+              </div>
+              <div className="lp-faq-a">{f.a}</div>
             </div>
           </FadeIn>
-          <div className="ng-grid-3">
-            {STRENGTHS.map((s, i) => (
-              <FadeIn key={i} delay={i * 0.1}>
-                <div className="ng-card" style={{ padding: '44px 32px', height: '100%' }}>
-                  <p style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '3.2rem', color: 'rgba(109,190,214,0.22)', lineHeight: 1, marginBottom: 8 }}>{s.num}</p>
-                  <div style={{ display: 'inline-block', background: 'rgba(109,190,214,0.12)', borderRadius: 100, padding: '4px 14px', fontSize: '0.75rem', color: '#6dbed6', marginBottom: 16, letterSpacing: '0.05em' }}>{s.accent}</div>
-                  <h3 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#ffffff', marginBottom: 16, lineHeight: 1.4 }}>{s.title}</h3>
-                  <p style={{ color: '#8ab8cc', lineHeight: 1.85, fontSize: '0.93rem' }}>{s.body}</p>
-                </div>
-              </FadeIn>
+        ))}
+      </div>
+      <FadeIn delay={0.4}>
+        <div style={{ textAlign: 'center' }}>
+          <a href={LINE_URL} target="_blank" rel="noopener noreferrer" className="lp-btn-line">
+            LINEで相談してみる →
+          </a>
+        </div>
+      </FadeIn>
+    </div>
+  </section>
+
+  {/* ── クロージング ── */}
+  <section className="lp-closing">
+    <div className="lp-closing-glow" />
+    <div style={{ position: 'relative', zIndex: 1, maxWidth: 560, margin: '0 auto' }}>
+      <FadeIn>
+        <div className="lp-label">LINE登録の特典</div>
+        <div className="lp-line-merit">
+          <div className="lp-line-merit-title">✅ LINE追加で全部無料</div>
+          <div className="lp-line-merit-list">
+            {[
+              '無料ヒアリング（30分）',
+              '競合サイト調査レポート',
+              'SEOキーワード提案',
+              '御社に最適な制作プラン提案',
+              'LINE上で何でも質問OK',
+            ].map((m, i) => (
+              <div key={i} className="lp-line-merit-item">
+                <span className="lp-line-merit-check">✓</span>
+                {m}
+              </div>
             ))}
           </div>
         </div>
-      </section>
-
-      {/* ── SERVICES ── */}
-      <section id="services" style={{ padding: '100px 24px', background: '#091422' }}>
-        <div style={{ maxWidth: 1040, margin: '0 auto' }}>
-          <FadeIn>
-            <div style={{ textAlign: 'center', marginBottom: 60 }}>
-              <span className="ng-section-label">SERVICES</span>
-              <h2 className="ng-section-title">提供サービス</h2>
-              <div className="ng-divider" />
+      </FadeIn>
+      <FadeIn delay={0.1}>
+        <div className="lp-trust-grid" style={{ marginBottom: 32 }}>
+          {[
+            { icon: '🔒', text: '営業電話\nなし' },
+            { icon: '💬', text: 'LINEで\n気軽に相談' },
+            { icon: '🆓', text: '相談・見積もり\n完全無料' },
+            { icon: '⚡', text: '最短翌日\nご提案' },
+          ].map((t, i) => (
+            <div key={i} className="lp-trust-item">
+              <div className="lp-trust-icon">{t.icon}</div>
+              <div className="lp-trust-text" style={{ whiteSpace: 'pre-line' }}>{t.text}</div>
             </div>
-          </FadeIn>
-          <div className="ng-grid-2">
-            {SERVICES.map((s, i) => (
-              <FadeIn key={i} delay={i * 0.08}>
-                <div className="ng-card" style={{ padding: '40px 32px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 8 }}>
-                    <span style={{ fontSize: '2rem' }}>{s.icon}</span>
-                    <div>
-                      <h3 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.2 }}>{s.title}</h3>
-                      <p style={{ fontSize: '0.78rem', color: '#6dbed6', marginTop: 2 }}>{s.sub}</p>
-                    </div>
-                  </div>
-                  <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10, margin: '20px 0 24px' }}>
-                    {s.items.map((item, j) => (
-                      <li key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#9abccc', fontSize: '0.92rem' }}>
-                        <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#6dbed6', flexShrink: 0 }} />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                  <a href="#contact" className="ng-btn-outline" style={{ fontSize: '0.85rem', padding: '10px 24px' }}>{s.cta} →</a>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
+          ))}
         </div>
-      </section>
-
-      {/* ── RESULTS ── */}
-      <section id="results" style={{ padding: '100px 24px', background: '#060e1c' }}>
-        <div style={{ maxWidth: 1040, margin: '0 auto' }}>
-          <FadeIn>
-            <div style={{ textAlign: 'center', marginBottom: 60 }}>
-              <span className="ng-section-label">RESULTS</span>
-              <h2 className="ng-section-title">制作実績・改善事例</h2>
-              <div className="ng-divider" />
-            </div>
-          </FadeIn>
-          <div className="ng-grid-3" style={{ marginBottom: 28 }}>
-            {RESULTS.map((r, i) => (
-              <FadeIn key={i} delay={i * 0.1}>
-                <div style={{ background: 'linear-gradient(135deg,rgba(109,190,214,0.1),rgba(109,190,214,0.03))', border: '1px solid rgba(109,190,214,0.22)', borderRadius: 12, padding: '40px 28px', textAlign: 'center' }}>
-                  <p style={{ fontSize: '0.75rem', color: '#6dbed6', letterSpacing: '0.1em', marginBottom: 16 }}>{r.category}</p>
-                  <p style={{ fontSize: 'clamp(1.5rem,2.8vw,2rem)', fontWeight: 900, color: '#ffffff', marginBottom: 12, lineHeight: 1.2 }}>{r.kpi}</p>
-                  <p style={{ fontSize: '0.82rem', color: '#8ab8cc' }}>{r.period}</p>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-          <FadeIn delay={0.2}>
-            <p style={{ textAlign: 'center', fontSize: '0.82rem', color: 'rgba(109,190,214,0.45)' }}>※ 実績は順次更新予定です。詳細はお問い合わせください。</p>
-          </FadeIn>
+      </FadeIn>
+      <FadeIn delay={0.15}>
+        <div className="lp-limit" style={{ marginBottom: 28 }}>
+          <div className="lp-limit-title">⚠️ 今月の受付枠 残り</div>
+          <div className="lp-limit-num">2社</div>
+          <div className="lp-limit-sub">枠が埋まり次第、受付終了します</div>
         </div>
-      </section>
-
-      {/* ── VOICES ── */}
-      <section style={{ padding: '100px 24px', background: '#091422' }}>
-        <div style={{ maxWidth: 1040, margin: '0 auto' }}>
-          <FadeIn>
-            <div style={{ textAlign: 'center', marginBottom: 60 }}>
-              <span className="ng-section-label">VOICES</span>
-              <h2 className="ng-section-title">お客様の声</h2>
-              <div className="ng-divider" />
-            </div>
-          </FadeIn>
-          <div className="ng-grid-3">
-            {VOICES.map((v, i) => (
-              <FadeIn key={i} delay={i * 0.1}>
-                <div className="ng-card" style={{ padding: '36px 28px', position: 'relative' }}>
-                  <p style={{ fontSize: '2.5rem', color: 'rgba(109,190,214,0.25)', lineHeight: 1, marginBottom: 16, fontFamily: 'Georgia,serif' }}>&ldquo;</p>
-                  <p style={{ color: '#c0dce8', lineHeight: 1.85, fontSize: '0.93rem', marginBottom: 20 }}>{v.text}</p>
-                  <p style={{ fontSize: '0.78rem', color: '#6dbed6' }}>— {v.from}</p>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
+      </FadeIn>
+      <FadeIn delay={0.2}>
+        <h2 className="lp-closing-catch">
+          「とりあえず聞いてみる」<br />
+          それだけで<em>OKです。</em>
+        </h2>
+        <p className="lp-closing-sub">
+          30秒でLINE追加完了。<br />
+          しつこい連絡は一切しません。<br />
+          まず相談だけでもOK。
+        </p>
+        <div className="lp-btn-stack">
+          <a href={LINE_URL} target="_blank" rel="noopener noreferrer" className="lp-btn-line" style={{ fontSize: '1.1rem', padding: '20px 32px' }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z"/></svg>
+            30秒で無料相談する →
+          </a>
+          <a href={LINE_URL} target="_blank" rel="noopener noreferrer" className="lp-btn-orange">
+            今すぐチェック →
+          </a>
+          <p style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: 4 }}>
+            ✓ 完全無料　✓ 営業なし　✓ 相談だけでもOK
+          </p>
         </div>
-      </section>
+      </FadeIn>
+    </div>
+  </section>
+</>
+```
 
-      {/* ── PRICING ── */}
-      <section id="pricing" style={{ padding: '100px 24px', background: '#060e1c' }}>
-        <div style={{ maxWidth: 1040, margin: '0 auto' }}>
-          <FadeIn>
-            <div style={{ textAlign: 'center', marginBottom: 60 }}>
-              <span className="ng-section-label">PRICING</span>
-              <h2 className="ng-section-title">明確な料金体系</h2>
-              <p style={{ color: '#8ab8cc', marginTop: 12, fontSize: '0.92rem' }}>ご予算・ご要望に応じて柔軟にご対応します</p>
-              <div className="ng-divider" />
-            </div>
-          </FadeIn>
-          <div className="ng-grid-3" style={{ alignItems: 'start' }}>
-            {PRICING.map((p, i) => (
-              <FadeIn key={i} delay={i * 0.1}>
-                <div style={{
-                  background: p.highlight ? 'linear-gradient(135deg,rgba(109,190,214,0.14),rgba(109,190,214,0.05))' : 'rgba(109,190,214,0.04)',
-                  border: p.highlight ? '1.5px solid #6dbed6' : '1px solid rgba(109,190,214,0.14)',
-                  borderRadius: 12,
-                  padding: '44px 28px',
-                  position: 'relative',
-                }}>
-                  {p.note && (
-                    <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: '#6dbed6', color: '#060e1c', fontSize: '0.72rem', fontWeight: 900, padding: '4px 18px', borderRadius: 100, whiteSpace: 'nowrap' }}>
-                      {p.note}
-                    </div>
-                  )}
-                  <p style={{ fontSize: '0.8rem', color: '#6dbed6', marginBottom: 6, letterSpacing: '0.06em' }}>{p.name}</p>
-                  <p style={{ fontSize: 'clamp(1.6rem,2.8vw,2rem)', fontWeight: 900, color: '#ffffff', marginBottom: 4 }}>{p.price}</p>
-                  <p style={{ fontSize: '0.83rem', color: '#8ab8cc', marginBottom: 28 }}>{p.desc}</p>
-                  <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 32 }}>
-                    {p.items.map((item, j) => (
-                      <li key={j} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, color: '#c0dce8', fontSize: '0.88rem', lineHeight: 1.5 }}>
-                        <span style={{ color: '#6dbed6', fontWeight: 900, flexShrink: 0 }}>✓</span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                  <a href="#contact" className={p.highlight ? 'ng-btn-primary' : 'ng-btn-outline'} style={{ width: '100%', textAlign: 'center', display: 'block', fontSize: '0.88rem', padding: '13px 20px' }}>
-                    相談する →
-                  </a>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FLOW ── */}
-      <section style={{ padding: '100px 24px', background: '#091422' }}>
-        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-          <FadeIn>
-            <div style={{ textAlign: 'center', marginBottom: 60 }}>
-              <span className="ng-section-label">FLOW</span>
-              <h2 className="ng-section-title">ご依頼の流れ</h2>
-              <div className="ng-divider" />
-            </div>
-          </FadeIn>
-          <div className="ng-grid-5">
-            {FLOW.map((f, i) => (
-              <FadeIn key={i} delay={i * 0.08}>
-                <div style={{ textAlign: 'center', position: 'relative' }}>
-                  {i < FLOW.length - 1 && (
-                    <div className="ng-hide-sp" style={{ position: 'absolute', top: 27, left: '58%', right: '-42%', height: 1, background: 'linear-gradient(to right,rgba(109,190,214,0.6),rgba(109,190,214,0.1))' }} />
-                  )}
-                  <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(109,190,214,0.08)', border: '1.5px solid rgba(109,190,214,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', fontFamily: "'Bebas Neue',sans-serif", fontSize: '1.05rem', color: '#6dbed6', letterSpacing: '0.05em' }}>
-                    {f.step}
-                  </div>
-                  <h4 style={{ fontSize: '0.88rem', fontWeight: 700, color: '#ffffff', marginBottom: 8 }}>{f.title}</h4>
-                  <p style={{ fontSize: '0.75rem', color: '#6dbed6', lineHeight: 1.6, opacity: 0.8 }}>{f.body}</p>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── CTA BANNER ── */}
-      <section style={{ padding: '90px 24px', background: 'linear-gradient(135deg,rgba(109,190,214,0.11) 0%,rgba(109,190,214,0.03) 100%)', borderTop: '1px solid rgba(109,190,214,0.14)', borderBottom: '1px solid rgba(109,190,214,0.14)' }}>
-        <FadeIn>
-          <div style={{ maxWidth: 680, margin: '0 auto', textAlign: 'center' }}>
-            <h2 style={{ fontSize: 'clamp(1.6rem,3.5vw,2.4rem)', fontWeight: 900, lineHeight: 1.45, marginBottom: 16, color: '#ffffff' }}>
-              まずは<span style={{ color: '#6dbed6' }}>無料相談</span>から。<br />
-              <span style={{ fontSize: '0.7em', color: '#8ab8cc', fontWeight: 400 }}>「何から始めればいいかわからない」でも大丈夫です。</span>
-            </h2>
-            <p style={{ color: '#8ab8cc', marginBottom: 40, fontSize: '0.95rem', lineHeight: 1.8 }}>
-              24時間以内にご返信いたします。<br />しつこい営業は一切行いません。
-            </p>
-            <a href="#contact" className="ng-btn-primary" style={{ fontSize: '1.1rem', padding: '20px 56px' }}>無料で相談する →</a>
-          </div>
-        </FadeIn>
-      </section>
-
-      {/* ── CONTACT ── */}
-      <section id="contact" style={{ padding: '100px 24px', background: '#060e1c' }}>
-        <div style={{ maxWidth: 660, margin: '0 auto' }}>
-          <FadeIn>
-            <div style={{ textAlign: 'center', marginBottom: 56 }}>
-              <span className="ng-section-label">CONTACT</span>
-              <h2 className="ng-section-title">お問い合わせ</h2>
-              <p style={{ color: '#8ab8cc', marginTop: 12, fontSize: '0.92rem' }}>相談・見積もり完全無料</p>
-              <div className="ng-divider" />
-            </div>
-          </FadeIn>
-          <FadeIn delay={0.1}>
-            <ContactForm />
-          </FadeIn>
-        </div>
-      </section>
-    </>
-  );
+);
 }
