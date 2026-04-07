@@ -64,9 +64,9 @@ const SERVICES = [
 ];
 
 const RESULTS = [
-  { category: '飲食店 / MEO＋LP改善', kpi: '予約数 2.3倍', period: '施策開始から3ヶ月で達成', color: '#6dbed6' },
-  { category: 'コーポレートサイト / SEO改善', kpi: '問い合わせ 4倍', period: 'CV導線最適化＋記事SEOで半年', color: '#6dbed6' },
-  { category: '個人事業主 / LP制作＋SNS', kpi: '新規顧客 月+8件', period: 'LP公開から2ヶ月で安定化', color: '#6dbed6' },
+  { category: '飲食店 / MEO＋LP改善', kpi: '予約数 2.3倍', period: '施策開始から3ヶ月で達成' },
+  { category: 'コーポレートサイト / SEO改善', kpi: '問い合わせ 4倍', period: 'CV導線最適化＋記事SEOで半年' },
+  { category: '個人事業主 / LP制作＋SNS', kpi: '新規顧客 月+8件', period: 'LP公開から2ヶ月で安定化' },
 ];
 
 const PRICING = [
@@ -218,7 +218,7 @@ export default function Page() {
           </FadeIn>
           <FadeIn delay={0.1}>
             <h1 className="ng-hero-title">低コスト×最短納期で</h1>
-            <h1 className="ng-hero-title" style={{ marginBottom: 28 }}>"売れる"サイトを。</h1>
+            <h1 className="ng-hero-title" style={{ marginBottom: 28 }}>&ldquo;売れる&rdquo;サイトを。</h1>
           </FadeIn>
           <FadeIn delay={0.2}>
             <p style={{ fontSize: 'clamp(1rem, 2.2vw, 1.15rem)', color: '#9ac4d4', lineHeight: 1.9, marginBottom: 48, maxWidth: 580, margin: '0 auto 48px' }}>
@@ -393,7 +393,7 @@ export default function Page() {
             {VOICES.map((v, i) => (
               <FadeIn key={i} delay={i * 0.1}>
                 <div className="ng-card" style={{ padding: '36px 28px', position: 'relative' }}>
-                  <p style={{ fontSize: '2.5rem', color: 'rgba(109,190,214,0.25)', lineHeight: 1, marginBottom: 16, fontFamily: 'Georgia,serif' }}>"</p>
+                  <p style={{ fontSize: '2.5rem', color: 'rgba(109,190,214,0.25)', lineHeight: 1, marginBottom: 16, fontFamily: 'Georgia,serif' }}>&ldquo;</p>
                   <p style={{ color: '#c0dce8', lineHeight: 1.85, fontSize: '0.93rem', marginBottom: 20 }}>{v.text}</p>
                   <p style={{ fontSize: '0.78rem', color: '#6dbed6' }}>— {v.from}</p>
                 </div>
