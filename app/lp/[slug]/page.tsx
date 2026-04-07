@@ -5,8 +5,12 @@ import { getAllSites, getSiteBySlug } from "@/app/_libs/microcms";
 import type { AccentColor, LayoutPattern } from "@/app/_libs/microcms";
 
 export async function generateStaticParams() {
-  const data = await getAllSites();
-  return data.contents.map((s) => ({ slug: s.slug }));
+  try {
+    const data = await getAllSites();
+    return data.contents.map((s) => ({ slug: s.slug }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({
