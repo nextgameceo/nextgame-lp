@@ -62,6 +62,23 @@ export type Meta = {
   canonical?: string;
 };
 
+// ✅ 追加: LP量産用のSite型
+export type AccentColor = 'cyan' | 'violet' | 'green' | 'orange' | 'red';
+export type LayoutPattern = 'hero-center' | 'hero-left' | 'visual-first';
+
+export type Site = {
+  slug: string;
+  title: string;
+  sub_title: string;
+  content: string;
+  main_visual?: MicroCMSImage;
+  accent_color?: AccentColor;
+  layout?: LayoutPattern;
+  client_name?: string;
+  is_published?: boolean;
+} & MicroCMSContentId &
+  MicroCMSDate;
+
 /* ===============================
    環境変数チェック
 ================================ */
@@ -149,7 +166,7 @@ export const getMembersList = async (queries?: MicroCMSQueries) => {
 };
 
 /* ===============================
-   Recruit（✅ cache: 'no-store' 追加）
+   Recruit
 ================================ */
 
 export const getRecruitList = async (queries?: MicroCMSQueries) => {
@@ -158,7 +175,7 @@ export const getRecruitList = async (queries?: MicroCMSQueries) => {
       endpoint: 'recruit',
       queries,
       customRequestInit: {
-        cache: 'no-store', // ✅ 追加
+        cache: 'no-store',
       },
     })
     .catch(notFound);
@@ -203,3 +220,25 @@ export const getMeta = async (queries?: MicroCMSQueries) => {
     .catch(() => null);
 };
 
+/* ===============================
+   ✅ 追加: LP量産用 Sites
+================================ */
+
+export const getAllSites = async () => {
+  return await client
+    .getList<Site>({
+      endpoint: 'sites',
+      queries: { limit: 100, filters: 'is_published[equals]true' },
+    })
+    .catch(notFound);
+};
+
+export const getSiteBySlug = async (slug: string) => {
+  const data = await client
+    .getList<Site>({
+      endpoint: 'sites',
+      queries: { filters: `slug[equals]${slug}` },
+    })
+    .catch(notFound);
+  return data.contents[0] ?? null;
+};
