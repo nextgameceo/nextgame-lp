@@ -1,91 +1,72 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
 function validateEmail(email: string) {
-  const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return pattern.test(email);
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-const SUPPORT_EMAIL = "support@nextgame-limited.com";
-const DEFAULT_FROM = "NextGame Contact <support@nextgame-limited.com>";
-
-const SERVICE_LABELS: Record<string, string> = {
-  web: "Web運用サブスク",
-  music: "楽曲制作・配信",
-  ai: "AI導入コンサル",
-  other: "その他",
-};
+const DEFAULT_FROM = 'NEXTGAME <support@nextgame-limited.com>';
+const SUPPORT_EMAIL = 'support@nextgame-limited.com';
 
 export async function POST(request: NextRequest) {
-  const json = await request.json();
-  const { lastname, firstname, company, email, service, message } = json;
+  try {
+    const { name, company, email, summary, message } = await request.json();
 
-  if (!lastname) {
-    return NextResponse.json({ status: "error", message: "姓を入力してください" }, { status: 400 });
+    // バリデーション
+    if (!name) return NextResponse.json({ status: 'error', message: 'お名前を入力してください' }, { status: 400 });
+    if (!email) return NextResponse.json({ status: 'error', message: 'メールアドレスを入力してください' }, { status: 400 });
+    if (!validateEmail(email)) return NextResponse.json({ status: 'error', message: 'メールアドレスの形式が正しくありません' }, { status: 400 });
+    if (!summary) return NextResponse.json({ status: 'error', message: '相談概要を入力してください' }, { status: 400 });
+
+    // ── Step1: Googleスプレッドシートに保存 ──
+    const gasUrl = process.env.GOOGLE_APPS_SCRIPT_URL;
+    if (gasUrl) {
+      await fetch(gasUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, company, email, summary, message }),
+      }).catch(err => console.error('GAS error:', err));
+    }
+
+    // ── Step2: Resendでメール通知 ──
+    if (!process.env.RESEND_API_KEY) {
+      return NextResponse.json({ status: 'error', message: 'メール設定が不足しています' }, { status: 500 });
+    }
+
+    const from = process.env.RESEND_FROM ?? DEFAULT_FROM;
+    const to = process.env.RESEND_TO ?? SUPPORT_EMAIL;
+    const subject = `【相談】${company ? `${company} ` : ''}${name} 様`;
+    const text = `
+新しいお問い合わせが届きました。
+
+━━━━━━━━━━━━━━━━━━
+お名前：${name}
+会社名：${company || '-'}
+メール：${email}
+相談概要：${summary}
+メッセージ：${message || '-'}
+━━━━━━━━━━━━━━━━━━
+
+スプレッドシート：https://docs.google.com/spreadsheets/d/1T4dBcYd_3Mhlee-lPwl7OUkS5Vw007zJ-VAi4QtrnVc/edit
+    `.trim();
+
+    const resendRes = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ from, to, subject, text, reply_to: email }),
+    });
+
+    if (!resendRes.ok) {
+      const err = await resendRes.text();
+      console.error('Resend error:', err);
+    }
+
+    return NextResponse.json({ status: 'ok' });
+
+  } catch (error) {
+    console.error('Contact error:', error);
+    return NextResponse.json({ status: 'error', message: 'サーバーエラーが発生しました' }, { status: 500 });
   }
-
-  if (!firstname) {
-    return NextResponse.json({ status: "error", message: "名を入力してください" }, { status: 400 });
-  }
-
-  if (!email) {
-    return NextResponse.json({ status: "error", message: "メールアドレスを入力してください" }, { status: 400 });
-  }
-
-  if (!validateEmail(email)) {
-    return NextResponse.json({ status: "error", message: "メールアドレスの形式が誤っています" }, { status: 400 });
-  }
-
-  if (!message) {
-    return NextResponse.json({ status: "error", message: "メッセージを入力してください" }, { status: 400 });
-  }
-
-  if (!process.env.RESEND_API_KEY) {
-    return NextResponse.json({ status: "error", message: "メール送信の設定が不足しています" }, { status: 500 });
-  }
-
-  const from = process.env.RESEND_FROM ?? DEFAULT_FROM;
-  const to = process.env.RESEND_TO ?? SUPPORT_EMAIL;
-  const serviceLabel = SERVICE_LABELS[service] ?? service ?? "-";
-
-  const subject = `【お問い合わせ】${company ? `${company} ` : ""}${lastname}${firstname} 様`;
-
-  const text = `
-お問い合わせが届きました
-
-氏名: ${lastname} ${firstname}
-会社名: ${company ?? "-"}
-メールアドレス: ${email}
-ご相談内容: ${serviceLabel}
-
-メッセージ:
-${message}
-
-送信元ページ: ${request.headers.get("referer") ?? "unknown"}
-`;
-
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from,
-      to,
-      subject,
-      text,
-      reply_to: email,
-    }),
-  });
-
-  if (!response.ok) {
-    const error = await response.text();
-    return NextResponse.json(
-      { status: "error", message: "メール送信失敗", error },
-      { status: 502 }
-    );
-  }
-
-  const result = await response.json();
-  return NextResponse.json({ status: "ok", result });
 }
