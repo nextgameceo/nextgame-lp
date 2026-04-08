@@ -16,7 +16,10 @@ export default function NewLpPage() {
   const [clientName, setClientName] = useState('');
 
   const handleSubmit = async () => {
-    if (!title) { setError('会社名・サービス名を入力してください'); return; }
+    if (!title) {
+      setError('会社名・サービス名を入力してください');
+      return;
+    }
     setError('');
     setStep('loading');
     try {
@@ -101,13 +104,13 @@ export default function NewLpPage() {
 
           <div style={{ marginBottom: 28 }}>
             <label style={{ display: 'block', fontSize: 11, color: '#888', letterSpacing: '0.2em', fontWeight: 700, marginBottom: 10 }}>
-              業種を選ぶ <span style={{ color: '#333', fontWeight: 400 }}>（任意・AIが自動判断）</span>
+              業種を選ぶ <span style={{ color: '#444', fontWeight: 400 }}>（任意・AIが自動判断）</span>
             </label>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
               {INDUSTRIES.map(ind => (
                 <button
                   key={ind}
-                  className={['ind-btn', industry === ind ? 'active' : ''].join(' ')}
+                  className={`ind-btn${industry === ind ? ' active' : ''}`}
                   onClick={() => setIndustry(industry === ind ? '' : ind)}
                 >
                   {ind}
@@ -118,7 +121,7 @@ export default function NewLpPage() {
 
           <div style={{ marginBottom: 36 }}>
             <label style={{ display: 'block', fontSize: 11, color: '#888', letterSpacing: '0.2em', fontWeight: 700, marginBottom: 10 }}>
-              お名前 <span style={{ color: '#333', fontWeight: 400 }}>（任意・管理用）</span>
+              お名前 <span style={{ color: '#444', fontWeight: 400 }}>（任意・管理用）</span>
             </label>
             <input
               className="inp"
@@ -137,7 +140,7 @@ export default function NewLpPage() {
 
           <button
             onClick={handleSubmit}
-            style={{ width: '100%', padding: '17px', background: 'linear-gradient(135deg,#6dbed6,#7f5af0)', border: 'none', borderRadius: 4, color: '#fff', fontFamily: 'Inter, monospace', fontSize: 13, fontWeight: 700, cursor: 'pointer', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+            style={{ width: '100%', padding: '17px', background: 'linear-gradient(135deg,#6dbed6,#7f5af0)', border: 'none', borderRadius: 4, color: '#fff', fontFamily: 'Inter, monospace', fontSize: 13, fontWeight: 700, cursor: 'pointer', letterSpacing: '0.05em' }}
           >
             AIでLPを生成する（無料）
           </button>
@@ -168,7 +171,9 @@ export default function NewLpPage() {
               <polyline points="22 4 12 14.01 9 11.01" />
             </svg>
           </div>
-          <h2 style={{ fontFamily: 'Inter, monospace', fontSize: 'clamp(1.4rem,4vw,2rem)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 8 }}>LP生成完了</h2>
+          <h2 style={{ fontFamily: 'Inter, monospace', fontSize: 'clamp(1.4rem,4vw,2rem)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 8 }}>
+            LP生成完了
+          </h2>
           <p style={{ fontSize: 13, color: '#555', marginBottom: 28, lineHeight: 1.7 }}>
             約1〜2分でビルドが完了します。
             <br />
