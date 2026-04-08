@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 // ── 公開するパス（これ以外はトップへリダイレクト）──
 const PUBLIC_PATHS = [
   '/',
+  '/about',
   '/contact',
   '/privacy',
   '/lp',
