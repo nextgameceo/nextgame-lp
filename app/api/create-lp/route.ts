@@ -5,7 +5,6 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { title, sub_title, content, accent_color, layout, client_name } = body;
 
-    // slugを自動生成（タイトルから + ランダム文字列）
     const random = Math.random().toString(36).substring(2, 8);
     const slug = `lp-${random}`;
 
@@ -22,8 +21,8 @@ export async function POST(req: Request) {
           title,
           sub_title,
           content: `<p>${content.replace(/\n/g, '</p><p>')}</p>`,
-          accent_color: accent_color ?? 'cyan',
-          layout: layout ?? 'hero-center',
+          accent_color: [accent_color ?? 'cyan'],
+          layout: [layout ?? 'hero-center'],
           client_name: client_name ?? '',
           is_published: true,
         }),
