@@ -32,8 +32,9 @@ export async function POST(req: Request) {
 
 以下のJSON形式で返答してください：
 {
-  "theme": "light" または "dark"（業種に合わせて選択。医療・福祉・教育は"light"、IT・エンタメ・飲食は"dark"）,
+  "theme": "light" または "dark"（業種に合わせて選択。医療・福祉・教育・士業は"light"、IT・エンタメ・飲食・美容は"dark"）,
   "accent_color": "blue" または "green" または "orange" または "red" または "purple"（業種イメージに合わせて）,
+  "unsplash_keyword": "Unsplash検索用の英語キーワード1〜2単語（例: dental clinic, coffee shop, yoga studio）",
   "features": [
     {"icon": "絵文字1つ", "title": "特徴タイトル（10文字以内）", "desc": "説明文（30文字以内）"},
     {"icon": "絵文字1つ", "title": "特徴タイトル（10文字以内）", "desc": "説明文（30文字以内）"},
@@ -57,16 +58,15 @@ export async function POST(req: Request) {
       }),
     });
 
-    if (!groqRes.ok) {
-      throw new Error('Groq API error: ' + await groqRes.text());
-    }
+    if (!groqRes.ok) throw new Error('Groq API error: ' + await groqRes.text());
 
     const groqData = await groqRes.json();
     const rawText = groqData.choices[0].message.content.trim();
-    
+
     let ai: {
       theme: string;
       accent_color: string;
+      unsplash_keyword: string;
       features: { icon: string; title: string; desc: string }[];
       services: { name: string; desc: string }[];
       reasons: { num: string; title: string; desc: string }[];
@@ -79,31 +79,46 @@ export async function POST(req: Request) {
     } catch {
       const match = rawText.match(/\{[\s\S]*\}/);
       ai = match ? JSON.parse(match[0]) : {
-        theme: 'light',
-        accent_color: 'blue',
-        features: [],
-        services: [],
-        reasons: [],
-        cta_text: 'お問い合わせ',
-        cta_sub: 'お気軽にご相談ください',
+        theme: 'light', accent_color: 'blue', unsplash_keyword: 'business office',
+        features: [], services: [], reasons: [],
+        cta_text: 'お問い合わせ', cta_sub: 'お気軽にご相談ください',
       };
     }
 
-    // ── Step2: microCMSに保存 ──
+    // ── Step2: Unsplashで画像取得 ──
+    let imageUrl = '';
+    try {
+      const keyword = encodeURIComponent(ai.unsplash_keyword ?? 'business');
+      const unsplashRes = await fetch(
+        `https://api.unsplash.com/search/photos?query=${keyword}&per_page=1&orientation=landscape`,
+        {
+          headers: {
+            Authorization: `Client-ID ${process.env.UNSPLASH_ACCESS_KEY}`,
+          },
+        }
+      );
+      if (unsplashRes.ok) {
+        const unsplashData = await unsplashRes.json();
+        imageUrl = unsplashData.results?.[0]?.urls?.regular ?? '';
+      }
+    } catch {
+      imageUrl = '';
+    }
+
+    // ── Step3: microCMSに保存 ──
     const random = Math.random().toString(36).substring(2, 8);
     const slug = `lp-${random}`;
 
-    // accent_colorをmicroCMSのセレクト形式に変換
     const colorMap: Record<string, string> = {
       blue: 'cyan', green: 'green', orange: 'orange', red: 'red', purple: 'violet',
     };
     const accentColor = colorMap[ai.accent_color] ?? 'cyan';
 
-    // AI生成コンテンツをJSON文字列としてcontentフィールドに保存
     const aiContent = JSON.stringify({
       theme: ai.theme,
       accent_color: ai.accent_color,
       original: content,
+      image_url: imageUrl,
       features: ai.features,
       services: ai.services,
       reasons: ai.reasons,
