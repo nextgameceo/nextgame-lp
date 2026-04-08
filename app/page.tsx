@@ -1,78 +1,74 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 
 const LINE_URL = 'https://lin.ee/SJDJXQv';
+const DEMO_URL = '/lp/new';
 
-const FAQ = [
-  { q: '相談は本当に無料ですか？', a: '完全無料です。費用が発生するのはご契約後のみ。相談・見積もりは何度でも無料でお応えします。' },
-  { q: '営業電話はかかってきますか？', a: 'かかってきません。LINEでのやり取りのみ。しつこい連絡は一切しません。' },
-  { q: '制作期間はどれくらいですか？', a: 'LPなら最短3日、コーポレートサイトは2〜3週間が目安です。' },
-  { q: '予算が少ないのですが大丈夫ですか？', a: '10万円台から対応可能です。まずご予算をLINEで教えてください。最適なプランをご提案します。' },
-  { q: '制作後のサポートはありますか？', a: 'あります。運用・更新・SEO改善まで月額でサポートするプランをご用意しています。' },
-  { q: 'どんな業種でも対応できますか？', a: '飲食・美容・士業・EC・建設など幅広く対応実績があります。まずご相談ください。' },
-];
+// ── カウントダウン終了日（例：30日後）──
+const DEADLINE = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
 const PROBLEMS = [
-  { num: '01', text: 'HPに100万払ったのに\n問い合わせがゼロ' },
+  { num: '01', text: 'HPを作ったのに\n問い合わせが来ない' },
   { num: '02', text: '更新のたびに\n制作会社に追加費用' },
-  { num: '03', text: 'SEO対策を頼んだら\n半年経っても順位変わらず' },
-  { num: '04', text: 'SNS運用を外注したら\n月20万で成果なし' },
-];
-
-const COMPARE = [
-  { item: '制作費用', other: '50〜200万円', ng: '10万円〜' },
-  { item: '納期', other: '1〜3ヶ月', ng: '最短3日' },
-  { item: '修正対応', other: '有料・遅い', ng: '無料・即対応' },
-  { item: '運用サポート', other: '別途契約', ng: '込みプランあり' },
-  { item: '担当者', other: '営業→下請け', ng: '直接対応' },
-  { item: '相談方法', other: '電話・メール', ng: 'LINE即レス' },
+  { num: '03', text: 'SEOを頼んだら\n半年経っても効果なし' },
+  { num: '04', text: '制作後に放置されて\n成果ゼロのまま' },
 ];
 
 const SERVICES = [
-  { icon: '🖥️', name: 'LP制作', price: '10万円〜', desc: '最短3日。CVに特化した設計' },
-  { icon: '🏢', name: 'HP制作', price: '20万円〜', desc: 'CMS込み。自分で更新可能' },
-  { icon: '🔍', name: 'SEO対策', price: '3万円〜/月', desc: '検索上位を狙う継続支援' },
-  { icon: '📍', name: 'MEO対策', price: '2万円〜/月', desc: 'Googleマップ上位表示' },
-  { icon: '📱', name: 'SNS運用', price: '3万円〜/月', desc: 'Instagram・X投稿代行' },
-  { icon: '⚙️', name: 'Web運用代行', price: '2万円〜/月', desc: '更新・分析・改善まで一括' },
-];
-
-const RESULTS = [
-  { cat: '飲食店', result: '予約2.3倍', period: '3ヶ月', tag: 'MEO＋LP改善' },
-  { cat: '美容サロン', result: '問い合わせ4倍', period: '2ヶ月', tag: 'SEO＋HP改善' },
-  { cat: '個人事業主', result: '新規8件/月増', period: '2ヶ月', tag: 'LP制作' },
-  { cat: '整骨院', result: '来院数1.8倍', period: '4ヶ月', tag: 'MEO対策' },
-];
-
-const FLOW = [
-  { step: '01', title: 'LINEで相談', body: '30秒で完了。無料' },
-  { step: '02', title: 'ヒアリング', body: 'LINE上で完結' },
-  { step: '03', title: '無料提案', body: '最短翌日' },
-  { step: '04', title: '制作開始', body: '最短3日で納品' },
-  { step: '05', title: '運用開始', body: '公開後も伴走' },
+  {
+    icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6dbed6" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>`,
+    name: 'Web制作',
+    badge: '期間限定無料',
+    badgeColor: '#6dbed6',
+    price: '¥0',
+    priceNote: '期間限定',
+    desc: 'LP・コーポレートサイトをAIで最短3日で制作。運用契約前提で制作費0円。',
+    main: false,
+  },
+  {
+    icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6dbed6" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`,
+    name: 'Web運用代行',
+    badge: 'メインサービス',
+    badgeColor: '#6dbed6',
+    price: '¥30,000〜',
+    priceNote: '/月',
+    desc: '更新・SEO・分析・改善まで月額で一括。成果が出るまで伴走します。',
+    main: true,
+  },
+  {
+    icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7f5af0" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>`,
+    name: 'AI運用自動化',
+    badge: '強み',
+    badgeColor: '#7f5af0',
+    price: '要相談',
+    priceNote: '',
+    desc: 'AI活用で更新・投稿・分析を自動化。人件費を削減しながら成果を最大化。',
+    main: false,
+  },
 ];
 
 const PRICING = [
-  { name: 'LP制作', price: '10万円〜', featured: false, badge: '' },
-  { name: 'ホームページ制作', price: '20万円〜', featured: true, badge: '人気No.1' },
-  { name: 'SEO・MEO対策', price: '2万円〜/月', featured: false, badge: '' },
-  { name: 'Web運用代行', price: '2万円〜/月', featured: false, badge: '' },
+  { name: 'ライト', desc: 'LP1P・月1回更新・レポート', price: '¥30,000', note: '/月', featured: false },
+  { name: 'スタンダード', desc: '複数P・SEO・月次改善提案', price: '¥50,000', note: '/月', featured: true },
+  { name: 'プレミアム', desc: 'フルサポート・AI自動化込み', price: '¥100,000', note: '/月', featured: false },
 ];
 
-const MERITS = [
-  '無料ヒアリング（30分）',
-  '競合サイト調査レポート',
-  'SEOキーワード提案',
-  '御社に最適な制作プラン提案',
-  'LINE上で何でも質問OK',
+const FLOW = [
+  { step: '01', title: 'LINEで無料相談', body: '30秒で完了・費用0円' },
+  { step: '02', title: 'ヒアリング・提案', body: '最短翌日にご提案' },
+  { step: '03', title: 'AI制作スタート', body: '最短3日で初稿' },
+  { step: '04', title: '公開・運用開始', body: '公開後も月額でサポート継続' },
 ];
 
-const TRUST = [
-  { icon: '🔒', text: '営業電話\nなし' },
-  { icon: '💬', text: 'LINEで\n気軽に相談' },
-  { icon: '🆓', text: '相談・見積もり\n完全無料' },
-  { icon: '⚡', text: '最短翌日\nご提案' },
+const FAQ = [
+  { q: '相談は本当に無料ですか？', a: '完全無料です。費用が発生するのはご契約後のみ。何度でもご相談いただけます。' },
+  { q: 'Web制作が無料というのは本当ですか？', a: '期間限定で運用契約（月額¥30,000〜）を前提にWeb制作費を0円にしています。制作のみのご依頼はお受けしておりません。' },
+  { q: '営業電話はかかってきますか？', a: 'かかってきません。LINEでのやり取りのみ。しつこい連絡は一切しません。' },
+  { q: '制作期間はどれくらいですか？', a: 'LPなら最短3日、コーポレートサイトは2〜3週間が目安です。' },
+  { q: 'どんな業種でも対応できますか？', a: '飲食・美容・士業・EC・建設など幅広く対応しています。まずご相談ください。' },
+  { q: 'いつでも解約できますか？', a: 'はい。最低契約期間はありません。いつでも解約可能です。' },
 ];
 
 function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
@@ -91,313 +87,391 @@ function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
   return (
     <div ref={ref} style={{
       opacity: inView ? 1 : 0,
-      transform: inView ? 'translateY(0)' : 'translateY(28px)',
-      transition: `opacity 0.65s ease ${delay}s, transform 0.65s ease ${delay}s`,
+      transform: inView ? 'translateY(0)' : 'translateY(24px)',
+      transition: `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s`,
     }}>
       {children}
     </div>
   );
 }
 
-function LineIcon() {
+function Countdown() {
+  const [time, setTime] = useState({ d: 0, h: 0, m: 0, s: 0 });
+  useEffect(() => {
+    const tick = () => {
+      const diff = Math.max(0, DEADLINE.getTime() - Date.now());
+      setTime({
+        d: Math.floor(diff / 86400000),
+        h: Math.floor((diff % 86400000) / 3600000),
+        m: Math.floor((diff % 3600000) / 60000),
+        s: Math.floor((diff % 60000) / 1000),
+      });
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+  const pad = (n: number) => String(n).padStart(2, '0');
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
-      <path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z" />
-    </svg>
+    <div style={{ display: 'flex', gap: 8, justifyContent: 'center', alignItems: 'center' }}>
+      {[{ v: time.d, l: '日' }, { v: time.h, l: '時間' }, { v: time.m, l: '分' }, { v: time.s, l: '秒' }].map((t, i) => (
+        <div key={i} style={{ textAlign: 'center' }}>
+          <div style={{ background: '#0a1628', border: '1px solid rgba(109,190,214,0.3)', borderRadius: 6, padding: '8px 12px', fontFamily: 'monospace', fontSize: '1.4rem', fontWeight: 900, color: '#6dbed6', minWidth: 52 }}>{pad(t.v)}</div>
+          <div style={{ fontSize: '0.65rem', color: '#4a6580', marginTop: 4 }}>{t.l}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function LineBtn({ large = false }: { large?: boolean }) {
+  return (
+    <a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={{
+      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+      gap: 10, background: '#06C755', color: '#fff', fontWeight: 900,
+      fontSize: large ? '1.05rem' : '0.95rem',
+      padding: large ? '18px 36px' : '14px 28px',
+      borderRadius: 6, textDecoration: 'none',
+      boxShadow: '0 4px 24px rgba(6,199,85,0.35)',
+      letterSpacing: '0.03em',
+    }}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+        <path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z" />
+      </svg>
+      LINEで無料相談する
+    </a>
   );
 }
 
 export default function Page() {
-  const s = {
-    orange: '#FF6B2B',
-    green: '#06C755',
-    dark: '#0D0D0D',
-    dark2: '#141414',
-    dark3: '#1A1A1A',
-    text: '#F0F0F0',
-    muted: '#888888',
-  };
-
-  const btnLine: React.CSSProperties = {
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    gap: 10, background: s.green, color: '#fff', fontWeight: 900,
-    fontSize: '1rem', padding: '18px 32px', borderRadius: 100,
-    textDecoration: 'none', boxShadow: '0 4px 24px rgba(6,199,85,0.4)',
-    letterSpacing: '0.03em', width: '100%', maxWidth: 400, margin: '0 auto',
-  };
-
-  const btnOrange: React.CSSProperties = {
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    gap: 8, background: s.orange, color: '#fff', fontWeight: 900,
-    fontSize: '1rem', padding: '18px 32px', borderRadius: 100,
-    textDecoration: 'none', boxShadow: '0 4px 24px rgba(255,107,43,0.4)',
-    letterSpacing: '0.03em', width: '100%', maxWidth: 400, margin: '0 auto',
-  };
-
-  const sec = (bg: string): React.CSSProperties => ({ padding: '72px 20px', background: bg });
-  const inn: React.CSSProperties = { maxWidth: 600, margin: '0 auto' };
-  const innW: React.CSSProperties = { maxWidth: 800, margin: '0 auto' };
-  const lbl: React.CSSProperties = { display: 'inline-block', fontSize: '0.7rem', letterSpacing: '0.2em', color: s.orange, background: 'rgba(255,107,43,0.1)', border: '1px solid rgba(255,107,43,0.3)', borderRadius: 100, padding: '5px 14px', marginBottom: 20 };
-  const ttl: React.CSSProperties = { fontSize: 'clamp(1.5rem,5vw,2rem)', fontWeight: 900, lineHeight: 1.4, color: '#fff', marginBottom: 12 };
-  const dvd: React.CSSProperties = { width: 40, height: 3, background: s.orange, margin: '16px 0 32px', borderRadius: 2 };
-  const crd: React.CSSProperties = { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: '20px 16px' };
+  const cyan = '#6dbed6';
+  const violet = '#7f5af0';
+  const bg = '#060e1c';
+  const bg2 = '#0a1628';
+  const bg3 = '#0d1f35';
+  const border = 'rgba(109,190,214,0.12)';
+  const muted = '#4a6580';
+  const text = '#e2e8f0';
 
   return (
-    <div style={{ fontFamily: 'Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif', background: s.dark, color: s.text, overflowX: 'hidden' }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@400;500;700;900&display=swap'); *{box-sizing:border-box;margin:0;padding:0;} html{scroll-behavior:smooth;} .lpfixed{position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:12px 16px 20px;background:linear-gradient(to top,#0D0D0D 60%,transparent);pointer-events:none;} .lpfixed a{pointer-events:all;display:flex;align-items:center;justify-content:center;gap:10px;background:#06C755;color:#fff;font-weight:900;font-size:1.05rem;padding:18px 24px;border-radius:100px;text-decoration:none;box-shadow:0 4px 32px rgba(6,199,85,0.5);animation:lpbounce 2.5s ease-in-out infinite;max-width:480px;margin:0 auto;width:100%;letter-spacing:0.03em;} @keyframes lpbounce{0%,100%{transform:translateY(0);box-shadow:0 4px 32px rgba(6,199,85,0.5);}50%{transform:translateY(-3px);box-shadow:0 8px 40px rgba(6,199,85,0.7);}} .lpcmp{width:100%;border-collapse:collapse;margin-bottom:40px;} .lpcmp th{padding:12px 10px;font-size:0.8rem;font-weight:700;letter-spacing:0.05em;} .lpcmp th:first-child{text-align:left;color:#888;} .lpcmp th:nth-child(2){color:#888;background:rgba(255,255,255,0.03);} .lpcmp th:nth-child(3){color:#fff;background:rgba(255,107,43,0.15);border-radius:8px 8px 0 0;} .lpcmp td{padding:14px 10px;font-size:0.85rem;border-top:1px solid rgba(255,255,255,0.08);} .lpcmp td:first-child{color:#888;font-size:0.8rem;} .lpcmp td:nth-child(2){color:#666;text-align:center;background:rgba(255,255,255,0.02);} .lpcmp td:nth-child(3){color:#FF6B2B;font-weight:700;text-align:center;background:rgba(255,107,43,0.06);} .lpsg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:40px;} .lprg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:40px;} .lptg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:32px;} @media(min-width:600px){.lpsg{grid-template-columns:repeat(3,1fr);}.lprg{grid-template-columns:repeat(4,1fr);}.lptg{grid-template-columns:repeat(4,1fr);}}`}</style>
+    <div style={{ fontFamily: 'Noto Sans JP, sans-serif', background: bg, color: text, overflowX: 'hidden' }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700;900&display=swap');
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { overflow-x: hidden; }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+        @keyframes gridMove { from{background-position:0 0} to{background-position:44px 44px} }
+        .fixed-line { position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999; padding: 12px 16px 20px; background: linear-gradient(to top, #060e1c 60%, transparent); pointer-events: none; }
+        .fixed-line a { pointer-events: all; display: flex; align-items: center; justify-content: center; gap: 10px; background: #06C755; color: #fff; font-weight: 900; font-size: 1rem; padding: 16px 24px; border-radius: 6px; text-decoration: none; box-shadow: 0 4px 32px rgba(6,199,85,0.5); animation: bounce 2.5s ease-in-out infinite; max-width: 480px; margin: 0 auto; width: 100%; }
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 60px; background: rgba(6,14,28,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(109,190,214,0.1); }
+        .nav-links { display: flex; gap: 24px; align-items: center; }
+        .nav-links a { font-size: 0.8rem; color: #4a6580; text-decoration: none; transition: color 0.2s; }
+        .nav-links a:hover { color: #6dbed6; }
+        section { padding: 72px 20px; }
+        .inner { max-width: 640px; margin: 0 auto; }
+        .inner-w { max-width: 900px; margin: 0 auto; }
+        .sec-label { font-size: 0.68rem; letter-spacing: 0.25em; color: #6dbed6; font-weight: 700; margin-bottom: 8px; }
+        .sec-title { font-size: clamp(1.4rem, 3.5vw, 2rem); font-weight: 900; color: #fff; line-height: 1.3; margin-bottom: 10px; }
+        .sec-title span { color: #6dbed6; }
+        .sec-sub { font-size: 0.88rem; color: #4a6580; line-height: 1.8; margin-bottom: 40px; }
+        .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(109,190,214,0.15), transparent); margin: 0; }
+        .card { background: rgba(13,31,53,0.8); border: 1px solid rgba(109,190,214,0.12); border-radius: 12px; padding: 24px 20px; }
+        @media(max-width:640px) { nav { padding: 0 1rem; } .nav-links { gap: 12px; } .nav-links a { font-size: 0.72rem; } section { padding: 56px 16px; } }
+      `}</style>
 
-      <div className="lpfixed">
+      {/* 固定LINEボタン */}
+      <div className="fixed-line">
         <a href={LINE_URL} target="_blank" rel="noopener noreferrer">
-          <LineIcon />
-          30秒で無料相談する →
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z"/></svg>
+          LINEで無料相談する
         </a>
       </div>
 
-      <section style={{ position: 'relative', background: s.dark, padding: '80px 20px 100px', overflow: 'hidden', textAlign: 'center' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,107,43,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,107,43,0.04) 1px,transparent 1px)', backgroundSize: '40px 40px', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', top: -100, left: '50%', transform: 'translateX(-50%)', width: 600, height: 600, background: 'radial-gradient(circle,rgba(255,107,43,0.12) 0%,transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 560, margin: '0 auto' }}>
+      {/* ナビ */}
+      <nav>
+        <Image src="/logo.png" alt="NEXTGAME" width={140} height={36} style={{ objectFit: 'contain' }} />
+        <div className="nav-links">
+          <a href="#services">サービス</a>
+          <a href="#pricing">料金</a>
+          <a href="#demo">デモ</a>
+          <a href="#faq">FAQ</a>
+          <a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={{ background: 'rgba(109,190,214,0.1)', border: `1px solid rgba(109,190,214,0.35)`, color: cyan, padding: '6px 16px', borderRadius: 4, fontWeight: 700, fontSize: '0.8rem' }}>無料相談</a>
+        </div>
+      </nav>
+
+      {/* ── HERO ── */}
+      <section style={{ background: bg, paddingTop: 100, paddingBottom: 80, textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(109,190,214,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(109,190,214,0.04) 1px,transparent 1px)`, backgroundSize: '44px 44px', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 700, height: 500, background: 'radial-gradient(ellipse,rgba(109,190,214,0.1) 0%,transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: 40, right: '10%', width: 240, height: 240, background: 'radial-gradient(ellipse,rgba(127,90,240,0.07) 0%,transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 680, margin: '0 auto' }}>
           <FadeIn>
-            <div style={{ display: 'inline-block', background: 'rgba(255,107,43,0.15)', border: '1px solid rgba(255,107,43,0.4)', color: s.orange, fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', padding: '6px 16px', borderRadius: 100, marginBottom: 24 }}>毎月5社限定・先着順</div>
-            <h1 style={{ fontSize: 'clamp(1.9rem,7vw,3rem)', fontWeight: 900, lineHeight: 1.3, color: '#fff', marginBottom: 8 }}>
-              ホームページ制作、<br /><span style={{ color: s.orange }}>3分の1の費用</span>で<br />問い合わせを3倍に。
-            </h1>
-            <p style={{ fontSize: 'clamp(0.85rem,3vw,1rem)', color: s.muted, lineHeight: 1.8, marginBottom: 32 }}>
-              AIを活用した次世代のWeb制作会社。<br />中小企業・個人事業主・店舗オーナー専門。
-            </p>
+            <Image src="/logo.png" alt="NEXTGAME" width={220} height={56} style={{ objectFit: 'contain', marginBottom: 28 }} />
           </FadeIn>
           <FadeIn delay={0.1}>
-            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 32 }}>
-              {['最短3日で納品', '費用10万円〜', '営業一切なし', 'LINE即レス'].map((b, i) => (
-                <div key={i} style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 6, padding: '8px 14px', fontSize: '0.78rem', color: '#fff' }}>{b}</div>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: '0.7rem', letterSpacing: '0.25em', color: cyan, border: `1px solid rgba(109,190,214,0.2)`, padding: '4px 14px', borderRadius: 2, marginBottom: 20 }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: cyan, display: 'inline-block' }} />
+              AI × WEB PRODUCTION & OPERATION
+            </div>
+            <h1 style={{ fontSize: 'clamp(1.8rem,5vw,3rem)', fontWeight: 900, lineHeight: 1.25, color: '#fff', marginBottom: 16 }}>
+              AIで、Webの<span style={{ color: cyan }}>常識を壊す。</span>
+            </h1>
+            <p style={{ fontSize: 'clamp(0.9rem,2vw,1.05rem)', color: muted, lineHeight: 1.9, marginBottom: 10 }}>
+              100万のサイトを、AIが<strong style={{ color: cyan }}>3分の1のコスト</strong>で作る。
+            </p>
+            <p style={{ fontSize: '0.88rem', color: '#3a5470', marginBottom: 32 }}>
+              そして<strong style={{ color: cyan }}>運用し続けること</strong>で、はじめて成果が生まれる。
+            </p>
+          </FadeIn>
+          <FadeIn delay={0.2}>
+            {/* カウントダウン */}
+            <div style={{ background: 'linear-gradient(135deg,rgba(109,190,214,0.08),rgba(109,190,214,0.03))', border: `1px solid rgba(109,190,214,0.2)`, borderRadius: 12, padding: '20px 24px', marginBottom: 28 }}>
+              <div style={{ fontSize: '0.7rem', color: cyan, letterSpacing: '0.2em', marginBottom: 12, fontWeight: 700 }}>⚡ 期間限定 — Web制作費0円キャンペーン終了まで</div>
+              <Countdown />
+              <div style={{ fontSize: '0.72rem', color: muted, marginTop: 10 }}>運用契約（月額¥30,000〜）前提・先着10社限定</div>
+            </div>
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <LineBtn large />
+              <a href={DEMO_URL} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 24px', background: 'transparent', border: `1px solid rgba(109,190,214,0.35)`, borderRadius: 6, color: cyan, fontSize: '0.9rem', fontWeight: 700, textDecoration: 'none' }}>
+                30秒でLP体験 →
+              </a>
+            </div>
+            <p style={{ fontSize: '0.72rem', color: muted, marginTop: 14 }}>✓ 相談無料　✓ 最短3日納品　✓ しつこい営業なし</p>
+          </FadeIn>
+
+          {/* 数値バー */}
+          <FadeIn delay={0.3}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 0, border: `1px solid ${border}`, borderRadius: 8, overflow: 'hidden', marginTop: 40 }}>
+              {[
+                { v: '¥0', l: '初期費用' },
+                { v: '3日', l: '最短納期' },
+                { v: '1/3', l: 'コスト削減' },
+                { v: '継続', l: '運用サポート' },
+              ].map((item, i) => (
+                <div key={i} style={{ padding: '16px 8px', textAlign: 'center', borderRight: i < 3 ? `1px solid ${border}` : 'none' }}>
+                  <div style={{ fontFamily: 'monospace', fontSize: '1.3rem', fontWeight: 900, color: cyan }}>{item.v}</div>
+                  <div style={{ fontSize: '0.68rem', color: muted, marginTop: 3 }}>{item.l}</div>
+                </div>
               ))}
             </div>
-          </FadeIn>
-          <FadeIn delay={0.15}>
-            <div style={{ background: 'linear-gradient(135deg,rgba(255,107,43,0.15),rgba(255,107,43,0.05))', border: '1px solid rgba(255,107,43,0.3)', borderRadius: 12, padding: 20, textAlign: 'center', marginBottom: 28 }}>
-              <div style={{ fontSize: '0.72rem', color: s.orange, letterSpacing: '0.15em', marginBottom: 8 }}>今月の受付枠</div>
-              <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: '3rem', color: '#fff', lineHeight: 1, marginBottom: 4 }}>残2社</div>
-              <div style={{ fontSize: '0.82rem', color: s.muted }}>枠が埋まり次第、受付終了</div>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center' }}>
-              <a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={btnLine}><LineIcon />30秒で無料相談する →</a>
-              <a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={btnOrange}>費用を無料で見積もる →</a>
-            </div>
-            <p style={{ fontSize: '0.75rem', color: s.muted, marginTop: 14 }}>
-              <span style={{ color: s.orange, fontWeight: 700 }}>✓ 完全無料</span>　
-              <span style={{ color: s.orange, fontWeight: 700 }}>✓ しつこい営業なし</span>　
-              <span style={{ color: s.orange, fontWeight: 700 }}>✓ 相談だけでもOK</span>
-            </p>
           </FadeIn>
         </div>
       </section>
 
-      <section style={sec(s.dark2)}>
-        <div style={inn}>
-          <FadeIn><div style={lbl}>PROBLEMS</div><h2 style={ttl}>こんな悩み、<span style={{ color: s.orange }}>ありませんか？</span></h2><div style={dvd} /></FadeIn>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 40 }}>
+      <div className="divider" />
+
+      {/* ── 課題提起 ── */}
+      <section style={{ background: bg2 }} id="problems">
+        <div className="inner">
+          <FadeIn>
+            <p className="sec-label">PROBLEMS</p>
+            <h2 className="sec-title">作って<span>終わり</span>になっていませんか？</h2>
+            <p className="sec-sub">多くの中小企業・店舗オーナーが抱える共通の悩みです</p>
+          </FadeIn>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 36 }}>
             {PROBLEMS.map((p, i) => (
-              <FadeIn key={i} delay={i * 0.06}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16, ...crd }}>
-                  <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: '1.4rem', color: 'rgba(255,107,43,0.4)', flexShrink: 0 }}>{p.num}</div>
-                  <div style={{ fontSize: '0.92rem', color: s.text, lineHeight: 1.6, whiteSpace: 'pre-line' }}>{p.text}</div>
+              <FadeIn key={i} delay={i * 0.07}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16, ...{ background: 'rgba(109,190,214,0.03)', border: `1px solid ${border}`, borderRadius: 8, padding: '14px 18px' } }}>
+                  <div style={{ fontFamily: 'monospace', fontSize: '1.1rem', fontWeight: 900, color: 'rgba(109,190,214,0.25)', flexShrink: 0 }}>{p.num}</div>
+                  <div style={{ fontSize: '0.9rem', color: text, lineHeight: 1.6, whiteSpace: 'pre-line' }}>{p.text}</div>
                 </div>
               </FadeIn>
             ))}
           </div>
           <FadeIn delay={0.3}>
             <div style={{ textAlign: 'center' }}>
-              <p style={{ fontSize: '1rem', fontWeight: 900, color: '#fff', marginBottom: 6 }}>その悩み、<span style={{ color: s.orange }}>全部解決できます。</span></p>
-              <p style={{ fontSize: '0.82rem', color: s.muted, marginBottom: 24 }}>まずLINEで相談してみてください。</p>
-              <a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={btnLine}><LineIcon />LINEで今すぐ聞く →</a>
+              <p style={{ fontSize: '1rem', fontWeight: 900, color: '#fff', marginBottom: 6 }}>その悩み、<span style={{ color: cyan }}>全部解決できます。</span></p>
+              <p style={{ fontSize: '0.82rem', color: muted, marginBottom: 24 }}>まずLINEで相談してみてください。</p>
+              <LineBtn />
             </div>
           </FadeIn>
         </div>
       </section>
 
-      <section style={sec(s.dark3)}>
-        <div style={inn}>
+      <div className="divider" />
+
+      {/* ── サービス ── */}
+      <section style={{ background: bg }} id="services">
+        <div className="inner">
           <FadeIn>
-            <div style={lbl}>SOLUTION</div>
-            <h2 style={ttl}>AIで、<span style={{ color: s.orange }}>常識を壊す。</span></h2>
-            <div style={dvd} />
-            <div style={{ background: 'rgba(255,107,43,0.06)', border: '1px solid rgba(255,107,43,0.2)', borderRadius: 16, padding: 28 }}>
-              <p style={{ fontSize: '0.95rem', color: s.text, lineHeight: 2 }}>
-                従来の制作会社は<strong style={{ color: '#fff' }}>「高い・遅い・使えない」</strong>が当たり前。<br /><br />
-                NEXTGAMEはAIを最大活用することで、<br />
-                <strong style={{ color: s.orange }}>費用を3分の1以下</strong>に圧縮。<br />
-                <strong style={{ color: s.orange }}>納期を10分の1</strong>に短縮。<br />
-                <strong style={{ color: s.orange }}>品質は大手以上</strong>を実現します。
-              </p>
-            </div>
+            <p className="sec-label">SERVICES</p>
+            <h2 className="sec-title"><span>運用</span>で成果を出す3つの柱</h2>
+            <p className="sec-sub">制作して終わりではなく、運用し続けることで成果を最大化します</p>
           </FadeIn>
-        </div>
-      </section>
-
-      <section style={sec(s.dark2)}>
-        <div style={inn}>
-          <FadeIn><div style={lbl}>COMPARISON</div><h2 style={ttl}>他社と<span style={{ color: s.orange }}>比べてください。</span></h2><div style={dvd} /></FadeIn>
-          <FadeIn delay={0.1}>
-            <table className="lpcmp">
-              <thead><tr><th></th><th>一般制作会社</th><th>NEXTGAME</th></tr></thead>
-              <tbody>{COMPARE.map((c, i) => <tr key={i}><td>{c.item}</td><td>❌ {c.other}</td><td>✅ {c.ng}</td></tr>)}</tbody>
-            </table>
-          </FadeIn>
-          <FadeIn delay={0.2}><div style={{ textAlign: 'center' }}><a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={btnOrange}>集客の悩みを相談する →</a></div></FadeIn>
-        </div>
-      </section>
-
-      <section style={sec(s.dark)}>
-        <div style={innW}>
-          <FadeIn><div style={{ textAlign: 'center' }}><div style={lbl}>SERVICES</div><h2 style={{ ...ttl, textAlign: 'center' }}>サービス一覧</h2><div style={{ ...dvd, margin: '16px auto 32px' }} /></div></FadeIn>
-          <div className="lpsg">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {SERVICES.map((sv, i) => (
-              <FadeIn key={i} delay={i * 0.06}>
-                <div style={crd}>
-                  <div style={{ fontSize: '1.6rem', marginBottom: 8 }}>{sv.icon}</div>
-                  <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#fff', marginBottom: 4 }}>{sv.name}</div>
-                  <div style={{ fontSize: '0.78rem', color: s.orange, fontWeight: 700, marginBottom: 6 }}>{sv.price}</div>
-                  <div style={{ fontSize: '0.75rem', color: s.muted, lineHeight: 1.5 }}>{sv.desc}</div>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-          <FadeIn delay={0.3}><div style={{ textAlign: 'center' }}><a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={btnLine}><LineIcon />まずは話を聞く →</a></div></FadeIn>
-        </div>
-      </section>
-
-      <section style={sec(s.dark2)}>
-        <div style={innW}>
-          <FadeIn><div style={{ textAlign: 'center' }}><div style={lbl}>RESULTS</div><h2 style={{ ...ttl, textAlign: 'center' }}><span style={{ color: s.orange }}>数字</span>で証明します。</h2><div style={{ ...dvd, margin: '16px auto 32px' }} /></div></FadeIn>
-          <div className="lprg">
-            {RESULTS.map((r, i) => (
-              <FadeIn key={i} delay={i * 0.08}>
-                <div style={{ background: 'linear-gradient(135deg,rgba(255,107,43,0.1),rgba(255,107,43,0.03))', border: '1px solid rgba(255,107,43,0.2)', borderRadius: 12, padding: '20px 16px', textAlign: 'center' }}>
-                  <div style={{ fontSize: '0.7rem', color: s.orange, marginBottom: 8 }}>{r.cat}</div>
-                  <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: '1.8rem', color: '#fff', lineHeight: 1, marginBottom: 4 }}>{r.result}</div>
-                  <div style={{ fontSize: '0.72rem', color: s.muted, marginBottom: 4 }}>{r.period}で達成</div>
-                  <div style={{ display: 'inline-block', fontSize: '0.68rem', color: s.orange, background: 'rgba(255,107,43,0.1)', padding: '2px 8px', borderRadius: 100 }}>{r.tag}</div>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-          <FadeIn delay={0.3}><div style={{ textAlign: 'center' }}><a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={btnOrange}>最短で集客を始める →</a></div></FadeIn>
-        </div>
-      </section>
-
-      <section style={sec(s.dark)}>
-        <div style={inn}>
-          <FadeIn><div style={lbl}>PRICING</div><h2 style={ttl}>明確な<span style={{ color: s.orange }}>料金体系。</span></h2><p style={{ fontSize: '0.9rem', color: s.muted, lineHeight: 1.7, marginBottom: 40 }}>追加費用なし。見積もり無料。</p></FadeIn>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 40 }}>
-            {PRICING.map((p, i) => (
-              <FadeIn key={i} delay={i * 0.07}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: p.featured ? 'rgba(255,107,43,0.06)' : 'rgba(255,255,255,0.03)', border: p.featured ? '1px solid #FF6B2B' : '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '18px 20px', gap: 12 }}>
-                  <div>
-                    {p.badge && <div style={{ fontSize: '0.65rem', background: s.orange, color: '#fff', padding: '2px 8px', borderRadius: 100, display: 'inline-block', marginBottom: 4 }}>{p.badge}</div>}
-                    <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#fff' }}>{p.name}</div>
-                  </div>
-                  <div style={{ fontSize: '1.1rem', fontWeight: 900, color: s.orange, whiteSpace: 'nowrap' }}>{p.price}</div>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-          <FadeIn delay={0.3}><div style={{ textAlign: 'center' }}><a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={btnLine}><LineIcon />費用を無料で見積もる →</a></div></FadeIn>
-        </div>
-      </section>
-
-      <section style={sec(s.dark2)}>
-        <div style={inn}>
-          <FadeIn><div style={lbl}>FLOW</div><h2 style={ttl}>相談から<span style={{ color: s.orange }}>最短3日</span>で公開。</h2><div style={dvd} /></FadeIn>
-          <div style={{ display: 'flex', flexDirection: 'column', marginBottom: 40 }}>
-            {FLOW.map((f, i) => (
-              <FadeIn key={i} delay={i * 0.07}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, paddingBottom: i < FLOW.length - 1 ? 24 : 0 }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
-                    <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'rgba(255,107,43,0.15)', border: '1.5px solid #FF6B2B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Bebas Neue, sans-serif', fontSize: '1rem', color: s.orange }}>{f.step}</div>
-                    {i < FLOW.length - 1 && <div style={{ width: 1, flex: 1, minHeight: 24, background: 'linear-gradient(to bottom,rgba(255,107,43,0.4),rgba(255,107,43,0.05))', marginTop: 4 }} />}
-                  </div>
-                  <div style={{ paddingTop: 8 }}>
-                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#fff', marginBottom: 4 }}>{f.title}</div>
-                    <div style={{ fontSize: '0.8rem', color: s.muted }}>{f.body}</div>
+              <FadeIn key={i} delay={i * 0.1}>
+                <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start', background: sv.main ? 'rgba(109,190,214,0.05)' : bg2, border: sv.main ? `2px solid rgba(109,190,214,0.4)` : `1px solid ${border}`, borderRadius: 12, padding: '20px 18px', position: 'relative' }}>
+                  {sv.badge && (
+                    <div style={{ position: 'absolute', top: -10, left: 16, background: sv.badgeColor, color: sv.main ? '#060e1c' : '#fff', fontSize: '0.65rem', fontWeight: 700, padding: '2px 10px', borderRadius: 2, letterSpacing: '0.08em' }}>{sv.badge}</div>
+                  )}
+                  <div style={{ flexShrink: 0, width: 44, height: 44, borderRadius: 8, background: 'rgba(109,190,214,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} dangerouslySetInnerHTML={{ __html: sv.icon }} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 6 }}>
+                      <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#fff' }}>{sv.name}</div>
+                      <div style={{ fontFamily: 'monospace', fontSize: '0.9rem', color: cyan, fontWeight: 700 }}>{sv.price}<span style={{ fontSize: '0.7rem', color: muted }}>{sv.priceNote}</span></div>
+                    </div>
+                    <div style={{ fontSize: '0.83rem', color: muted, lineHeight: 1.7 }}>{sv.desc}</div>
                   </div>
                 </div>
               </FadeIn>
             ))}
           </div>
-          <FadeIn delay={0.4}><div style={{ textAlign: 'center' }}><a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={btnOrange}>プロに聞く →</a></div></FadeIn>
         </div>
       </section>
 
-      <section style={sec(s.dark)}>
-        <div style={inn}>
-          <FadeIn><div style={lbl}>FAQ</div><h2 style={ttl}>よくある<span style={{ color: s.orange }}>質問。</span></h2><div style={dvd} /></FadeIn>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 40 }}>
-            {FAQ.map((f, i) => (
-              <FadeIn key={i} delay={i * 0.06}>
-                <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, overflow: 'hidden' }}>
-                  <div style={{ padding: '18px 20px', fontSize: '0.88rem', fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                    <span style={{ color: s.orange, fontWeight: 900, flexShrink: 0 }}>Q</span>{f.q}
-                  </div>
-                  <div style={{ padding: '0 20px 18px 44px', fontSize: '0.83rem', color: s.muted, lineHeight: 1.75 }}>{f.a}</div>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-          <FadeIn delay={0.4}><div style={{ textAlign: 'center' }}><a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={btnLine}><LineIcon />LINEで相談してみる →</a></div></FadeIn>
-        </div>
-      </section>
+      <div className="divider" />
 
-      <section style={{ background: 'linear-gradient(135deg,#1A0A00,#0D0D0D)', padding: '72px 20px 140px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', bottom: -100, left: '50%', transform: 'translateX(-50%)', width: 500, height: 500, background: 'radial-gradient(circle,rgba(255,107,43,0.1) 0%,transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 560, margin: '0 auto' }}>
+      {/* ── デモ体験 ── */}
+      <section style={{ background: bg2 }} id="demo">
+        <div className="inner">
           <FadeIn>
-            <div style={lbl}>LINE登録の特典</div>
-            <div style={{ background: 'linear-gradient(135deg,rgba(6,199,85,0.1),rgba(6,199,85,0.03))', border: '1px solid rgba(6,199,85,0.25)', borderRadius: 16, padding: 28, marginBottom: 28, textAlign: 'left' }}>
-              <div style={{ fontSize: '0.78rem', color: '#06C755', letterSpacing: '0.1em', marginBottom: 16, fontWeight: 700 }}>LINE追加で全部無料</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {MERITS.map((m, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: '0.85rem', color: s.text }}>
-                    <span style={{ color: '#06C755', fontWeight: 900, flexShrink: 0 }}>✓</span>{m}
-                  </div>
-                ))}
-              </div>
-            </div>
+            <p className="sec-label">DEMO</p>
+            <h2 className="sec-title">30秒で<span>あなたのLPを体験</span></h2>
+            <p className="sec-sub">会社名とキャッチコピーを入力するだけ。AIが業種を判断してデザイン・コンテンツを自動生成します。</p>
           </FadeIn>
           <FadeIn delay={0.1}>
-            <div className="lptg">
-              {TRUST.map((t, i) => (
-                <div key={i} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: 16, textAlign: 'center' }}>
-                  <div style={{ fontSize: '1.4rem', marginBottom: 6 }}>{t.icon}</div>
-                  <div style={{ fontSize: '0.78rem', color: '#ccc', lineHeight: 1.5, whiteSpace: 'pre-line' }}>{t.text}</div>
+            <div style={{ background: bg, border: `1px solid ${border}`, borderRadius: 12, padding: 24, marginBottom: 20 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
+                <div style={{ background: bg2, border: `1px solid ${border}`, borderRadius: 6, padding: '10px 14px' }}>
+                  <div style={{ fontSize: '0.68rem', color: muted, marginBottom: 4 }}>会社名 / サービス名</div>
+                  <div style={{ fontSize: '0.85rem', color: '#3a5470' }}>例：田中歯科クリニック</div>
+                </div>
+                <div style={{ background: bg2, border: `1px solid ${border}`, borderRadius: 6, padding: '10px 14px' }}>
+                  <div style={{ fontSize: '0.68rem', color: muted, marginBottom: 4 }}>キャッチコピー</div>
+                  <div style={{ fontSize: '0.85rem', color: '#3a5470' }}>例：痛くない治療で笑顔を。</div>
+                </div>
+              </div>
+              <a href={DEMO_URL} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px', background: `linear-gradient(135deg,${cyan},${violet})`, borderRadius: 6, color: '#fff', fontSize: '0.9rem', fontWeight: 700, textDecoration: 'none', letterSpacing: '0.05em' }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                今すぐLPを生成する（無料）
+              </a>
+            </div>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {['歯科クリニック', '美容サロン', '整体院', 'カフェ', '不動産'].map((tag, i) => (
+                <div key={i} style={{ background: bg, border: `1px solid ${border}`, borderRadius: 4, padding: '5px 12px', fontSize: '0.72rem', color: muted }}>
+                  {tag} で生成済み →
                 </div>
               ))}
             </div>
           </FadeIn>
-          <FadeIn delay={0.15}>
-            <div style={{ background: 'linear-gradient(135deg,rgba(255,107,43,0.15),rgba(255,107,43,0.05))', border: '1px solid rgba(255,107,43,0.3)', borderRadius: 12, padding: 20, textAlign: 'center', marginBottom: 28 }}>
-              <div style={{ fontSize: '0.72rem', color: s.orange, letterSpacing: '0.15em', marginBottom: 8 }}>今月の受付枠 残り</div>
-              <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: '3rem', color: '#fff', lineHeight: 1, marginBottom: 4 }}>2社</div>
-              <div style={{ fontSize: '0.82rem', color: s.muted }}>枠が埋まり次第、受付終了します</div>
-            </div>
+        </div>
+      </section>
+
+      <div className="divider" />
+
+      {/* ── 料金 ── */}
+      <section style={{ background: bg }} id="pricing">
+        <div className="inner">
+          <FadeIn>
+            <p className="sec-label">PRICING</p>
+            <h2 className="sec-title">明確な<span>料金体系</span></h2>
+            <p className="sec-sub">初期費用0円・最低契約期間なし・いつでも解約可</p>
           </FadeIn>
-          <FadeIn delay={0.2}>
-            <h2 style={{ fontSize: 'clamp(1.4rem,5vw,1.9rem)', fontWeight: 900, color: '#fff', lineHeight: 1.45, marginBottom: 12 }}>
-              「とりあえず聞いてみる」<br />それだけで<span style={{ color: s.orange }}>OKです。</span>
-            </h2>
-            <p style={{ fontSize: '0.85rem', color: s.muted, marginBottom: 36, lineHeight: 1.7 }}>
-              30秒でLINE追加完了。<br />しつこい連絡は一切しません。<br />まず相談だけでもOK。
-            </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center' }}>
-              <a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={{ ...btnLine, fontSize: '1.1rem', padding: '20px 32px' }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z" /></svg>
-                30秒で無料相談する →
-              </a>
-              <a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={btnOrange}>今すぐチェック →</a>
-              <p style={{ fontSize: '0.75rem', color: s.muted, marginTop: 4 }}>✓ 完全無料　✓ 営業なし　✓ 相談だけでもOK</p>
-            </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 32 }}>
+            {PRICING.map((p, i) => (
+              <FadeIn key={i} delay={i * 0.08}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: p.featured ? 'rgba(109,190,214,0.06)' : bg2, border: p.featured ? `2px solid ${cyan}` : `1px solid ${border}`, borderRadius: 10, padding: '16px 20px', gap: 12, position: 'relative' }}>
+                  {p.featured && <div style={{ position: 'absolute', top: -10, left: 14, background: cyan, color: '#060e1c', fontSize: '0.65rem', fontWeight: 700, padding: '2px 10px', borderRadius: 2 }}>人気No.1</div>}
+                  <div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#fff', marginBottom: 3 }}>{p.name}</div>
+                    <div style={{ fontSize: '0.75rem', color: muted }}>{p.desc}</div>
+                  </div>
+                  <div style={{ fontFamily: 'monospace', fontSize: '1.1rem', fontWeight: 900, color: cyan, whiteSpace: 'nowrap', flexShrink: 0 }}>{p.price}<span style={{ fontSize: '0.7rem', color: muted }}>{p.note}</span></div>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+          <FadeIn delay={0.3}>
+            <div style={{ textAlign: 'center' }}><LineBtn /></div>
           </FadeIn>
         </div>
       </section>
+
+      <div className="divider" />
+
+      {/* ── フロー ── */}
+      <section style={{ background: bg2 }} id="flow">
+        <div className="inner">
+          <FadeIn>
+            <p className="sec-label">FLOW</p>
+            <h2 className="sec-title">相談から<span>最短3日</span>で公開</h2>
+          </FadeIn>
+          <div style={{ display: 'flex', flexDirection: 'column', marginBottom: 36 }}>
+            {FLOW.map((f, i) => (
+              <FadeIn key={i} delay={i * 0.08}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, paddingBottom: i < FLOW.length - 1 ? 24 : 0 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
+                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(109,190,214,0.12)', border: `1.5px solid ${cyan}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'monospace', fontSize: '0.8rem', fontWeight: 700, color: cyan }}>{f.step}</div>
+                    {i < FLOW.length - 1 && <div style={{ width: 1, flex: 1, minHeight: 20, background: `linear-gradient(to bottom,rgba(109,190,214,0.3),rgba(109,190,214,0.05))`, marginTop: 4 }} />}
+                  </div>
+                  <div style={{ paddingTop: 8 }}>
+                    <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#fff', marginBottom: 3 }}>{f.title}</div>
+                    <div style={{ fontSize: '0.78rem', color: muted }}>{f.body}</div>
+                  </div>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+          <FadeIn delay={0.4}>
+            <div style={{ textAlign: 'center' }}><LineBtn /></div>
+          </FadeIn>
+        </div>
+      </section>
+
+      <div className="divider" />
+
+      {/* ── FAQ ── */}
+      <section style={{ background: bg }} id="faq">
+        <div className="inner">
+          <FadeIn>
+            <p className="sec-label">FAQ</p>
+            <h2 className="sec-title">よくある<span>質問</span></h2>
+          </FadeIn>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 36 }}>
+            {FAQ.map((f, i) => (
+              <FadeIn key={i} delay={i * 0.06}>
+                <div style={{ background: bg2, border: `1px solid ${border}`, borderRadius: 10, overflow: 'hidden' }}>
+                  <div style={{ padding: '16px 18px', fontSize: '0.88rem', fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                    <span style={{ color: cyan, fontWeight: 900, flexShrink: 0 }}>Q</span>{f.q}
+                  </div>
+                  <div style={{ padding: '0 18px 16px 42px', fontSize: '0.82rem', color: muted, lineHeight: 1.8 }}>{f.a}</div>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+          <FadeIn delay={0.4}>
+            <div style={{ textAlign: 'center' }}><LineBtn /></div>
+          </FadeIn>
+        </div>
+      </section>
+
+      <div className="divider" />
+
+      {/* ── CTA ── */}
+      <section style={{ background: `linear-gradient(135deg,#0a1628,#060e1c)`, textAlign: 'center', paddingBottom: 120 }}>
+        <div style={{ maxWidth: 560, margin: '0 auto' }}>
+          <FadeIn>
+            <Image src="/logo.png" alt="NEXTGAME" width={160} height={40} style={{ objectFit: 'contain', marginBottom: 24 }} />
+            <h2 style={{ fontSize: 'clamp(1.4rem,4vw,1.9rem)', fontWeight: 900, color: '#fff', lineHeight: 1.45, marginBottom: 12 }}>
+              「とりあえず聞いてみる」<br />それだけで<span style={{ color: cyan }}>OKです。</span>
+            </h2>
+            <p style={{ fontSize: '0.85rem', color: muted, marginBottom: 32, lineHeight: 1.8 }}>
+              相談・見積もり完全無料。<br />しつこい連絡は一切しません。
+            </p>
+            <LineBtn large />
+            <p style={{ fontSize: '0.72rem', color: muted, marginTop: 16 }}>✓ 初期費用0円　✓ 最短3日納品　✓ 営業なし</p>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* フッター */}
+      <footer style={{ padding: '24px 20px', borderTop: `1px solid ${border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+        <Image src="/logo.png" alt="NEXTGAME" width={120} height={30} style={{ objectFit: 'contain' }} />
+        <span style={{ fontSize: '0.72rem', color: muted }}>© 2026 NEXTGAME株式会社</span>
+      </footer>
     </div>
   );
 }
