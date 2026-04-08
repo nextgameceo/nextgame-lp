@@ -43,7 +43,7 @@ export default function NewLpPage() {
   const url = `https://nextgame-limited.com/lp/${slug}`;
 
   return (
-    <div style={{ minHeight: '100vh', background: '#000', color: '#e8e8e8', fontFamily: "'Noto Sans JP', sans-serif" }}>
+    <div style={{ minHeight: '100vh', background: '#000', color: '#e8e8e8', fontFamily: 'Noto Sans JP, sans-serif' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700;900&family=Inter:wght@700;900&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -58,7 +58,6 @@ export default function NewLpPage() {
         .inp::placeholder { color: #333; }
       `}</style>
 
-      {/* NAV */}
       <nav style={{ padding: '0 40px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
         <a href="/" style={{ textDecoration: 'none' }}>
           <span style={{ fontFamily: 'Inter, monospace', fontSize: 14, fontWeight: 900, letterSpacing: '0.12em' }}>
@@ -69,7 +68,6 @@ export default function NewLpPage() {
         <span style={{ fontSize: 11, color: '#444', letterSpacing: '0.1em' }}>LP GENERATOR</span>
       </nav>
 
-      {/* FORM */}
       {step === 'form' && (
         <div className="fade-up" style={{ maxWidth: 560, margin: '0 auto', padding: '72px 24px 80px' }}>
           <div style={{ marginBottom: 48 }}>
@@ -78,14 +76,15 @@ export default function NewLpPage() {
               <span style={{ fontSize: 10, letterSpacing: '0.3em', color: '#6dbed6', fontWeight: 700 }}>FREE LP GENERATOR</span>
             </div>
             <h1 style={{ fontFamily: 'Inter, monospace', fontSize: 'clamp(1.8rem,5vw,2.6rem)', fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em', marginBottom: 12 }}>
-              会社名を入れるだけ。<br /><span style={{ color: '#6dbed6' }}>AIが全部作る。</span>
+              会社名を入れるだけ。
+              <br />
+              <span style={{ color: '#6dbed6' }}>AIが全部作る。</span>
             </h1>
             <p style={{ fontSize: 14, color: '#666', lineHeight: 1.8 }}>
-              業種・キャッチコピー・デザイン・コンテンツすべてAIが自動生成。<br />30秒で本格LPが完成します。
+              業種・キャッチコピー・デザイン・コンテンツすべてAIが自動生成。30秒で本格LPが完成します。
             </p>
           </div>
 
-          {/* 会社名 */}
           <div style={{ marginBottom: 28 }}>
             <label style={{ display: 'block', fontSize: 11, color: '#6dbed6', letterSpacing: '0.2em', fontWeight: 700, marginBottom: 10 }}>
               会社名・サービス名 <span style={{ color: '#ef4444' }}>*</span>
@@ -96,11 +95,10 @@ export default function NewLpPage() {
               placeholder="例：山田整体院"
               value={title}
               onChange={e => setTitle(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+              onKeyDown={e => { if (e.key === 'Enter') handleSubmit(); }}
             />
           </div>
 
-          {/* 業種 */}
           <div style={{ marginBottom: 28 }}>
             <label style={{ display: 'block', fontSize: 11, color: '#888', letterSpacing: '0.2em', fontWeight: 700, marginBottom: 10 }}>
               業種を選ぶ <span style={{ color: '#333', fontWeight: 400 }}>（任意・AIが自動判断）</span>
@@ -109,7 +107,7 @@ export default function NewLpPage() {
               {INDUSTRIES.map(ind => (
                 <button
                   key={ind}
-                  className={`ind-btn ${industry === ind ? 'active' : ''}`}
+                  className={['ind-btn', industry === ind ? 'active' : ''].join(' ')}
                   onClick={() => setIndustry(industry === ind ? '' : ind)}
                 >
                   {ind}
@@ -118,7 +116,6 @@ export default function NewLpPage() {
             </div>
           </div>
 
-          {/* 担当者名 */}
           <div style={{ marginBottom: 36 }}>
             <label style={{ display: 'block', fontSize: 11, color: '#888', letterSpacing: '0.2em', fontWeight: 700, marginBottom: 10 }}>
               お名前 <span style={{ color: '#333', fontWeight: 400 }}>（任意・管理用）</span>
@@ -142,7 +139,6 @@ export default function NewLpPage() {
             onClick={handleSubmit}
             style={{ width: '100%', padding: '17px', background: 'linear-gradient(135deg,#6dbed6,#7f5af0)', border: 'none', borderRadius: 4, color: '#fff', fontFamily: 'Inter, monospace', fontSize: 13, fontWeight: 700, cursor: 'pointer', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
             AIでLPを生成する（無料）
           </button>
 
@@ -154,7 +150,6 @@ export default function NewLpPage() {
         </div>
       )}
 
-      {/* LOADING */}
       {step === 'loading' && (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: 24 }}>
           <div style={{ width: 48, height: 48, border: '2px solid rgba(109,190,214,0.15)', borderTopColor: '#6dbed6', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
@@ -165,27 +160,25 @@ export default function NewLpPage() {
         </div>
       )}
 
-      {/* DONE */}
       {step === 'done' && (
         <div className="fade-up" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '70vh', padding: '60px 24px', textAlign: 'center' }}>
           <div style={{ marginBottom: 24 }}>
             <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#6dbed6" strokeWidth="1.5" style={{ display: 'block', margin: '0 auto' }}>
-              <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
-              <polyline points="22 4 12 14.01 9 11.01"/>
+              <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
             </svg>
           </div>
           <h2 style={{ fontFamily: 'Inter, monospace', fontSize: 'clamp(1.4rem,4vw,2rem)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 8 }}>LP生成完了</h2>
           <p style={{ fontSize: 13, color: '#555', marginBottom: 28, lineHeight: 1.7 }}>
-            約1〜2分でビルドが完了します。<br />
+            約1〜2分でビルドが完了します。
+            <br />
             下のボタンからアクセスできます。
           </p>
 
-          {/* URLボックス */}
           <div style={{ background: 'rgba(109,190,214,0.04)', border: '1px solid rgba(109,190,214,0.12)', borderRadius: 4, padding: '14px 20px', marginBottom: 16, wordBreak: 'break-all', fontFamily: 'monospace', fontSize: 12, color: '#4a6580', maxWidth: 440, width: '100%' }}>
             {url}
           </div>
 
-          {/* ボタン2つ */}
           <div style={{ display: 'flex', gap: 10, marginBottom: 36, flexWrap: 'wrap', justifyContent: 'center' }}>
             
               href={url}
@@ -193,7 +186,6 @@ export default function NewLpPage() {
               rel="noopener noreferrer"
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', background: 'linear-gradient(135deg,#6dbed6,#7f5af0)', borderRadius: 4, color: '#fff', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}
             >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
               生成されたLPを見る
             </a>
             <button
@@ -206,7 +198,9 @@ export default function NewLpPage() {
 
           <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 28, maxWidth: 380, width: '100%' }}>
             <p style={{ fontSize: 13, color: '#555', marginBottom: 16, lineHeight: 1.7 }}>
-              このLPをそのまま使いたい方は<br />NEXTGAMEのサブスクをご検討ください。
+              このLPをそのまま使いたい方は
+              <br />
+              NEXTGAMEのサブスクをご検討ください。
             </p>
             
               href="https://lin.ee/SJDJXQv"
@@ -214,7 +208,6 @@ export default function NewLpPage() {
               rel="noopener noreferrer"
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 28px', background: '#06C755', borderRadius: 4, color: '#fff', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z"/></svg>
               LINEで相談する
             </a>
           </div>
