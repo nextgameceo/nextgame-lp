@@ -2,49 +2,33 @@
 
 import { useState } from 'react';
 
-const ACCENT_OPTIONS = [
-  { value: 'cyan',   label: 'シアン（青）',   color: '#63b3ed' },
-  { value: 'violet', label: 'バイオレット（紫）', color: '#7f5af0' },
-  { value: 'green',  label: 'グリーン（緑）',  color: '#48bb78' },
-  { value: 'orange', label: 'オレンジ',       color: '#ed8936' },
-  { value: 'red',    label: 'レッド（赤）',    color: '#fc8181' },
-];
-
-const LAYOUT_OPTIONS = [
-  { value: 'hero-center',  label: '中央寄せ',     desc: 'タイトルが画面中央に大きく表示' },
-  { value: 'hero-left',    label: '左テキスト',    desc: '左にテキスト・右に画像' },
-  { value: 'visual-first', label: '画像ファースト', desc: '画像が最初に大きく表示' },
+const INDUSTRIES = [
+  '飲食店', '美容サロン', '歯科クリニック', '整体院・整骨院',
+  '不動産', '学習塾', 'EC・通販', 'IT・Web', '建設・工務店', 'その他',
 ];
 
 export default function NewLpPage() {
   const [step, setStep] = useState<'form' | 'loading' | 'done'>('form');
   const [slug, setSlug] = useState('');
   const [error, setError] = useState('');
-
-  const [form, setForm] = useState({
-    title: '',
-    sub_title: '',
-    content: '',
-    accent_color: 'cyan',
-    layout: 'hero-center',
-    client_name: '',
-  });
-
-  const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
+  const [title, setTitle] = useState('');
+  const [industry, setIndustry] = useState('');
+  const [clientName, setClientName] = useState('');
 
   const handleSubmit = async () => {
-    if (!form.title || !form.sub_title || !form.content) {
-      setError('会社名・キャッチコピー・説明文は必須です');
-      return;
-    }
+    if (!title) { setError('会社名・サービス名を入力してください'); return; }
     setError('');
     setStep('loading');
-
     try {
       const res = await fetch('/api/create-lp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          title,
+          sub_title: '',
+          content: industry ? `業種：${industry}` : '',
+          client_name: clientName,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -59,170 +43,181 @@ export default function NewLpPage() {
   const url = `https://nextgame-limited.com/lp/${slug}`;
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#060a12',
-      color: '#e2e8f0',
-      fontFamily: "'Noto Sans JP', sans-serif",
-    }}>
+    <div style={{ minHeight: '100vh', background: '#000', color: '#e8e8e8', fontFamily: "'Noto Sans JP', sans-serif" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Noto+Sans+JP:wght@300;400;700&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        .wrap { max-width: 640px; margin: 0 auto; padding: 80px 24px 60px; }
-        .head-label { font-family: 'Orbitron', monospace; font-size: 0.65rem; letter-spacing: 0.3em; color: #63b3ed; margin-bottom: 12px; }
-        .head-title { font-family: 'Orbitron', monospace; font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 900; background: linear-gradient(135deg, #fff 40%, #63b3ed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
-        .head-sub { font-size: 0.85rem; color: #718096; margin-bottom: 48px; line-height: 1.7; }
-        .field { margin-bottom: 28px; }
-        .field label { display: block; font-size: 0.75rem; letter-spacing: 0.15em; color: #63b3ed; margin-bottom: 8px; font-family: 'Orbitron', monospace; }
-        .field input, .field textarea { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; padding: 14px 16px; color: #e2e8f0; font-size: 0.95rem; font-family: inherit; transition: border-color 0.2s; outline: none; }
-        .field input:focus, .field textarea:focus { border-color: #63b3ed; }
-        .field textarea { resize: vertical; min-height: 120px; line-height: 1.7; }
-        .color-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
-        .color-btn { padding: 10px 6px; border-radius: 4px; border: 2px solid transparent; background: rgba(255,255,255,0.04); cursor: pointer; text-align: center; transition: all 0.2s; }
-        .color-btn.active { border-color: #fff; background: rgba(255,255,255,0.1); }
-        .color-dot { width: 24px; height: 24px; border-radius: 50%; margin: 0 auto 6px; }
-        .color-btn span { font-size: 0.65rem; color: #a0aec0; display: block; line-height: 1.4; }
-        .layout-grid { display: flex; flex-direction: column; gap: 10px; }
-        .layout-btn { padding: 14px 16px; border-radius: 4px; border: 2px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); cursor: pointer; text-align: left; transition: all 0.2s; display: flex; align-items: center; gap: 14px; }
-        .layout-btn.active { border-color: #63b3ed; background: rgba(99,179,237,0.08); }
-        .layout-btn-title { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 2px; }
-        .layout-btn-desc { font-size: 0.75rem; color: #718096; }
-        .radio { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #718096; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-        .radio.active { border-color: #63b3ed; }
-        .radio.active::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #63b3ed; }
-        .error { color: #fc8181; font-size: 0.82rem; margin-bottom: 20px; padding: 12px 16px; background: rgba(252,129,129,0.08); border: 1px solid rgba(252,129,129,0.2); border-radius: 4px; }
-        .btn-submit { width: 100%; padding: 18px; background: linear-gradient(135deg, #63b3ed, #7f5af0); border: none; border-radius: 4px; color: #fff; font-family: 'Orbitron', monospace; font-size: 0.85rem; letter-spacing: 0.15em; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
-        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(99,179,237,0.4); }
-        .loading-wrap { text-align: center; padding: 80px 24px; }
-        .spinner { width: 48px; height: 48px; border: 3px solid rgba(99,179,237,0.2); border-top-color: #63b3ed; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 24px; }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700;900&family=Inter:wght@700;900&display=swap');
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .done-wrap { text-align: center; padding: 60px 24px; }
-        .done-icon { font-size: 3rem; margin-bottom: 16px; }
-        .url-box { background: rgba(99,179,237,0.08); border: 1px solid rgba(99,179,237,0.3); border-radius: 4px; padding: 16px 20px; margin: 24px 0; word-break: break-all; font-family: monospace; font-size: 0.9rem; color: #63b3ed; }
-        .btn-copy { padding: 12px 28px; background: rgba(99,179,237,0.15); border: 1px solid #63b3ed; border-radius: 4px; color: #63b3ed; font-family: 'Orbitron', monospace; font-size: 0.75rem; letter-spacing: 0.1em; cursor: pointer; transition: all 0.2s; }
-        .btn-copy:hover { background: rgba(99,179,237,0.25); }
-        @media(max-width: 480px) { .color-grid { grid-template-columns: repeat(3, 1fr); } }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+        .fade-up { animation: fadeUp 0.6s ease forwards; }
+        .ind-btn { background: transparent; border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 8px 14px; color: #666; font-size: 12px; cursor: pointer; transition: all 0.15s; font-family: inherit; }
+        .ind-btn:hover { border-color: rgba(109,190,214,0.4); color: #999; }
+        .ind-btn.active { border-color: #6dbed6; color: #6dbed6; background: rgba(109,190,214,0.06); }
+        .inp { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 16px 18px; color: #e8e8e8; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; }
+        .inp:focus { border-color: rgba(109,190,214,0.5); }
+        .inp::placeholder { color: #333; }
       `}</style>
 
+      {/* NAV */}
+      <nav style={{ padding: '0 40px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <a href="/" style={{ textDecoration: 'none' }}>
+          <span style={{ fontFamily: 'Inter, monospace', fontSize: 14, fontWeight: 900, letterSpacing: '0.12em' }}>
+            <span style={{ background: 'linear-gradient(90deg,#c8a84a,#e8d48a)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>NEXT</span>
+            <span style={{ color: '#6dbed6' }}>GAME</span>
+          </span>
+        </a>
+        <span style={{ fontSize: 11, color: '#444', letterSpacing: '0.1em' }}>LP GENERATOR</span>
+      </nav>
+
+      {/* FORM */}
       {step === 'form' && (
-        <div className="wrap">
-          <p className="head-label">LP GENERATOR</p>
-          <h1 className="head-title">あなたのLPを<br />今すぐ作成</h1>
-          <p className="head-sub">
-            以下のフォームに入力するだけで、<br />
-            プロ品質のLPが自動生成されます。
-          </p>
+        <div className="fade-up" style={{ maxWidth: 560, margin: '0 auto', padding: '72px 24px 80px' }}>
+          <div style={{ marginBottom: 48 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: '1px solid rgba(109,190,214,0.2)', padding: '4px 14px', borderRadius: 2, marginBottom: 20 }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#6dbed6', display: 'inline-block' }} />
+              <span style={{ fontSize: 10, letterSpacing: '0.3em', color: '#6dbed6', fontWeight: 700 }}>FREE LP GENERATOR</span>
+            </div>
+            <h1 style={{ fontFamily: 'Inter, monospace', fontSize: 'clamp(1.8rem,5vw,2.6rem)', fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em', marginBottom: 12 }}>
+              会社名を入れるだけ。<br /><span style={{ color: '#6dbed6' }}>AIが全部作る。</span>
+            </h1>
+            <p style={{ fontSize: 14, color: '#666', lineHeight: 1.8 }}>
+              業種・キャッチコピー・デザイン・コンテンツすべてAIが自動生成。<br />30秒で本格LPが完成します。
+            </p>
+          </div>
 
-          <div className="field">
-            <label>会社名 / サービス名 *</label>
+          {/* 会社名 */}
+          <div style={{ marginBottom: 28 }}>
+            <label style={{ display: 'block', fontSize: 11, color: '#6dbed6', letterSpacing: '0.2em', fontWeight: 700, marginBottom: 10 }}>
+              会社名・サービス名 <span style={{ color: '#ef4444' }}>*</span>
+            </label>
             <input
+              className="inp"
               type="text"
-              placeholder="例：○○株式会社"
-              value={form.title}
-              onChange={e => set('title', e.target.value)}
+              placeholder="例：山田整体院"
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSubmit()}
             />
           </div>
 
-          <div className="field">
-            <label>キャッチコピー *</label>
-            <input
-              type="text"
-              placeholder="例：あなたのビジネスを次のステージへ"
-              value={form.sub_title}
-              onChange={e => set('sub_title', e.target.value)}
-            />
-          </div>
-
-          <div className="field">
-            <label>サービス説明文 *</label>
-            <textarea
-              placeholder="サービスや商品の特徴・強みを自由に入力してください"
-              value={form.content}
-              onChange={e => set('content', e.target.value)}
-            />
-          </div>
-
-          <div className="field">
-            <label>お名前（管理用・非公開）</label>
-            <input
-              type="text"
-              placeholder="例：山田太郎"
-              value={form.client_name}
-              onChange={e => set('client_name', e.target.value)}
-            />
-          </div>
-
-          <div className="field">
-            <label>テーマカラー</label>
-            <div className="color-grid">
-              {ACCENT_OPTIONS.map(o => (
+          {/* 業種 */}
+          <div style={{ marginBottom: 28 }}>
+            <label style={{ display: 'block', fontSize: 11, color: '#888', letterSpacing: '0.2em', fontWeight: 700, marginBottom: 10 }}>
+              業種を選ぶ <span style={{ color: '#333', fontWeight: 400 }}>（任意・AIが自動判断）</span>
+            </label>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {INDUSTRIES.map(ind => (
                 <button
-                  key={o.value}
-                  className={`color-btn ${form.accent_color === o.value ? 'active' : ''}`}
-                  onClick={() => set('accent_color', o.value)}
+                  key={ind}
+                  className={`ind-btn ${industry === ind ? 'active' : ''}`}
+                  onClick={() => setIndustry(industry === ind ? '' : ind)}
                 >
-                  <div className="color-dot" style={{ background: o.color }} />
-                  <span>{o.label}</span>
+                  {ind}
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="field">
-            <label>レイアウト</label>
-            <div className="layout-grid">
-              {LAYOUT_OPTIONS.map(o => (
-                <button
-                  key={o.value}
-                  className={`layout-btn ${form.layout === o.value ? 'active' : ''}`}
-                  onClick={() => set('layout', o.value)}
-                >
-                  <div className={`radio ${form.layout === o.value ? 'active' : ''}`} />
-                  <div>
-                    <div className="layout-btn-title">{o.label}</div>
-                    <div className="layout-btn-desc">{o.desc}</div>
-                  </div>
-                </button>
-              ))}
-            </div>
+          {/* 担当者名 */}
+          <div style={{ marginBottom: 36 }}>
+            <label style={{ display: 'block', fontSize: 11, color: '#888', letterSpacing: '0.2em', fontWeight: 700, marginBottom: 10 }}>
+              お名前 <span style={{ color: '#333', fontWeight: 400 }}>（任意・管理用）</span>
+            </label>
+            <input
+              className="inp"
+              type="text"
+              placeholder="例：山田 太郎"
+              value={clientName}
+              onChange={e => setClientName(e.target.value)}
+            />
           </div>
 
-          {error && <div className="error">⚠️ {error}</div>}
+          {error && (
+            <div style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)', borderRadius: 4, padding: '12px 16px', fontSize: 13, color: '#f87171', marginBottom: 20 }}>
+              {error}
+            </div>
+          )}
 
-          <button className="btn-submit" onClick={handleSubmit}>
-            ⚡ LP を生成する
+          <button
+            onClick={handleSubmit}
+            style={{ width: '100%', padding: '17px', background: 'linear-gradient(135deg,#6dbed6,#7f5af0)', border: 'none', borderRadius: 4, color: '#fff', fontFamily: 'Inter, monospace', fontSize: 13, fontWeight: 700, cursor: 'pointer', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            AIでLPを生成する（無料）
           </button>
+
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 20, marginTop: 14 }}>
+            <span style={{ fontSize: 11, color: '#2a2a2a' }}>✓ クレカ不要</span>
+            <span style={{ fontSize: 11, color: '#2a2a2a' }}>✓ 登録不要</span>
+            <span style={{ fontSize: 11, color: '#2a2a2a' }}>✓ 完全無料</span>
+          </div>
         </div>
       )}
 
+      {/* LOADING */}
       {step === 'loading' && (
-        <div className="loading-wrap">
-          <div className="spinner" />
-          <p style={{ fontFamily: "'Orbitron',monospace", fontSize: '0.85rem', color: '#63b3ed', letterSpacing: '0.1em' }}>
-            LP を生成中...
-          </p>
-          <p style={{ fontSize: '0.8rem', color: '#718096', marginTop: 12 }}>
-            約1〜2分後に公開されます
-          </p>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: 24 }}>
+          <div style={{ width: 48, height: 48, border: '2px solid rgba(109,190,214,0.15)', borderTopColor: '#6dbed6', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+          <div style={{ textAlign: 'center' }}>
+            <p style={{ fontFamily: 'Inter, monospace', fontSize: 13, color: '#6dbed6', letterSpacing: '0.15em', marginBottom: 8 }}>AIがLPを生成中...</p>
+            <p style={{ fontSize: 12, color: '#333' }}>業種分析 → キャッチコピー生成 → デザイン適用</p>
+          </div>
         </div>
       )}
 
+      {/* DONE */}
       {step === 'done' && (
-        <div className="done-wrap">
-          <div className="done-icon">🎉</div>
-          <h2 style={{ fontFamily: "'Orbitron',monospace", fontSize: '1.2rem', color: '#fff', marginBottom: 8 }}>
-            LP生成完了！
-          </h2>
-          <p style={{ fontSize: '0.85rem', color: '#718096', lineHeight: 1.7 }}>
-            約1〜2分後に以下のURLで公開されます。
+        <div className="fade-up" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '70vh', padding: '60px 24px', textAlign: 'center' }}>
+          <div style={{ marginBottom: 24 }}>
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#6dbed6" strokeWidth="1.5" style={{ display: 'block', margin: '0 auto' }}>
+              <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <h2 style={{ fontFamily: 'Inter, monospace', fontSize: 'clamp(1.4rem,4vw,2rem)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 8 }}>LP生成完了</h2>
+          <p style={{ fontSize: 13, color: '#555', marginBottom: 28, lineHeight: 1.7 }}>
+            約1〜2分でビルドが完了します。<br />
+            下のボタンからアクセスできます。
           </p>
-          <div className="url-box">{url}</div>
-          <button className="btn-copy" onClick={() => navigator.clipboard.writeText(url)}>
-            URLをコピー
-          </button>
-          <p style={{ fontSize: '0.75rem', color: '#718096', marginTop: 24 }}>
-            ※ ビルドに1〜2分かかります。しばらく後にアクセスしてください。
-          </p>
+
+          {/* URLボックス */}
+          <div style={{ background: 'rgba(109,190,214,0.04)', border: '1px solid rgba(109,190,214,0.12)', borderRadius: 4, padding: '14px 20px', marginBottom: 16, wordBreak: 'break-all', fontFamily: 'monospace', fontSize: 12, color: '#4a6580', maxWidth: 440, width: '100%' }}>
+            {url}
+          </div>
+
+          {/* ボタン2つ */}
+          <div style={{ display: 'flex', gap: 10, marginBottom: 36, flexWrap: 'wrap', justifyContent: 'center' }}>
+            
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', background: 'linear-gradient(135deg,#6dbed6,#7f5af0)', borderRadius: 4, color: '#fff', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              生成されたLPを見る
+            </a>
+            <button
+              onClick={() => navigator.clipboard.writeText(url)}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 20px', background: 'transparent', border: '1px solid rgba(109,190,214,0.25)', borderRadius: 4, color: '#6dbed6', fontFamily: 'Inter, monospace', fontSize: 12, fontWeight: 700, cursor: 'pointer', letterSpacing: '0.05em' }}
+            >
+              URLをコピー
+            </button>
+          </div>
+
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 28, maxWidth: 380, width: '100%' }}>
+            <p style={{ fontSize: 13, color: '#555', marginBottom: 16, lineHeight: 1.7 }}>
+              このLPをそのまま使いたい方は<br />NEXTGAMEのサブスクをご検討ください。
+            </p>
+            
+              href="https://lin.ee/SJDJXQv"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 28px', background: '#06C755', borderRadius: 4, color: '#fff', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z"/></svg>
+              LINEで相談する
+            </a>
+          </div>
         </div>
       )}
     </div>
