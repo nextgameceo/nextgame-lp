@@ -195,18 +195,10 @@ export default function NewLpPage() {
             {url}
           </div>
           <div style={{ display: 'flex', gap: '10px', marginBottom: '36px', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <a
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 28px', background: 'linear-gradient(135deg,#6dbed6,#7f5af0)', borderRadius: '4px', color: '#fff', fontSize: '13px', fontWeight: 700, textDecoration: 'none' }}
-            >
+            <a href={url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 28px', background: 'linear-gradient(135deg,#6dbed6,#7f5af0)', borderRadius: '4px', color: '#fff', fontSize: '13px', fontWeight: 700, textDecoration: 'none' }}>
               生成されたLPを見る
             </a>
-            <button
-              onClick={() => navigator.clipboard.writeText(url)}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 20px', background: 'transparent', border: '1px solid rgba(109,190,214,0.25)', borderRadius: '4px', color: '#6dbed6', fontFamily: 'Inter, monospace', fontSize: '12px', fontWeight: 700, cursor: 'pointer', letterSpacing: '0.05em' }}
-            >
+            <button onClick={() => navigator.clipboard.writeText(url)} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 20px', background: 'transparent', border: '1px solid rgba(109,190,214,0.25)', borderRadius: '4px', color: '#6dbed6', fontFamily: 'Inter, monospace', fontSize: '12px', fontWeight: 700, cursor: 'pointer', letterSpacing: '0.05em' }}>
               URLをコピー
             </button>
           </div>
@@ -216,12 +208,7 @@ export default function NewLpPage() {
               <br />
               NEXTGAMEのサブスクをご検討ください。
             </p>
-            
-              href="https://lin.ee/SJDJXQv"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '13px 28px', background: '#06C755', borderRadius: '4px', color: '#fff', fontSize: '13px', fontWeight: 700, textDecoration: 'none' }}
-            >
+            <a href="https://lin.ee/SJDJXQv" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '13px 28px', background: '#06C755', borderRadius: '4px', color: '#fff', fontSize: '13px', fontWeight: 700, textDecoration: 'none' }}>
               LINEで相談する
             </a>
           </div>
