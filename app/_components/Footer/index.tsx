@@ -5,7 +5,6 @@ import styles from './index.module.css';
 export default function Footer() {
   return (
     <footer className={styles.footer}>
-
       <div className={styles.top}>
         <div className={styles.brand}>
           <Link href="/" aria-label="トップへ戻る">
@@ -18,36 +17,35 @@ export default function Footer() {
             />
           </Link>
         </div>
-
         <nav className={styles.nav}>
           <div className={styles.navGroup}>
             <p className={styles.navLabel}>SERVICES</p>
             <ul className={styles.navItems}>
-              <li><Link href="/business">事業内容</Link></li>
-              <li><Link href="/wage">工賃・キャリア</Link></li>
+              <li><Link href="/#services">Web制作・運用</Link></li>
+              <li><Link href="/#pricing">料金プラン</Link></li>
+              <li><Link href="/lp/new">無料LP生成</Link></li>
             </ul>
           </div>
           <div className={styles.navGroup}>
             <p className={styles.navLabel}>COMPANY</p>
             <ul className={styles.navItems}>
-              <li><Link href="/about">企業情報</Link></li>
-              <li><Link href="/ceo-message">代表者メッセージ</Link></li>
-              <li><Link href="/news">ニュース</Link></li>
+              <li><Link href="/#reviews">お客様の声</Link></li>
+              <li><Link href="/#faq">よくある質問</Link></li>
+              <li><Link href="/#flow">ご利用の流れ</Link></li>
             </ul>
           </div>
           <div className={styles.navGroup}>
             <p className={styles.navLabel}>CONTACT</p>
             <ul className={styles.navItems}>
-              <li><Link href="/recruit">採用情報</Link></li>
+              <li><a href="https://lin.ee/SJDJXQv" target="_blank" rel="noopener noreferrer">LINEで無料相談</a></li>
               <li><Link href="/contact">お問い合わせ</Link></li>
             </ul>
           </div>
         </nav>
       </div>
-
       <div className={styles.bottom}>
         <div className={styles.social}>
-          <a
+          
             href="https://x.com/woomemorys?s=21"
             target="_blank"
             rel="noopener noreferrer"
@@ -58,8 +56,8 @@ export default function Footer() {
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
             </svg>
           </a>
-          <a
-            href="https://www.instagram.com/nextgame.ltd?igsh=N284aHF5aWp3OG51&utm_source=qr"
+          
+            href="https://www.instagram.com/nextgame.ltd"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.socialLink}
@@ -70,14 +68,11 @@ export default function Footer() {
             </svg>
           </a>
         </div>
-
         <div className={styles.legal}>
           <Link href="/privacy">Privacy Policy</Link>
-          <span></span>
           <span>© NEXTGAME,LTD All Rights Reserved 2026</span>
         </div>
       </div>
-
     </footer>
   );
 }
