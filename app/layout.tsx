@@ -147,7 +147,7 @@ type Props = {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="ja" className={orbitron.variable}>
-      <body className={`${styles.body} loading-active`}>
+      <body className={styles.body}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
