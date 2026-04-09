@@ -3,9 +3,8 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { title, sub_title, content, client_name } = body;
+    const { title, content, client_name } = body;
 
-    // ── Step1: GroqでAIコンテンツ生成 ──
     const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -27,12 +26,12 @@ export async function POST(req: Request) {
             content: `以下の情報からLPコンテンツを生成してください。
 
 会社名・サービス名: ${title}
-キャッチコピー: ${sub_title}
-説明文: ${content}
+業種・説明: ${content || '不明'}
 
 以下のJSON形式で返答してください：
 {
-  "theme": "light" または "dark"（業種に合わせて選択。医療・福祉・教育・士業は"light"、IT・エンタメ・飲食・美容は"dark"）,
+  "sub_title": "キャッチコピー（20文字以内・インパクトある一文・業種に合わせて）",
+  "theme": "light" または "dark"（医療・福祉・教育・士業は"light"、IT・エンタメ・飲食・美容は"dark"）,
   "accent_color": "blue" または "green" または "orange" または "red" または "purple"（業種イメージに合わせて）,
   "unsplash_keyword": "Unsplash検索用の英語キーワード1〜2単語（例: dental clinic, coffee shop, yoga studio）",
   "features": [
@@ -64,6 +63,7 @@ export async function POST(req: Request) {
     const rawText = groqData.choices[0].message.content.trim();
 
     let ai: {
+      sub_title: string;
       theme: string;
       accent_color: string;
       unsplash_keyword: string;
@@ -79,13 +79,19 @@ export async function POST(req: Request) {
     } catch {
       const match = rawText.match(/\{[\s\S]*\}/);
       ai = match ? JSON.parse(match[0]) : {
-        theme: 'light', accent_color: 'blue', unsplash_keyword: 'business office',
-        features: [], services: [], reasons: [],
-        cta_text: 'お問い合わせ', cta_sub: 'お気軽にご相談ください',
+        sub_title: title,
+        theme: 'light',
+        accent_color: 'blue',
+        unsplash_keyword: 'business office',
+        features: [],
+        services: [],
+        reasons: [],
+        cta_text: 'お問い合わせ',
+        cta_sub: 'お気軽にご相談ください',
       };
     }
 
-    // ── Step2: Unsplashで画像取得 ──
+    // Unsplashで画像取得
     let imageUrl = '';
     try {
       const keyword = encodeURIComponent(ai.unsplash_keyword ?? 'business');
@@ -105,7 +111,7 @@ export async function POST(req: Request) {
       imageUrl = '';
     }
 
-    // ── Step3: microCMSに保存 ──
+    // microCMSに保存
     const random = Math.random().toString(36).substring(2, 8);
     const slug = `lp-${random}`;
 
@@ -137,7 +143,7 @@ export async function POST(req: Request) {
         body: JSON.stringify({
           slug,
           title,
-          sub_title,
+          sub_title: ai.sub_title ?? title,
           content: aiContent,
           accent_color: [accentColor],
           layout: ['hero-center'],
