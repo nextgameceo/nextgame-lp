@@ -13,12 +13,15 @@ export default function NewLpPage() {
   const [error, setError] = useState('');
   const [title, setTitle] = useState('');
   const [industry, setIndustry] = useState('');
+  const [otherIndustry, setOtherIndustry] = useState('');
   const [clientName, setClientName] = useState('');
 
   const handleSubmit = async () => {
     if (!title) { setError('会社名・サービス名を入力してください'); return; }
+    if (industry === 'その他' && !otherIndustry) { setError('業種を入力してください'); return; }
     setError('');
     setStep('loading');
+    const industryLabel = industry === 'その他' ? otherIndustry : industry;
     try {
       const res = await fetch('/api/create-lp', {
         method: 'POST',
@@ -26,7 +29,7 @@ export default function NewLpPage() {
         body: JSON.stringify({
           title,
           sub_title: '',
-          content: industry ? ('業種：' + industry) : '',
+          content: industryLabel ? ('業種：' + industryLabel) : '',
           client_name: clientName,
         }),
       });
@@ -107,12 +110,25 @@ export default function NewLpPage() {
                 <button
                   key={ind}
                   className={industry === ind ? 'ind-btn active' : 'ind-btn'}
-                  onClick={() => setIndustry(industry === ind ? '' : ind)}
+                  onClick={() => {
+                    setIndustry(industry === ind ? '' : ind);
+                    setOtherIndustry('');
+                  }}
                 >
                   {ind}
                 </button>
               ))}
             </div>
+            {industry === 'その他' && (
+              <input
+                className="inp"
+                type="text"
+                placeholder="業種を入力（例：ペットサロン、農園、占い師）"
+                value={otherIndustry}
+                onChange={e => setOtherIndustry(e.target.value)}
+                style={{ marginTop: '12px' }}
+              />
+            )}
           </div>
 
           <div style={{ marginBottom: '36px' }}>
@@ -179,7 +195,7 @@ export default function NewLpPage() {
             {url}
           </div>
           <div style={{ display: 'flex', gap: '10px', marginBottom: '36px', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <a
+            
               href={url}
               target="_blank"
               rel="noopener noreferrer"
@@ -200,22 +216,11 @@ export default function NewLpPage() {
               <br />
               NEXTGAMEのサブスクをご検討ください。
             </p>
-            <a
+            
               href="https://lin.ee/SJDJXQv"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ 
-                display: 'inline-flex', 
-                alignItems: 'center', 
-                gap: '8px', 
-                padding: '13px 28px', 
-                background: '#06C755', 
-                borderRadius: '4px', 
-                color: '#fff', 
-                fontSize: '13px', 
-                fontWeight: 700, 
-                textDecoration: 'none' 
-              }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '13px 28px', background: '#06C755', borderRadius: '4px', color: '#fff', fontSize: '13px', fontWeight: 700, textDecoration: 'none' }}
             >
               LINEで相談する
             </a>
