@@ -4,6 +4,8 @@ import { getAllSites, getSiteBySlug } from "@/app/_libs/microcms";
 
 export const dynamicParams = true;
 
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
   try {
     const data = await getAllSites();
