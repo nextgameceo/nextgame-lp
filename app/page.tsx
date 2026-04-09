@@ -5,10 +5,6 @@ import Image from 'next/image';
 
 const LINE_URL = 'https://lin.ee/SJDJXQv';
 const DEMO_URL = '/lp/new';
-const SLOTS_TOTAL = 3;
-const SLOTS_REMAINING = 1;
-
-const DEADLINE = new Date(Date.now() + 23 * 24 * 60 * 60 * 1000);
 
 const PROBLEMS = [
   { num: '01', text: 'HPを作ったのに\n問い合わせが来ない' },
@@ -19,7 +15,6 @@ const PROBLEMS = [
 
 const PLANS = [
   {
-    id: 'starter',
     name: 'STARTER',
     price: '¥29,800',
     note: '/月（税込¥32,780）',
@@ -35,7 +30,6 @@ const PLANS = [
     badge: '',
   },
   {
-    id: 'growth',
     name: 'GROWTH',
     price: '¥59,800',
     note: '/月（税込¥65,780）',
@@ -52,7 +46,6 @@ const PLANS = [
     badge: '人気No.1',
   },
   {
-    id: 'scale',
     name: 'SCALE',
     price: '¥99,800',
     note: '/月（税込¥109,780）',
@@ -134,47 +127,6 @@ function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
   );
 }
 
-function Countdown() {
-  const [time, setTime] = useState({ d: 0, h: 0, m: 0, s: 0 });
-  useEffect(() => {
-    const tick = () => {
-      const diff = Math.max(0, DEADLINE.getTime() - Date.now());
-      setTime({
-        d: Math.floor(diff / 86400000),
-        h: Math.floor((diff % 86400000) / 3600000),
-        m: Math.floor((diff % 3600000) / 60000),
-        s: Math.floor((diff % 60000) / 1000),
-      });
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, []);
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return (
-    <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
-      {[{ v: time.d, l: '日' }, { v: time.h, l: '時間' }, { v: time.m, l: '分' }, { v: time.s, l: '秒' }].map((t, i) => (
-        <div key={i} style={{ textAlign: 'center' }}>
-          <div style={{ background: '#0a0a0a', border: '1px solid rgba(200,168,74,0.3)', borderRadius: 6, padding: '8px 12px', fontFamily: 'monospace', fontSize: '1.4rem', fontWeight: 900, color: '#c8a84a', minWidth: 52 }}>{pad(t.v)}</div>
-          <div style={{ fontSize: '0.65rem', color: '#555', marginTop: 4 }}>{t.l}</div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function SlotBadge() {
-  return (
-    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: 'rgba(200,168,74,0.08)', border: '1px solid rgba(200,168,74,0.25)', borderRadius: 6, padding: '10px 20px' }}>
-      <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#c8a84a', display: 'inline-block', boxShadow: '0 0 8px rgba(200,168,74,0.6)' }} />
-      <span style={{ fontSize: '0.85rem', color: '#e8d48a', fontWeight: 700 }}>
-        今月の受付枠 残り<span style={{ fontFamily: 'monospace', fontSize: '1.4rem', margin: '0 4px', color: '#fff' }}>{SLOTS_REMAINING}</span>社
-      </span>
-      <span style={{ fontSize: '0.72rem', color: '#555' }}>/ {SLOTS_TOTAL}社</span>
-    </div>
-  );
-}
-
 function LineBtn({ large = false, text = 'LINEで無料相談する' }: { large?: boolean; text?: string }) {
   return (
     <a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={{
@@ -184,6 +136,7 @@ function LineBtn({ large = false, text = 'LINEで無料相談する' }: { large?
       padding: large ? '18px 40px' : '14px 28px',
       borderRadius: 6, textDecoration: 'none',
       boxShadow: '0 4px 24px rgba(6,199,85,0.35)',
+      width: large ? '100%' : 'auto',
     }}>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
         <path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z" />
@@ -214,96 +167,117 @@ export default function Page() {
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
         .fixed-line { position:fixed; bottom:0; left:0; right:0; z-index:9999; padding:12px 16px 20px; background:linear-gradient(to top,#000 60%,transparent); pointer-events:none; }
         .fixed-line a { pointer-events:all; display:flex; align-items:center; justify-content:center; gap:10px; background:#06C755; color:#fff; font-weight:900; font-size:1rem; padding:16px 24px; border-radius:6px; text-decoration:none; box-shadow:0 4px 32px rgba(6,199,85,0.5); animation:bounce 2.5s ease-in-out infinite; max-width:480px; margin:0 auto; width:100%; }
-        nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:0 2rem; height:60px; background:rgba(0,0,0,0.95); backdrop-filter:blur(16px); border-bottom:1px solid rgba(200,168,74,0.1); }
-        .nav-links { display:flex; gap:20px; align-items:center; }
-        .nav-links a { font-size:0.78rem; color:#555; text-decoration:none; transition:color 0.2s; }
-        .nav-links a:hover { color:#6dbed6; }
-        .section { padding:72px 20px; }
+        .section { padding:64px 20px; }
         .inner { max-width:640px; margin:0 auto; }
         .inner-w { max-width:900px; margin:0 auto; }
         .sec-label { font-size:0.68rem; letter-spacing:0.25em; color:#c8a84a; font-weight:700; margin-bottom:8px; text-transform:uppercase; }
-        .sec-title { font-size:clamp(1.5rem,3.5vw,2.2rem); font-weight:900; color:#fff; line-height:1.3; margin-bottom:10px; }
+        .sec-title { font-size:clamp(1.4rem,3.5vw,2.2rem); font-weight:900; color:#fff; line-height:1.3; margin-bottom:10px; }
         .sec-title span { color:#6dbed6; }
-        .sec-sub { font-size:0.88rem; color:#555; line-height:1.8; margin-bottom:40px; }
+        .sec-sub { font-size:0.88rem; color:#555; line-height:1.8; margin-bottom:32px; }
         .divider { height:1px; background:linear-gradient(90deg,transparent,rgba(200,168,74,0.15),transparent); }
-        .plan-card { background:#0a0a0a; border:1px solid rgba(109,190,214,0.15); border-radius:16px; padding:32px 28px; transition:transform 0.2s; }
+        .plan-card { background:#0a0a0a; border:1px solid rgba(109,190,214,0.15); border-radius:16px; padding:28px 20px; transition:transform 0.2s; height:100%; }
         .plan-card:hover { transform:translateY(-4px); }
         .plan-card.featured { border:2px solid #6dbed6; background:rgba(109,190,214,0.04); }
         .check-item { display:flex; align-items:flex-start; gap:10px; font-size:0.82rem; color:#94a3b8; line-height:1.6; margin-bottom:8px; }
         .check-icon { color:#c8a84a; font-weight:900; flex-shrink:0; margin-top:1px; }
-        @media(max-width:640px) { nav { padding:0 1rem; } .nav-links { gap:12px; } .section { padding:56px 16px; } }
-        @media(max-width:480px) { .nav-links a:not(:last-child) { display:none; } }
+        @media(max-width:768px) {
+          .section { padding:48px 16px; }
+          .plans-grid { grid-template-columns:1fr !important; }
+          .services-grid { grid-template-columns:1fr !important; }
+          .stats-grid { grid-template-columns:repeat(2,1fr) !important; }
+          .demo-inputs { grid-template-columns:1fr !important; }
+          .hero-btns { flex-direction:column !important; }
+          .hero-btns a { width:100% !important; text-align:center; }
+        }
       `}</style>
 
       {/* 固定LINEボタン */}
       <div className="fixed-line">
         <a href={LINE_URL} target="_blank" rel="noopener noreferrer">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z"/></svg>
-          LINEで無料相談する（残{SLOTS_REMAINING}社）
+          LINEで無料相談する
         </a>
       </div>
 
-      {/* ナビ */}
-      <nav>
-        <Image src="/logo.png" alt="NEXTGAME" width={140} height={36} style={{ objectFit: 'contain' }} />
-        <div className="nav-links">
-          <a href="#demo">無料LP生成</a>
-          <a href="#services">サービス</a>
-          <a href="#pricing">料金</a>
-          <a href="#reviews">口コミ</a>
-          <a href="#faq">FAQ</a>
-          <a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={{ background: 'rgba(6,199,85,0.12)', border: '1px solid rgba(6,199,85,0.35)', color: '#06C755', padding: '6px 16px', borderRadius: 4, fontWeight: 700 }}>
-            無料相談
-          </a>
-        </div>
-      </nav>
-
-      {/* ── HERO ── */}
-      <section className="section" style={{ background: bg, paddingTop: 100, paddingBottom: 80, textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+      {/* ── LP無料生成 HERO ── */}
+      <section className="section" style={{ background: bg, paddingTop: 80, paddingBottom: 60, textAlign: 'center', position: 'relative', overflow: 'hidden' }} id="demo">
         <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(200,168,74,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(200,168,74,0.03) 1px,transparent 1px)`, backgroundSize: '44px 44px', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 700, height: 500, background: 'radial-gradient(ellipse,rgba(109,190,214,0.08) 0%,transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', top: 60, right: '8%', width: 260, height: 260, background: 'radial-gradient(ellipse,rgba(200,168,74,0.06) 0%,transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 600, height: 400, background: 'radial-gradient(ellipse,rgba(109,190,214,0.08) 0%,transparent 65%)', pointerEvents: 'none' }} />
 
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 700, margin: '0 auto' }}>
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 600, margin: '0 auto' }}>
           <FadeIn>
-            <Image src="/logo.png" alt="NEXTGAME" width={200} height={52} style={{ objectFit: 'contain', marginBottom: 32 }} />
-          </FadeIn>
-          <FadeIn delay={0.1}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: '0.7rem', letterSpacing: '0.25em', color: gold, border: `1px solid rgba(200,168,74,0.2)`, padding: '4px 14px', borderRadius: 2, marginBottom: 20 }}>
               <span style={{ width: 5, height: 5, borderRadius: '50%', background: gold, display: 'inline-block', animation: 'pulse 2s ease-in-out infinite' }} />
+              FREE LP GENERATOR
+            </div>
+            <h1 style={{ fontSize: 'clamp(1.8rem,5vw,3rem)', fontWeight: 900, lineHeight: 1.2, color: '#fff', marginBottom: 12 }}>
+              会社名を入れるだけ。<br />
+              <span style={{ color: cyan }}>AIが全部作る。</span>
+            </h1>
+            <p style={{ fontSize: 'clamp(0.85rem,2vw,1rem)', color: muted, lineHeight: 1.8, marginBottom: 32 }}>
+              業種・キャッチコピー・デザイン・コンテンツすべてAIが自動生成。<br />30秒で本格LPが完成します。
+            </p>
+          </FadeIn>
+
+          <FadeIn delay={0.1}>
+            <div style={{ background: bg2, border: `1px solid ${borderGold}`, borderRadius: 16, padding: '24px 20px', marginBottom: 20 }}>
+              <div className="demo-inputs" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 14 }}>
+                {[
+                  { label: '会社名 / サービス名', placeholder: '例：山田整体院' },
+                  { label: '業種（任意）', placeholder: '例：整体院・整骨院' },
+                ].map((f, i) => (
+                  <div key={i} style={{ background: bg, border: `1px solid ${border}`, borderRadius: 8, padding: '12px 14px' }}>
+                    <div style={{ fontSize: '0.65rem', color: muted, marginBottom: 4 }}>{f.label}</div>
+                    <div style={{ fontSize: '0.85rem', color: '#333' }}>{f.placeholder}</div>
+                  </div>
+                ))}
+              </div>
+              <a href={DEMO_URL} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '16px', background: `linear-gradient(135deg,${gold},#e8d48a)`, borderRadius: 8, color: '#000', fontSize: '1rem', fontWeight: 900, textDecoration: 'none' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                今すぐLPを無料生成する
+              </a>
+            </div>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center', marginBottom: 12 }}>
+              {['歯科クリニック', '美容サロン', '整体院', 'カフェ', '不動産'].map((tag, i) => (
+                <span key={i} style={{ background: bg2, border: `1px solid ${border}`, borderRadius: 4, padding: '4px 10px', fontSize: '0.7rem', color: muted }}>{tag}</span>
+              ))}
+            </div>
+            <p style={{ fontSize: '0.72rem', color: muted }}>✓ クレカ不要　✓ 登録不要　✓ 完全無料</p>
+          </FadeIn>
+        </div>
+      </section>
+
+      <div className="divider" />
+
+      {/* ── サブスクサービス紹介 ── */}
+      <section className="section" style={{ background: bg2, textAlign: 'center' }}>
+        <div className="inner" style={{ maxWidth: 700 }}>
+          <FadeIn>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: '0.7rem', letterSpacing: '0.25em', color: cyan, border: `1px solid rgba(109,190,214,0.2)`, padding: '4px 14px', borderRadius: 2, marginBottom: 20 }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: cyan, display: 'inline-block', animation: 'pulse 2s ease-in-out infinite' }} />
               AI × WEB SUBSCRIPTION
             </div>
-            <h1 style={{ fontSize: 'clamp(1.9rem,5vw,3.2rem)', fontWeight: 900, lineHeight: 1.2, color: '#fff', marginBottom: 20 }}>
+            <h2 style={{ fontSize: 'clamp(1.6rem,4vw,2.8rem)', fontWeight: 900, lineHeight: 1.2, color: '#fff', marginBottom: 16 }}>
               サイトは作った瞬間から<br />
               <span style={{ color: cyan }}>劣化する。</span>
-            </h1>
-            <p style={{ fontSize: 'clamp(0.9rem,2vw,1.1rem)', color: muted, lineHeight: 1.9, marginBottom: 8 }}>
+            </h2>
+            <p style={{ fontSize: 'clamp(0.85rem,2vw,1rem)', color: muted, lineHeight: 1.9, marginBottom: 8 }}>
               運用し続けるから、成果が出る。
             </p>
             <p style={{ fontSize: '0.88rem', color: '#333', marginBottom: 32 }}>
               Web制作・運用・改善をまるごと月額サブスクで。<span style={{ color: gold }}>初期費用0円・制作費0円。</span>
             </p>
-          </FadeIn>
-
-          <FadeIn delay={0.2}>
-            <div style={{ marginBottom: 20, display: 'flex', justifyContent: 'center' }}>
-              <SlotBadge />
-            </div>
-            <div style={{ background: 'rgba(200,168,74,0.05)', border: `1px solid rgba(200,168,74,0.15)`, borderRadius: 10, padding: '18px 24px', marginBottom: 28 }}>
-              <div style={{ fontSize: '0.68rem', color: gold, letterSpacing: '0.2em', marginBottom: 12, fontWeight: 700 }}>⚡ 制作費0円キャンペーン終了まで</div>
-              <Countdown />
-            </div>
-            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 16 }}>
-              <LineBtn large text={`無料相談する（残${SLOTS_REMAINING}社）`} />
-              <a href={DEMO_URL} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 24px', background: 'transparent', border: `1px solid rgba(200,168,74,0.3)`, borderRadius: 6, color: gold, fontSize: '0.88rem', fontWeight: 700, textDecoration: 'none' }}>
-                30秒でLP体験 →
+            <div className="hero-btns" style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 16 }}>
+              <LineBtn large text="無料相談する" />
+              <a href="#pricing" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '16px 24px', background: 'transparent', border: `1px solid rgba(200,168,74,0.3)`, borderRadius: 6, color: gold, fontSize: '0.9rem', fontWeight: 700, textDecoration: 'none', width: '100%' }}>
+                料金を見る →
               </a>
             </div>
             <p style={{ fontSize: '0.72rem', color: muted }}>✓ 相談無料　✓ 最短3日納品　✓ 営業なし　✓ 3ヶ月後は月単位で解約自由</p>
           </FadeIn>
 
-          <FadeIn delay={0.3}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 0, border: `1px solid ${borderGold}`, borderRadius: 8, overflow: 'hidden', marginTop: 48 }}>
+          <FadeIn delay={0.2}>
+            <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 0, border: `1px solid ${borderGold}`, borderRadius: 8, overflow: 'hidden', marginTop: 40 }}>
               {[
                 { v: '¥0', l: '初期費用' },
                 { v: '3日', l: '最短納期' },
@@ -322,44 +296,6 @@ export default function Page() {
 
       <div className="divider" />
 
-      {/* ── LP無料生成（ヒーロー直下） ── */}
-      <section className="section" style={{ background: bg2 }} id="demo">
-        <div className="inner">
-          <FadeIn>
-            <p className="sec-label">FREE LP GENERATOR</p>
-            <h2 className="sec-title">会社名を入れるだけ。<br /><span>AIが全部作る。</span></h2>
-            <p className="sec-sub">業種・キャッチコピー・デザイン・コンテンツすべてAIが自動生成。30秒で本格LPが完成します。</p>
-          </FadeIn>
-          <FadeIn delay={0.1}>
-            <div style={{ background: bg3, border: `1px solid ${borderGold}`, borderRadius: 12, padding: 24, marginBottom: 16 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 14 }}>
-                {[
-                  { label: '会社名 / サービス名', placeholder: '例：山田整体院' },
-                  { label: '業種（任意）', placeholder: '例：整体院・整骨院' },
-                ].map((f, i) => (
-                  <div key={i} style={{ background: bg, border: `1px solid ${border}`, borderRadius: 6, padding: '10px 14px' }}>
-                    <div style={{ fontSize: '0.65rem', color: muted, marginBottom: 4 }}>{f.label}</div>
-                    <div style={{ fontSize: '0.82rem', color: '#333' }}>{f.placeholder}</div>
-                  </div>
-                ))}
-              </div>
-              <a href={DEMO_URL} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '16px', background: `linear-gradient(135deg,${gold},#e8d48a)`, borderRadius: 6, color: '#000', fontSize: '0.95rem', fontWeight: 900, textDecoration: 'none' }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                今すぐLPを無料生成する
-              </a>
-            </div>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center', marginBottom: 8 }}>
-              {['歯科クリニック', '美容サロン', '整体院', 'カフェ', '不動産'].map((tag, i) => (
-                <span key={i} style={{ background: bg, border: `1px solid ${border}`, borderRadius: 4, padding: '4px 12px', fontSize: '0.72rem', color: muted }}>{tag} で生成済み</span>
-              ))}
-            </div>
-            <p style={{ textAlign: 'center', fontSize: '0.72rem', color: muted }}>✓ クレカ不要　✓ 登録不要　✓ 完全無料</p>
-          </FadeIn>
-        </div>
-      </section>
-
-      <div className="divider" />
-
       {/* ── 課題提起 ── */}
       <section className="section" style={{ background: bg }} id="problems">
         <div className="inner">
@@ -368,7 +304,7 @@ export default function Page() {
             <h2 className="sec-title">作って<span>終わり</span>に<br />なっていませんか？</h2>
             <p className="sec-sub">多くの経営者が陥る「制作したのに成果ゼロ」の罠。</p>
           </FadeIn>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 36 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 32 }}>
             {PROBLEMS.map((p, i) => (
               <FadeIn key={i} delay={i * 0.07}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, background: bg2, border: `1px solid ${border}`, borderRadius: 8, padding: '16px 18px' }}>
@@ -379,7 +315,7 @@ export default function Page() {
             ))}
           </div>
           <FadeIn delay={0.35}>
-            <div style={{ background: `linear-gradient(135deg,rgba(200,168,74,0.08),rgba(200,168,74,0.03))`, border: `1px solid rgba(200,168,74,0.2)`, borderRadius: 10, padding: '20px 24px', marginBottom: 28, textAlign: 'center' }}>
+            <div style={{ background: `linear-gradient(135deg,rgba(200,168,74,0.08),rgba(200,168,74,0.03))`, border: `1px solid rgba(200,168,74,0.2)`, borderRadius: 10, padding: '20px 24px', marginBottom: 24, textAlign: 'center' }}>
               <p style={{ fontSize: '1rem', fontWeight: 900, color: '#fff', marginBottom: 6 }}>
                 原因はひとつ。<span style={{ color: cyan }}>「運用されていないから」</span>です。
               </p>
@@ -400,7 +336,7 @@ export default function Page() {
             <h2 className="sec-title">すべて<span>サブスク</span>で<br />まるごとお任せ</h2>
             <p className="sec-sub">単発・スポット依頼は受け付けていません。月額継続前提で、本気で成果にコミットします。</p>
           </FadeIn>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div className="services-grid" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {[
               {
                 icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6dbed6" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>`,
@@ -451,14 +387,13 @@ export default function Page() {
       <section className="section" style={{ background: bg }} id="pricing">
         <div className="inner-w">
           <FadeIn>
-            <div style={{ textAlign: 'center', marginBottom: 40 }}>
+            <div style={{ textAlign: 'center', marginBottom: 36 }}>
               <p className="sec-label">PRICING</p>
               <h2 className="sec-title">シンプルな<span>サブスクプラン</span></h2>
               <p className="sec-sub">初期費用0円・制作費0円・最低3ヶ月・以降月単位で解約自由</p>
-              <SlotBadge />
             </div>
           </FadeIn>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
+          <div className="plans-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
             {PLANS.map((plan, i) => (
               <FadeIn key={i} delay={i * 0.1}>
                 <div className={`plan-card ${plan.featured ? 'featured' : ''}`} style={{ position: 'relative' }}>
@@ -469,7 +404,7 @@ export default function Page() {
                   <div style={{ fontFamily: 'monospace', fontSize: '1.8rem', fontWeight: 900, color: '#fff', lineHeight: 1, marginBottom: 4 }}>{plan.price}</div>
                   <div style={{ fontSize: '0.72rem', color: muted, marginBottom: 4 }}>{plan.note}</div>
                   <div style={{ fontSize: '0.75rem', color: cyan, marginBottom: 20, paddingBottom: 20, borderBottom: `1px solid ${border}` }}>{plan.target}</div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 0, marginBottom: 24 }}>
                     {plan.features.map((f, j) => (
                       <div key={j} className="check-item">
                         <span className="check-icon">✓</span>
@@ -477,9 +412,7 @@ export default function Page() {
                       </div>
                     ))}
                   </div>
-                  <div style={{ marginTop: 24 }}>
-                    <LineBtn text="このプランで相談する" />
-                  </div>
+                  <LineBtn text="このプランで相談する" />
                 </div>
               </FadeIn>
             ))}
@@ -494,7 +427,7 @@ export default function Page() {
 
       <div className="divider" />
 
-      {/* ── 口コミ・レビュー ── */}
+      {/* ── 口コミ ── */}
       <section className="section" style={{ background: bg2 }} id="reviews">
         <div className="inner">
           <FadeIn>
@@ -506,14 +439,14 @@ export default function Page() {
             {REVIEWS.map((r, i) => (
               <FadeIn key={i} delay={i * 0.1}>
                 <div style={{ background: bg3, border: `1px solid ${borderGold}`, borderRadius: 12, padding: '24px 20px' }}>
-                  <div style={{ display: 'flex', gap: 4, marginBottom: 12 }}>
+                  <div style={{ display: 'flex', gap: 2, marginBottom: 12 }}>
                     {Array.from({ length: r.star }).map((_, j) => (
                       <span key={j} style={{ color: gold, fontSize: '1rem' }}>★</span>
                     ))}
                   </div>
                   <p style={{ fontSize: '0.88rem', color: text, lineHeight: 1.8, marginBottom: 16 }}>{r.text}</p>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(200,168,74,0.1)', border: `1px solid ${borderGold}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>{r.icon}</div>
+                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(200,168,74,0.1)', border: `1px solid ${borderGold}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', flexShrink: 0 }}>{r.icon}</div>
                     <div>
                       <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#fff' }}>{r.name}</div>
                       <div style={{ fontSize: '0.72rem', color: muted }}>{r.role}</div>
@@ -591,16 +524,13 @@ export default function Page() {
         <div style={{ maxWidth: 560, margin: '0 auto' }}>
           <FadeIn>
             <Image src="/logo.png" alt="NEXTGAME" width={160} height={40} style={{ objectFit: 'contain', marginBottom: 28 }} />
-            <div style={{ marginBottom: 20, display: 'flex', justifyContent: 'center' }}>
-              <SlotBadge />
-            </div>
             <h2 style={{ fontSize: 'clamp(1.4rem,4vw,2rem)', fontWeight: 900, color: '#fff', lineHeight: 1.4, marginBottom: 12 }}>
               「とりあえず聞いてみる」<br />それだけで<span style={{ color: cyan }}>OKです。</span>
             </h2>
             <p style={{ fontSize: '0.85rem', color: muted, marginBottom: 32, lineHeight: 1.8 }}>
               相談・見積もり完全無料。<br />しつこい連絡は一切しません。<br />枠が埋まる前にご相談ください。
             </p>
-            <LineBtn large text={`無料相談する（残${SLOTS_REMAINING}社）`} />
+            <LineBtn large text="無料相談する" />
             <p style={{ fontSize: '0.72rem', color: muted, marginTop: 16 }}>✓ 初期費用0円　✓ 制作費0円　✓ 最短3日　✓ 3ヶ月後は自由解約</p>
           </FadeIn>
         </div>
