@@ -1,21 +1,22 @@
 'use client';
-
 import { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import styles from './index.module.css';
 
 const MIN_LOADING_MS = 2000;
 const LOGO_FADE_MS = 800;
+
 export default function InitialLoading() {
+  const pathname = usePathname();
   const [isActive, setIsActive] = useState(true);
   const [showLogo, setShowLogo] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
+    if (typeof window === 'undefined') return;
+    if (pathname?.startsWith('/lp')) return;
 
     document.body.classList.add('loading-active');
     videoRef.current?.play().catch(() => {});
@@ -36,16 +37,12 @@ export default function InitialLoading() {
     return () => {
       window.clearTimeout(logoTimer);
       window.clearTimeout(hideTimer);
-      if (fadeOutTimer) {
-        window.clearTimeout(fadeOutTimer);
-      }
+      if (fadeOutTimer) window.clearTimeout(fadeOutTimer);
       document.body.classList.remove('loading-active');
     };
-  }, []);
+  }, [pathname]);
 
-  if (!isActive) {
-    return null;
-  }
+  if (!isActive || pathname?.startsWith('/lp')) return null;
 
   return (
     <div
