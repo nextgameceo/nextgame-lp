@@ -31,6 +31,7 @@ export async function POST(req: Request) {
 以下のJSON形式で返答してください：
 {
   "sub_title": "キャッチコピー（20文字以内・インパクトある一文・業種に合わせて）",
+  "original": "ヒーローの説明文（40文字以内・業種に合わせた自然な一文・サービスの魅力を伝える）",
   "theme": "light" または "dark"（医療・福祉・教育・士業は"light"、IT・エンタメ・飲食・美容は"dark"）,
   "accent_color": "blue" または "green" または "orange" または "red" または "purple"（業種イメージに合わせて）,
   "unsplash_keyword": "Unsplash検索用の英語キーワード1〜2単語（例: dental clinic, coffee shop, yoga studio）",
@@ -64,6 +65,7 @@ export async function POST(req: Request) {
 
     let ai: {
       sub_title: string;
+      original: string;
       theme: string;
       accent_color: string;
       unsplash_keyword: string;
@@ -80,6 +82,7 @@ export async function POST(req: Request) {
       const match = rawText.match(/\{[\s\S]*\}/);
       ai = match ? JSON.parse(match[0]) : {
         sub_title: title,
+        original: '',
         theme: 'light',
         accent_color: 'blue',
         unsplash_keyword: 'business office',
@@ -123,7 +126,7 @@ export async function POST(req: Request) {
     const aiContent = JSON.stringify({
       theme: ai.theme,
       accent_color: ai.accent_color,
-      original: content,
+      original: ai.original,
       image_url: imageUrl,
       features: ai.features,
       services: ai.services,
