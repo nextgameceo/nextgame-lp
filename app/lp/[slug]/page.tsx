@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getAllSites, getSiteBySlug } from "@/app/_libs/microcms";
 
 export const dynamicParams = true;
+
 export async function generateStaticParams() {
   try {
     const data = await getAllSites();
@@ -24,10 +24,7 @@ export async function generateMetadata({
   return {
     title: site.title,
     description: site.sub_title,
-    openGraph: {
-      title: site.title,
-      description: site.sub_title,
-    },
+    openGraph: { title: site.title, description: site.sub_title },
   };
 }
 
@@ -88,6 +85,13 @@ export default async function LpPage({
   const isDark = themeKey === "dark";
   const imageUrl = ai?.image_url ?? site.main_visual?.url ?? "";
 
+  const overlayGradient =
+    accentKey === 'green'  ? 'linear-gradient(to right, rgba(255,255,255,0.97) 45%, rgba(255,255,255,0.6) 100%)' :
+    accentKey === 'blue'   ? 'linear-gradient(to right, rgba(240,249,255,0.97) 45%, rgba(240,249,255,0.6) 100%)' :
+    accentKey === 'orange' ? 'linear-gradient(to right, rgba(255,247,237,0.97) 45%, rgba(255,247,237,0.6) 100%)' :
+    accentKey === 'red'    ? 'linear-gradient(to right, rgba(255,241,242,0.97) 45%, rgba(255,241,242,0.6) 100%)' :
+                             'linear-gradient(to right, rgba(245,243,255,0.97) 45%, rgba(245,243,255,0.6) 100%)';
+
   return (
     <>
       <style>{`
@@ -106,41 +110,26 @@ export default async function LpPage({
         .delay-1{animation-delay:0.1s;opacity:0;}
         .delay-2{animation-delay:0.25s;opacity:0;}
         .delay-3{animation-delay:0.4s;opacity:0;}
-
         nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:60px;background:${t.navBg};backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
         .nav-title{font-size:0.95rem;font-weight:700;color:var(--text);}
         .nav-credit{font-size:0.6rem;color:${isDark ? '#2d3748' : '#cbd5e1'};letter-spacing:0.08em;}
-
-        /* ── ヒーロー：業種別で完全切り替え ── */
         .hero{min-height:100vh;padding-top:60px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
-
-        /* ライト：画像を背景に・白オーバーレイ */
         .hero-light{background:var(--bg2);}
         .hero-light .hero-img{position:absolute;inset:0;z-index:0;}
         .hero-light .hero-img img{object-fit:cover;width:100%;height:100%;}
-        .hero-light .hero-overlay{position:absolute;inset:0;z-index:1;background:${
-          accentKey === 'green'  ? 'linear-gradient(to right, rgba(255,255,255,0.97) 45%, rgba(255,255,255,0.6) 100%)' :
-          accentKey === 'blue'   ? 'linear-gradient(to right, rgba(240,249,255,0.97) 45%, rgba(240,249,255,0.6) 100%)' :
-          accentKey === 'orange' ? 'linear-gradient(to right, rgba(255,247,237,0.97) 45%, rgba(255,247,237,0.6) 100%)' :
-          accentKey === 'red'    ? 'linear-gradient(to right, rgba(255,241,242,0.97) 45%, rgba(255,241,242,0.6) 100%)' :
-                                   'linear-gradient(to right, rgba(245,243,255,0.97) 45%, rgba(245,243,255,0.6) 100%)'
-        };}
+        .hero-light .hero-overlay{position:absolute;inset:0;z-index:1;background:${overlayGradient};}
         .hero-light .hero-content{position:relative;z-index:2;max-width:900px;padding:60px 2rem;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;width:100%;}
         .hero-light .hero-text{text-align:left;}
         .hero-light .hero-visual{position:relative;aspect-ratio:4/3;border-radius:16px;overflow:hidden;box-shadow:0 24px 64px rgba(var(--rgb),0.2);}
-
-        /* ダーク：グラデーション背景 */
         .hero-dark{background:var(--bg);}
         .hero-dark .hero-content{position:relative;z-index:2;max-width:700px;padding:60px 2rem;text-align:center;width:100%;}
         .hero-dark .hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse 65% 50% at 50% 40%,rgba(var(--rgb),0.15) 0%,transparent 70%);pointer-events:none;}
         .hero-dark .hero-visual{position:relative;width:min(600px,90vw);aspect-ratio:16/9;border-radius:12px;overflow:hidden;margin:32px auto 0;box-shadow:0 24px 64px rgba(var(--rgb),0.25);border:1px solid rgba(var(--rgb),0.2);}
-
         .hero-catch{font-size:clamp(1.6rem,4vw,3rem);font-weight:900;line-height:1.3;color:var(--text);margin-bottom:12px;}
         .hero-catch span{color:var(--primary);}
         .hero-desc{font-size:clamp(0.85rem,1.5vw,1rem);color:var(--muted);line-height:1.9;margin-bottom:28px;}
         .btn-primary{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:var(--primary);border-radius:100px;color:#fff;font-size:0.95rem;font-weight:700;cursor:pointer;text-decoration:none;box-shadow:0 8px 24px rgba(var(--rgb),0.35);transition:transform 0.2s,box-shadow 0.2s;}
         .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(var(--rgb),0.45);}
-
         .section{padding:80px 2rem;}
         .section-inner{max-width:900px;margin:0 auto;}
         .section-label{font-size:0.7rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--primary);margin-bottom:8px;font-weight:700;}
@@ -148,35 +137,29 @@ export default async function LpPage({
         .section-title span{color:var(--primary);}
         .section-sub{font-size:0.9rem;color:var(--muted);margin-bottom:40px;line-height:1.7;}
         .divider{height:1px;background:var(--border);}
-
         .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
         .feature-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 20px;transition:transform 0.2s,box-shadow 0.2s;}
         .feature-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(var(--rgb),0.12);}
         .feature-icon{font-size:2rem;margin-bottom:14px;}
         .feature-title{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:8px;}
         .feature-desc{font-size:0.83rem;color:var(--muted);line-height:1.7;}
-
         .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
         .service-card{background:linear-gradient(135deg,rgba(var(--rgb),0.08),rgba(var(--rgb),0.02));border:1px solid rgba(var(--rgb),0.2);border-radius:12px;padding:24px 20px;}
         .service-num{font-size:0.65rem;font-weight:700;letter-spacing:0.15em;color:var(--primary);margin-bottom:10px;}
         .service-name{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:8px;}
         .service-desc{font-size:0.82rem;color:var(--muted);line-height:1.65;}
-
         .reasons-list{display:flex;flex-direction:column;gap:14px;}
         .reason-item{display:flex;gap:20px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;}
         .reason-num{font-size:2rem;font-weight:900;color:rgba(var(--rgb),0.2);flex-shrink:0;line-height:1;font-family:'Inter',sans-serif;}
         .reason-title{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:6px;}
         .reason-desc{font-size:0.84rem;color:var(--muted);line-height:1.7;}
-
         .cta-section{padding:80px 2rem;background:linear-gradient(135deg,rgba(var(--rgb),0.1),rgba(var(--rgb),0.03));text-align:center;}
         .cta-title{font-size:clamp(1.4rem,3vw,2rem);font-weight:900;color:var(--text);margin-bottom:12px;}
         .cta-sub{font-size:0.9rem;color:var(--muted);margin-bottom:32px;line-height:1.7;}
-
         footer{padding:28px 2rem;text-align:center;border-top:1px solid var(--border);}
         .footer-name{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:4px;}
         .footer-copy{font-size:0.78rem;color:var(--muted);margin-bottom:6px;}
         .footer-credit{font-size:0.6rem;color:${isDark ? '#2d3748' : '#e2e8f0'};letter-spacing:0.08em;}
-
         @media(max-width:768px){
           .hero-light .hero-content{grid-template-columns:1fr;padding:40px 1.2rem;}
           .hero-light .hero-visual{display:none;}
@@ -198,7 +181,6 @@ export default async function LpPage({
         <span className="nav-credit">Powered by NEXTGAME</span>
       </nav>
 
-      {/* ── ヒーロー：ライトテーマ（左テキスト・右画像） ── */}
       {!isDark && (
         <section className="hero hero-light">
           {imageUrl && (
@@ -235,7 +217,6 @@ export default async function LpPage({
         </section>
       )}
 
-      {/* ── ヒーロー：ダークテーマ（中央・画像下） ── */}
       {isDark && (
         <section className="hero hero-dark">
           <div className="hero-glow" />
@@ -260,7 +241,6 @@ export default async function LpPage({
 
       <div className="divider" />
 
-      {/* ── 特徴 ── */}
       {ai?.features && ai.features.length > 0 && (
         <section className="section" style={{ background: 'var(--bg2)' }}>
           <div className="section-inner">
@@ -282,7 +262,6 @@ export default async function LpPage({
 
       <div className="divider" />
 
-      {/* ── サービス ── */}
       {ai?.services && ai.services.length > 0 && (
         <section className="section" style={{ background: 'var(--bg)' }}>
           <div className="section-inner">
@@ -304,7 +283,6 @@ export default async function LpPage({
 
       <div className="divider" />
 
-      {/* ── 選ばれる理由 ── */}
       {ai?.reasons && ai.reasons.length > 0 && (
         <section className="section" style={{ background: 'var(--bg3)' }}>
           <div className="section-inner">
@@ -328,7 +306,6 @@ export default async function LpPage({
 
       <div className="divider" />
 
-      {/* ── CTA ── */}
       <section className="cta-section" id="cta">
         <h2 className="cta-title">{ai?.cta_text ?? 'お問い合わせ'}</h2>
         <p className="cta-sub">{ai?.cta_sub ?? 'お気軽にご相談ください'}</p>
@@ -337,7 +314,6 @@ export default async function LpPage({
         </a>
       </section>
 
-      {/* ── フッター ── */}
       <footer>
         <p className="footer-name">{site.title}</p>
         <p className="footer-copy">© {new Date().getFullYear()} {site.title} All rights reserved.</p>
