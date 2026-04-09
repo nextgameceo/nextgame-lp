@@ -195,7 +195,7 @@ export default function NewLpPage() {
             {url}
           </div>
           <div style={{ display: 'flex', gap: '10px', marginBottom: '36px', flexWrap: 'wrap', justifyContent: 'center' }}>
-            
+            <a
               href={url}
               target="_blank"
               rel="noopener noreferrer"
