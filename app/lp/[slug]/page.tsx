@@ -4,7 +4,6 @@ import { getAllSites, getSiteBySlug } from "@/app/_libs/microcms";
 
 export const dynamicParams = true;
 
-
 export async function generateStaticParams() {
   try {
     const data = await getAllSites();
@@ -77,7 +76,13 @@ export default async function LpPage({
     cta_sub: string;
   } | null = null;
 
-  try { ai = JSON.parse(site.content); } catch { ai = null; }
+  try {
+    const raw = site.content
+      .replace(/<[^>]*>/g, '')
+      .replace(/&quot;/g, '"')
+      .trim();
+    ai = JSON.parse(raw);
+  } catch { ai = null; }
 
   const themeKey: ThemeKey = ai?.theme ?? "light";
   const accentKey: AccentKey = ai?.accent_color ?? "blue";
