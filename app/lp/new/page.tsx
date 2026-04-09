@@ -47,7 +47,7 @@ export default function NewLpPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#000', color: '#e8e8e8', fontFamily: 'Noto Sans JP, sans-serif' }}>
-      <style>{`
+      <style>{'
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700;900&family=Inter:wght@700;900&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -59,7 +59,7 @@ export default function NewLpPage() {
         .inp { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 16px 18px; color: #e8e8e8; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; }
         .inp:focus { border-color: rgba(109,190,214,0.5); }
         .inp::placeholder { color: #333; }
-      `}</style>
+      '}</style>
 
       <nav style={{ padding: '0 40px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
         <a href="/" style={{ textDecoration: 'none' }}>
