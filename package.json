@@ -2,14 +2,12 @@
   "name": "nextgame-lp",
   "version": "0.1.0",
   "private": true,
-
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
-
   "dependencies": {
     "@anthropic-ai/sdk": "^0.27.0",
     "cheerio": "^1.0.0",
@@ -24,19 +22,14 @@
     "react": "19.0.0",
     "react-dom": "19.0.0"
   },
-
   "devDependencies": {
+    "typescript": "^5.8.2",
     "@types/node": "^22.13.10",
     "@types/react": "^19.0.11",
     "@types/react-dom": "^19.0.4",
     "eslint": "9.22.0",
     "eslint-config-next": "^15.2.3",
     "eslint-config-prettier": "^10.1.1",
-    "prettier": "^3.5.3",
-    "typescript": "^5.8.2"
-  },
-
-  "engines": {
-    "node": "18.x"
+    "prettier": "^3.5.3"
   }
 }
