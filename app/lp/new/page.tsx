@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect, Suspense } from "react"
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from "next/navigation"
 
 const STEPS = [
   {
@@ -58,7 +58,7 @@ const STEPS = [
       { label: 'アクセスの良さ・立地', icon: '📍' },
       { label: '完全予約制・プライベート感', icon: '🔒' },
       { label: '最新設備・機器', icon: '🔬' },
-      { label: '女性スタッフ・安心感', icon: '👩‍⚕️' },
+      { label: '女性スタッフ・安心感', icon: '👩' },
     ],
     hasOther: false,
   },
@@ -68,15 +68,15 @@ const STEPS = [
     sub: 'LPで解決したい課題を選んでください',
     options: [
       { label: '新規客が来ない', icon: '😔' },
-      { label: 'リピーターが増えない', icon: '🔄' },
+      { label: 'リピーターが増えない', icon: '🔁' },
       { label: '単価が上げられない', icon: '📉' },
-      { label: '競合との差別化ができない', icon: '⚔️' },
+      { label: '競合との差別化ができない', icon: '🆚' },
       { label: 'ネット集客ができていない', icon: '📱' },
       { label: '問い合わせが少ない', icon: '📞' },
       { label: 'ブランドイメージが弱い', icon: '🎨' },
       { label: '口コミが広がらない', icon: '💬' },
       { label: '採用・求人につなげたい', icon: '👥' },
-      { label: '既存サイトをリニューアルしたい', icon: '🔄' },
+      { label: '既存サイトをリニューアルしたい', icon: '🔃' },
     ],
     hasOther: false,
   },
@@ -124,14 +124,13 @@ function NewLpContent() {
     const company = searchParams.get('company');
     const industry = searchParams.get('industry');
     const redesign = searchParams.get('is_redesign');
-
     if (redesign === 'true') {
       setIsRedesign(true);
       if (prompt) setExtraPrompt(prompt);
       if (company) setTitle(company);
       if (industry) {
-        const matched = STEPS[0].options.find(o =>
-          o.label.includes(industry) || industry.includes(o.label.split('・')[0])
+        const matched = STEPS[0].options.find(
+          o => o.label.includes(industry) || industry.includes(o.label.split('・')[0])
         );
         if (matched) setAnswers(prev => ({ ...prev, industry: matched.label }));
       }
@@ -188,19 +187,16 @@ function NewLpContent() {
     if (!title.trim()) { setError('会社名・サービス名を入力してください'); return; }
     setError('');
     setGenStep('loading');
-
     const logoUrl = await uploadLogo();
-
     const promptParts: string[] = [];
     if (extraPrompt) promptParts.push(extraPrompt);
     if (!isRedesign) {
-      if (answers.industry) promptParts.push(`業種: ${answers.industry}`);
-      if (answers.target) promptParts.push(`ターゲット: ${answers.target}`);
-      if (answers.strength) promptParts.push(`強み: ${answers.strength}`);
-      if (answers.problem) promptParts.push(`課題: ${answers.problem}`);
-      if (answers.design) promptParts.push(`デザイン: ${answers.design}`);
+      if (answers.industry) promptParts.push('業種: ' + answers.industry);
+      if (answers.target) promptParts.push('ターゲット: ' + answers.target);
+      if (answers.strength) promptParts.push('強み: ' + answers.strength);
+      if (answers.problem) promptParts.push('課題: ' + answers.problem);
+      if (answers.design) promptParts.push('デザイン: ' + answers.design);
     }
-
     try {
       const res = await fetch('/api/create-lp', {
         method: 'POST',
@@ -208,7 +204,7 @@ function NewLpContent() {
         body: JSON.stringify({
           title,
           sub_title: '',
-          content: answers.industry ? `業種：${answers.industry}` : '',
+          content: answers.industry ? '業種：' + answers.industry : '',
           client_name: '',
           prompt: promptParts.join('\n'),
           logo_url: logoUrl,
@@ -253,7 +249,7 @@ function NewLpContent() {
         </a>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           {isRedesign && (
-            <span style={{ fontSize: 11, color: gold, border: `1px solid rgba(200,168,74,0.3)`, padding: '3px 10px', borderRadius: 4, letterSpacing: '0.1em' }}>REDESIGN</span>
+            <span style={{ fontSize: 11, color: gold, border: '1px solid rgba(200,168,74,0.3)', padding: '3px 10px', borderRadius: 4, letterSpacing: '0.1em' }}>REDESIGN</span>
           )}
           {genStep === 'quiz' && (
             <span style={{ fontSize: 12, color: '#555', fontFamily: 'Inter, monospace' }}>{currentStep + 1} / {totalSteps}</span>
@@ -263,27 +259,25 @@ function NewLpContent() {
 
       <div style={{ maxWidth: 560, margin: '0 auto', padding: '40px 20px 100px' }}>
 
-        {/* QUIZ（新規のみ） */}
         {genStep === 'quiz' && (
           <div key={currentStep} className="fade-up">
             <div style={{ marginBottom: 32 }}>
               <div style={{ height: 3, background: 'rgba(255,255,255,0.06)', borderRadius: 2, overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: `${progress}%`, background: `linear-gradient(90deg,${gold},#e8d48a)`, borderRadius: 2, transition: 'width 0.4s ease' }} />
+                <div style={{ height: '100%', width: progress + '%', background: 'linear-gradient(90deg,#c8a84a,#e8d48a)', borderRadius: 2, transition: 'width 0.4s ease' }} />
               </div>
             </div>
             <div style={{ marginBottom: 28 }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: '0.65rem', letterSpacing: '0.3em', color: gold, border: `1px solid rgba(200,168,74,0.2)`, padding: '3px 12px', borderRadius: 2, marginBottom: 14 }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: '0.65rem', letterSpacing: '0.3em', color: gold, border: '1px solid rgba(200,168,74,0.2)', padding: '3px 12px', borderRadius: 2, marginBottom: 14 }}>
                 STEP {currentStep + 1}
               </div>
               <h1 style={{ fontSize: 'clamp(1.4rem,4vw,1.9rem)', fontWeight: 900, color: '#fff', lineHeight: 1.3, marginBottom: 6 }}>{step.question}</h1>
               <p style={{ fontSize: '0.85rem', color: '#555' }}>{step.sub}</p>
             </div>
-
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {step.options.map(opt => (
                 <button
                   key={opt.label}
-                  className={`opt-btn ${answers[step.id] === opt.label ? 'selected' : ''}`}
+                  className={answers[step.id] === opt.label ? 'opt-btn selected' : 'opt-btn'}
                   onClick={() => handleSelect(opt.label)}
                 >
                   <span className="opt-icon">{opt.icon}</span>
@@ -299,31 +293,43 @@ function NewLpContent() {
               )}
               {step.hasOther && showOther[step.id] && (
                 <div style={{ display: 'flex', gap: 8 }}>
-                  <input className="inp" type="text" placeholder="業種を入力（例：ペットサロン）" value={otherInputs[step.id] ?? ''} onChange={e => setOtherInputs(prev => ({ ...prev, [step.id]: e.target.value }))} onKeyDown={e => e.key === 'Enter' && handleOtherConfirm()} autoFocus />
-                  <button onClick={handleOtherConfirm} style={{ padding: '0 20px', background: `linear-gradient(135deg,${gold},#e8d48a)`, border: 'none', borderRadius: 10, color: '#000', fontWeight: 900, cursor: 'pointer', flexShrink: 0 }}>決定</button>
+                  <input
+                    className="inp"
+                    type="text"
+                    placeholder="業種を入力（例：ペットサロン）"
+                    value={otherInputs[step.id] ?? ''}
+                    onChange={e => setOtherInputs(prev => ({ ...prev, [step.id]: e.target.value }))}
+                    onKeyDown={e => e.key === 'Enter' && handleOtherConfirm()}
+                    autoFocus
+                  />
+                  <button
+                    onClick={handleOtherConfirm}
+                    style={{ padding: '0 20px', background: 'linear-gradient(135deg,#c8a84a,#e8d48a)', border: 'none', borderRadius: 10, color: '#000', fontWeight: 900, cursor: 'pointer', flexShrink: 0 }}
+                  >
+                    決定
+                  </button>
                 </div>
               )}
             </div>
             {currentStep > 0 && (
-              <button onClick={() => setCurrentStep(currentStep - 1)} style={{ marginTop: 20, background: 'transparent', border: 'none', color: '#444', fontSize: '0.85rem', cursor: 'pointer', fontFamily: 'inherit' }}>
+              <button
+                onClick={() => setCurrentStep(currentStep - 1)}
+                style={{ marginTop: 20, background: 'transparent', border: 'none', color: '#444', fontSize: '0.85rem', cursor: 'pointer', fontFamily: 'inherit' }}
+              >
                 ← 前の質問に戻る
               </button>
             )}
           </div>
         )}
 
-        {/* NAME + LOGO */}
         {genStep === 'name' && (
           <div className="fade-up">
-            {/* リデザインバナー */}
             {isRedesign && (
-              <div style={{ background: 'rgba(200,168,74,0.06)', border: `1px solid rgba(200,168,74,0.2)`, borderRadius: 12, padding: '16px 18px', marginBottom: 24 }}>
+              <div style={{ background: 'rgba(200,168,74,0.06)', border: '1px solid rgba(200,168,74,0.2)', borderRadius: 12, padding: '16px 18px', marginBottom: 24 }}>
                 <p style={{ fontSize: '0.68rem', color: gold, letterSpacing: '0.15em', fontWeight: 700, marginBottom: 8 }}>リデザインモード</p>
                 <p style={{ fontSize: '0.82rem', color: '#888', lineHeight: 1.7 }}>{extraPrompt.slice(0, 120)}...</p>
               </div>
             )}
-
-            {/* 新規の場合は回答サマリー */}
             {!isRedesign && Object.keys(answers).length > 0 && (
               <div style={{ background: 'rgba(200,168,74,0.05)', border: '1px solid rgba(200,168,74,0.15)', borderRadius: 14, padding: '18px', marginBottom: 24 }}>
                 <p style={{ fontSize: '0.65rem', color: gold, letterSpacing: '0.2em', fontWeight: 700, marginBottom: 12 }}>あなたの回答</p>
@@ -337,8 +343,7 @@ function NewLpContent() {
                 </div>
               </div>
             )}
-
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: '0.65rem', letterSpacing: '0.3em', color: gold, border: `1px solid rgba(200,168,74,0.2)`, padding: '3px 12px', borderRadius: 2, marginBottom: 14 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: '0.65rem', letterSpacing: '0.3em', color: gold, border: '1px solid rgba(200,168,74,0.2)', padding: '3px 12px', borderRadius: 2, marginBottom: 14 }}>
               {isRedesign ? 'REDESIGN INFO' : 'LAST STEP'}
             </div>
             <h2 style={{ fontSize: 'clamp(1.4rem,4vw,1.9rem)', fontWeight: 900, color: '#fff', lineHeight: 1.3, marginBottom: 6 }}>
@@ -347,15 +352,18 @@ function NewLpContent() {
             <p style={{ fontSize: '0.85rem', color: '#555', marginBottom: 24 }}>
               {isRedesign ? 'AIが既存サイトを分析し、改善版LPを生成します' : 'AIがあなたの回答を元に本格LPを生成します'}
             </p>
-
             <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-              {/* 会社名 */}
               <div>
                 <label style={{ display: 'block', fontSize: '0.7rem', color: gold, letterSpacing: '0.15em', fontWeight: 700, marginBottom: 8 }}>会社名・サービス名 *</label>
-                <input className="inp" type="text" placeholder="例：山田整体院、田中税理士事務所" value={title} onChange={e => setTitle(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleGenerate()} />
+                <input
+                  className="inp"
+                  type="text"
+                  placeholder="例：山田整体院、田中税理士事務所"
+                  value={title}
+                  onChange={e => setTitle(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleGenerate()}
+                />
               </div>
-
-              {/* ロゴアップロード */}
               <div>
                 <label style={{ display: 'block', fontSize: '0.7rem', color: '#888', letterSpacing: '0.15em', fontWeight: 700, marginBottom: 8 }}>ロゴ画像（任意）</label>
                 <div className="logo-drop" onClick={() => fileInputRef.current?.click()}>
@@ -365,29 +373,128 @@ function NewLpContent() {
                       <p style={{ fontSize: '0.72rem', color: '#555' }}>クリックして変更</p>
                     </div>
                   ) : (
-                    <>
+                    <div>
                       <div style={{ fontSize: '1.8rem', marginBottom: 8 }}>🖼️</div>
                       <p style={{ fontSize: '0.85rem', color: '#555', marginBottom: 4 }}>ロゴ画像をアップロード</p>
                       <p style={{ fontSize: '0.72rem', color: '#333' }}>PNG・JPG・SVG・WebP対応</p>
-                    </>
+                    </div>
                   )}
                 </div>
                 <input ref={fileInputRef} type="file" accept="image/*" onChange={handleLogoChange} style={{ display: 'none' }} />
               </div>
-
-              {/* 追加こだわり（新規のみ） */}
               {!isRedesign && (
                 <div>
                   <label style={{ display: 'block', fontSize: '0.7rem', color: '#888', letterSpacing: '0.15em', fontWeight: 700, marginBottom: 8 }}>追加のこだわり（任意）</label>
-                  <textarea className="inp" placeholder="例：予約を増やしたい、高級感を出したい..." value={extraPrompt} onChange={e => setExtraPrompt(e.target.value)} style={{ minHeight: 80, resize: 'vertical', lineHeight: 1.6 }} />
+                  <textarea
+                    className="inp"
+                    placeholder="例：予約を増やしたい、高級感を出したい..."
+                    value={extraPrompt}
+                    onChange={e => setExtraPrompt(e.target.value)}
+                    style={{ minHeight: 80, resize: 'vertical', lineHeight: 1.6 }}
+                  />
                 </div>
               )}
             </div>
-
             {error && (
               <div style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)', borderRadius: 8, padding: '12px 16px', fontSize: '13px', color: '#f87171', marginTop: 16 }}>
                 {error}
               </div>
             )}
+            <button
+              onClick={handleGenerate}
+              disabled={logoUploading}
+              style={{ width: '100%', padding: '18px', background: 'linear-gradient(135deg,#c8a84a,#e8d48a)', border: 'none', borderRadius: 10, color: '#000', fontSize: '1rem', fontWeight: 900, cursor: 'pointer', marginTop: 20, opacity: logoUploading ? 0.7 : 1 }}
+            >
+              {logoUploading ? 'ロゴをアップロード中...' : isRedesign ? 'リデザインLPを生成する（無料）' : 'AIでLPを生成する（無料）'}
+            </button>
+            {!isRedesign && Object.keys(answers).length > 0 && (
+              <button
+                onClick={() => { setCurrentStep(STEPS.length - 1); setGenStep('quiz'); }}
+                style={{ width: '100%', padding: '13px', background: 'transparent', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, color: '#555', fontSize: '0.85rem', cursor: 'pointer', fontFamily: 'inherit', marginTop: 10 }}
+              >
+                ← 回答を修正する
+              </button>
+            )}
+            <p style={{ fontSize: '0.7rem', color: '#333', marginTop: 12, textAlign: 'center' }}>クレカ不要　登録不要　完全無料</p>
+          </div>
+        )}
 
-            <button onClick={handleGenerate} disabled={logoUploading} style={{ width: '100%', padding: '18px',​​​​​​​​​​​​​​​​
+        {genStep === 'loading' && (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '50vh', gap: 28 }}>
+            <div style={{ position: 'relative', width: 72, height: 72 }}>
+              <div style={{ position: 'absolute', inset: 0, border: '2px solid rgba(200,168,74,0.15)', borderTopColor: gold, borderRadius: '50%', animation: 'spin 0.9s linear infinite' }} />
+              <div style={{ position: 'absolute', inset: 10, border: '1px solid rgba(109,190,214,0.1)', borderTopColor: cyan, borderRadius: '50%', animation: 'spin 1.3s linear infinite reverse' }} />
+              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem' }}>✨</div>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <p style={{ fontFamily: 'Inter, monospace', fontSize: '1rem', color: gold, letterSpacing: '0.1em', marginBottom: 8, fontWeight: 700 }}>
+                {isRedesign ? 'リデザイン中...' : 'AIがLPを生成中...'}
+              </p>
+              <p style={{ fontSize: '0.82rem', color: '#555' }}>
+                {isRedesign ? '既存サイト分析 → 改善コピー生成 → デザイン適用' : '回答分析 → コピー生成 → デザイン適用'}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {genStep === 'done' && (
+          <div className="fade-up" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: 40 }}>
+            <div style={{ marginBottom: 24 }}>
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#c8a84a" strokeWidth="1.5" style={{ display: 'block', margin: '0 auto' }}>
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+            <h2 style={{ fontFamily: 'Inter, monospace', fontSize: 'clamp(1.5rem,4vw,2rem)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 8 }}>
+              {isRedesign ? 'リデザイン完了！' : 'LP生成完了！'}
+            </h2>
+            <p style={{ fontSize: '0.9rem', color: '#555', marginBottom: 32, lineHeight: 1.7 }}>約1〜2分でビルドが完了します。</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%', maxWidth: 400 }}>
+              <a
+                href={generatedUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '18px', background: 'linear-gradient(135deg,#c8a84a,#e8d48a)', borderRadius: 10, color: '#000', fontSize: '1rem', fontWeight: 900, textDecoration: 'none' }}
+              >
+                {isRedesign ? 'リデザインLPを見る →' : '生成されたLPを見る →'}
+              </a>
+              <a
+                href="https://lin.ee/SJDJXQv"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '16px', background: '#06C755', borderRadius: 10, color: '#fff', fontSize: '0.95rem', fontWeight: 900, textDecoration: 'none' }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z"/></svg>
+                このLPをサブスクで運用する
+              </a>
+              <button
+                onClick={() => {
+                  setCurrentStep(0);
+                  setAnswers({});
+                  setTitle('');
+                  setGenStep('quiz');
+                  setSlug('');
+                  setLogoFile(null);
+                  setLogoPreview('');
+                  setExtraPrompt('');
+                  setIsRedesign(false);
+                }}
+                style={{ padding: '14px', background: 'transparent', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, color: '#555', fontSize: '0.85rem', cursor: 'pointer', fontFamily: 'inherit' }}
+              >
+                もう一度生成する
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default function NewLpPage() {
+  return (
+    <Suspense fallback={<div style={{ background: '#000', minHeight: '100vh' }} />}>
+      <NewLpContent />
+    </Suspense>
+  );
+}
