@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { getAllSites, getSiteBySlug } from "@/app/_libs/microcms";
+import type { Metadata } from "next"
+import { notFound } from "next/navigation"
+import { getAllSites, getSiteBySlug } from "@/app/_libs/microcms"
 
 export const dynamicParams = true;
 
@@ -74,6 +74,8 @@ export default async function LpPage({
     reasons: { num: string; title: string; desc: string }[];
     reviews: { name: string; role: string; text: string; star: number }[];
     faq: { q: string; a: string }[];
+    flow: { step: string; title: string; desc: string }[];
+    closing: { title: string; body: string; guarantee: string };
     cta_text: string;
     cta_sub: string;
   } | null = null;
@@ -120,8 +122,8 @@ export default async function LpPage({
         .delay-3{animation-delay:0.4s;opacity:0;}
         nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:${t.navBg};backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
         .nav-title{font-size:0.95rem;font-weight:700;color:var(--text);}
-        .nav-cta{display:inline-flex;align-items:center;padding:8px 20px;background:var(--primary);color:#fff;border-radius:100px;font-size:0.78rem;font-weight:700;text-decoration:none;}
-        .nav-credit{font-size:0.6rem;color:${isDark ? '#2d3748' : '#cbd5e1'};letter-spacing:0.08em;}
+        .nav-cta{display:inline-flex;align-items:center;padding:8px 20px;background:var(--primary);color:#fff;border-radius:100px;font-size:0.78rem;font-weight:700;text-decoration:none;transition:opacity 0.2s;}
+        .nav-cta:hover{opacity:0.85;}
         .hero{min-height:100vh;padding-top:64px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
         .hero-light{background:var(--bg2);}
         .hero-light .hero-img{position:absolute;inset:0;z-index:0;}
@@ -137,7 +139,7 @@ export default async function LpPage({
         .badge{display:inline-flex;align-items:center;gap:6px;padding:4px 14px;border:1px solid rgba(var(--rgb),0.25);border-radius:100px;font-size:0.68rem;letter-spacing:0.15em;color:var(--primary);font-weight:700;margin-bottom:16px;text-transform:uppercase;}
         .hero-catch{font-size:clamp(1.8rem,4.5vw,3.2rem);font-weight:900;line-height:1.25;color:var(--text);margin-bottom:16px;}
         .hero-catch span{color:var(--primary);}
-        .hero-desc{font-size:clamp(0.88rem,1.5vw,1rem);color:var(--muted);line-height:1.9;margin-bottom:32px;}
+        .hero-desc{font-size:clamp(0.9rem,1.5vw,1.05rem);color:var(--muted);line-height:2;margin-bottom:32px;}
         .btn-primary{display:inline-flex;align-items:center;gap:8px;padding:16px 36px;background:var(--primary);border-radius:100px;color:#fff;font-size:1rem;font-weight:700;cursor:pointer;text-decoration:none;box-shadow:0 8px 32px rgba(var(--rgb),0.35);transition:transform 0.2s,box-shadow 0.2s;}
         .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(var(--rgb),0.45);}
         .btn-outline{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border:2px solid rgba(var(--rgb),0.3);border-radius:100px;color:var(--primary);font-size:0.9rem;font-weight:700;text-decoration:none;transition:all 0.2s;}
@@ -150,39 +152,52 @@ export default async function LpPage({
         .section-sub{font-size:0.92rem;color:var(--muted);margin-bottom:48px;line-height:1.8;}
         .divider{height:1px;background:var(--border);}
         .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
-        .feature-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px 24px;transition:transform 0.2s,box-shadow 0.2s;}
-        .feature-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(var(--rgb),0.1);}
-        .feature-icon{font-size:2.2rem;margin-bottom:16px;}
-        .feature-title{font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:10px;}
-        .feature-desc{font-size:0.85rem;color:var(--muted);line-height:1.75;}
+        .feature-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:36px 28px;transition:transform 0.2s,box-shadow 0.2s;}
+        .feature-card:hover{transform:translateY(-6px);box-shadow:0 16px 48px rgba(var(--rgb),0.1);}
+        .feature-icon{font-size:2.4rem;margin-bottom:20px;}
+        .feature-title{font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:12px;}
+        .feature-desc{font-size:0.88rem;color:var(--muted);line-height:1.85;}
         .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
-        .service-card{background:linear-gradient(135deg,rgba(var(--rgb),0.08),rgba(var(--rgb),0.02));border:1px solid rgba(var(--rgb),0.2);border-radius:16px;padding:28px 24px;}
+        .service-card{background:linear-gradient(135deg,rgba(var(--rgb),0.08),rgba(var(--rgb),0.02));border:1px solid rgba(var(--rgb),0.2);border-radius:16px;padding:32px 24px;}
         .service-num{font-size:0.65rem;font-weight:700;letter-spacing:0.15em;color:var(--primary);margin-bottom:12px;}
-        .service-name{font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:8px;}
-        .service-desc{font-size:0.84rem;color:var(--muted);line-height:1.7;margin-bottom:10px;}
-        .service-price{font-size:0.78rem;font-weight:700;color:var(--primary);padding:4px 12px;background:rgba(var(--rgb),0.1);border-radius:100px;display:inline-block;}
-        .reasons-list{display:flex;flex-direction:column;gap:16px;}
-        .reason-item{display:flex;gap:24px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;}
-        .reason-num{font-size:2.5rem;font-weight:900;color:rgba(var(--rgb),0.15);flex-shrink:0;line-height:1;font-family:'Inter',sans-serif;}
-        .reason-title{font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:8px;}
-        .reason-desc{font-size:0.86rem;color:var(--muted);line-height:1.75;}
+        .service-name{font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:10px;}
+        .service-desc{font-size:0.88rem;color:var(--muted);line-height:1.8;margin-bottom:14px;}
+        .service-price{font-size:0.8rem;font-weight:700;color:var(--primary);padding:5px 14px;background:rgba(var(--rgb),0.1);border-radius:100px;display:inline-block;}
+        .reasons-list{display:flex;flex-direction:column;gap:20px;}
+        .reason-item{display:flex;gap:28px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;}
+        .reason-num{font-size:3rem;font-weight:900;color:rgba(var(--rgb),0.12);flex-shrink:0;line-height:1;font-family:'Inter',sans-serif;}
+        .reason-title{font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:10px;}
+        .reason-desc{font-size:0.88rem;color:var(--muted);line-height:1.85;}
         .reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
         .review-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 24px;}
         .review-stars{display:flex;gap:3px;margin-bottom:14px;}
         .review-star{color:var(--primary);font-size:1rem;}
-        .review-text{font-size:0.88rem;color:var(--text);line-height:1.8;margin-bottom:18px;}
-        .review-author{display:flex;flex-direction:column;gap:3px;}
+        .review-text{font-size:0.9rem;color:var(--text);line-height:1.85;margin-bottom:20px;}
         .review-name{font-size:0.88rem;font-weight:700;color:var(--text);}
-        .review-role{font-size:0.75rem;color:var(--muted);}
+        .review-role{font-size:0.75rem;color:var(--muted);margin-top:3px;}
+        .flow-list{display:flex;flex-direction:column;gap:0;}
+        .flow-item{display:flex;gap:24px;align-items:flex-start;padding:24px 0;border-bottom:1px solid var(--border);}
+        .flow-item:last-child{border-bottom:none;}
+        .flow-step{width:48px;height:48px;border-radius:50%;background:rgba(var(--rgb),0.1);border:2px solid rgba(var(--rgb),0.3);display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:0.78rem;font-weight:700;color:var(--primary);flex-shrink:0;}
+        .flow-title{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:6px;}
+        .flow-desc{font-size:0.88rem;color:var(--muted);line-height:1.7;}
         .faq-list{display:flex;flex-direction:column;gap:12px;}
         .faq-item{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
-        .faq-q{padding:20px 24px;font-size:0.92rem;font-weight:700;color:var(--text);display:flex;align-items:flex-start;gap:14px;}
-        .faq-q-icon{color:var(--primary);font-weight:900;flex-shrink:0;font-size:1rem;}
-        .faq-a{padding:0 24px 20px 52px;font-size:0.85rem;color:var(--muted);line-height:1.8;}
-        .cta-section{padding:96px 2rem;background:linear-gradient(135deg,rgba(var(--rgb),0.08),rgba(var(--rgb),0.02));text-align:center;}
+        .faq-q{padding:22px 28px;font-size:0.95rem;font-weight:700;color:var(--text);display:flex;align-items:flex-start;gap:16px;}
+        .faq-q-icon{color:var(--primary);font-weight:900;flex-shrink:0;font-size:1.1rem;}
+        .faq-a{padding:0 28px 22px 60px;font-size:0.88rem;color:var(--muted);line-height:1.85;}
+        .closing-section{padding:80px 2rem;background:linear-gradient(135deg,rgba(var(--rgb),0.06),rgba(var(--rgb),0.01));border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+        .closing-inner{max-width:680px;margin:0 auto;text-align:center;}
+        .closing-title{font-size:clamp(1.4rem,3vw,2rem);font-weight:900;color:var(--text);margin-bottom:20px;line-height:1.4;}
+        .closing-title span{color:var(--primary);}
+        .closing-body{font-size:0.95rem;color:var(--muted);line-height:2;margin-bottom:28px;}
+        .closing-guarantee{display:inline-flex;align-items:center;gap:8px;padding:10px 24px;background:rgba(var(--rgb),0.08);border:1px solid rgba(var(--rgb),0.2);border-radius:100px;font-size:0.82rem;color:var(--primary);font-weight:700;margin-bottom:36px;}
+        .cta-section{padding:96px 2rem;text-align:center;}
+        .cta-inner{max-width:640px;margin:0 auto;}
         .cta-title{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:900;color:var(--text);margin-bottom:14px;line-height:1.3;}
-        .cta-sub{font-size:0.92rem;color:var(--muted);margin-bottom:36px;line-height:1.8;}
-        .cta-note{font-size:0.75rem;color:var(--muted);margin-top:16px;opacity:0.7;}
+        .cta-sub{font-size:0.95rem;color:var(--muted);margin-bottom:36px;line-height:1.85;}
+        .cta-buttons{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
+        .cta-note{font-size:0.75rem;color:var(--muted);opacity:0.7;}
         footer{padding:36px 2rem;text-align:center;border-top:1px solid var(--border);}
         .footer-name{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:6px;}
         .footer-copy{font-size:0.78rem;color:var(--muted);margin-bottom:8px;}
@@ -191,18 +206,17 @@ export default async function LpPage({
           .hero-light .hero-content{grid-template-columns:1fr;padding:60px 1.2rem;}
           .hero-light .hero-visual{display:none;}
           .hero-light .hero-text{text-align:center;}
-          .features-grid{grid-template-columns:1fr;}
-          .services-grid{grid-template-columns:1fr;}
-          .reviews-grid{grid-template-columns:1fr;}
+          .features-grid,.services-grid,.reviews-grid{grid-template-columns:1fr;}
           .reason-item{flex-direction:column;gap:10px;}
+          .flow-item{gap:16px;}
           nav{padding:0 1.2rem;}
-          .section{padding:72px 1.2rem;}
-          .nav-cta{display:none;}
+          .section{padding:64px 1.2rem;}
+          .nav-cta{font-size:0.72rem;padding:7px 14px;}
+          .cta-buttons{flex-direction:column;}
+          .cta-buttons a{width:100%!important;justify-content:center;}
         }
         @media(min-width:481px) and (max-width:768px){
-          .features-grid{grid-template-columns:repeat(2,1fr);}
-          .services-grid{grid-template-columns:repeat(2,1fr);}
-          .reviews-grid{grid-template-columns:repeat(2,1fr);}
+          .features-grid,.services-grid,.reviews-grid{grid-template-columns:repeat(2,1fr);}
         }
       `}</style>
 
@@ -210,17 +224,13 @@ export default async function LpPage({
         <span className="nav-title">{site.title}</span>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <a href="#cta" className="nav-cta">{ai?.cta_text ?? 'お問い合わせ'}</a>
-          <span className="nav-credit">Powered by NEXTGAME</span>
+          <span className="nav-credit" style={{ fontSize: '0.6rem', color: isDark ? '#2d3748' : '#cbd5e1', letterSpacing: '0.08em' }}>Powered by NEXTGAME</span>
         </div>
       </nav>
 
       {!isDark && (
         <section className="hero hero-light">
-          {imageUrl && (
-            <div className="hero-img">
-              <img src={imageUrl} alt={site.title} />
-            </div>
-          )}
+          {imageUrl && <div className="hero-img"><img src={imageUrl} alt={site.title} /></div>}
           <div className="hero-overlay" />
           <div className="hero-content">
             <div className="hero-text">
@@ -230,22 +240,15 @@ export default async function LpPage({
               </div>
               <h1 className="hero-catch fade-up delay-1">
                 {site.sub_title.includes('、') ? (
-                  <>
-                    {site.sub_title.split('、')[0]}、<br />
-                    <span>{site.sub_title.split('、').slice(1).join('、')}</span>
-                  </>
+                  <>{site.sub_title.split('、')[0]}、<br /><span>{site.sub_title.split('、').slice(1).join('、')}</span></>
                 ) : (
                   <span>{site.sub_title}</span>
                 )}
               </h1>
               <p className="hero-desc fade-up delay-2">{ai?.original ?? ''}</p>
               <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }} className="fade-up delay-3">
-                <a href="#cta" className="btn-primary">
-                  {ai?.cta_text ?? 'お問い合わせ'} →
-                </a>
-                <a href="#features" className="btn-outline">
-                  詳しく見る
-                </a>
+                <a href="#cta" className="btn-primary">{ai?.cta_text ?? 'お問い合わせ'} →</a>
+                <a href="#features" className="btn-outline">詳しく見る</a>
               </div>
             </div>
             {imageUrl && (
@@ -265,17 +268,11 @@ export default async function LpPage({
               <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--primary)', display: 'inline-block' }} />
               {site.title}
             </div>
-            <h1 className="hero-catch fade-up delay-1">
-              <span>{site.sub_title}</span>
-            </h1>
+            <h1 className="hero-catch fade-up delay-1"><span>{site.sub_title}</span></h1>
             <p className="hero-desc fade-up delay-2">{ai?.original ?? ''}</p>
             <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }} className="fade-up delay-3">
-              <a href="#cta" className="btn-primary">
-                {ai?.cta_text ?? 'お問い合わせ'} →
-              </a>
-              <a href="#features" className="btn-outline">
-                詳しく見る
-              </a>
+              <a href="#cta" className="btn-primary">{ai?.cta_text ?? 'お問い合わせ'} →</a>
+              <a href="#features" className="btn-outline">詳しく見る</a>
             </div>
             {imageUrl && (
               <div className="hero-visual fade-up delay-3">
@@ -336,7 +333,7 @@ export default async function LpPage({
           <div className="section-inner">
             <p className="section-label">WHY US</p>
             <h2 className="section-title"><span>選ばれる理由</span></h2>
-            <p className="section-sub">お客様から信頼をいただける理由</p>
+            <p className="section-sub">他社ではなく、私たちを選ぶ理由</p>
             <div className="reasons-list">
               {ai.reasons.map((r, i) => (
                 <div key={i} className="reason-item">
@@ -369,9 +366,32 @@ export default async function LpPage({
                     ))}
                   </div>
                   <p className="review-text">{r.text}</p>
-                  <div className="review-author">
-                    <span className="review-name">{r.name}</span>
-                    <span className="review-role">{r.role}</span>
+                  <div>
+                    <div className="review-name">{r.name}</div>
+                    <div className="review-role">{r.role}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <div className="divider" />
+
+      {ai?.flow && ai.flow.length > 0 && (
+        <section className="section" style={{ background: 'var(--bg2)' }} id="flow">
+          <div className="section-inner">
+            <p className="section-label">HOW TO START</p>
+            <h2 className="section-title"><span>3ステップ</span>で始められます</h2>
+            <p className="section-sub">お問い合わせから最短でスタートできます</p>
+            <div className="flow-list">
+              {ai.flow.map((f, i) => (
+                <div key={i} className="flow-item">
+                  <div className="flow-step">{f.step}</div>
+                  <div>
+                    <div className="flow-title">{f.title}</div>
+                    <div className="flow-desc">{f.desc}</div>
                   </div>
                 </div>
               ))}
@@ -383,11 +403,11 @@ export default async function LpPage({
       <div className="divider" />
 
       {ai?.faq && ai.faq.length > 0 && (
-        <section className="section" style={{ background: 'var(--bg2)' }} id="faq">
+        <section className="section" style={{ background: 'var(--bg)' }} id="faq">
           <div className="section-inner">
             <p className="section-label">FAQ</p>
             <h2 className="section-title">よくある<span>質問</span></h2>
-            <p className="section-sub">お客様からよくいただくご質問</p>
+            <p className="section-sub">お客様からよくいただくご質問にお答えします</p>
             <div className="faq-list">
               {ai.faq.map((f, i) => (
                 <div key={i} className="faq-item">
@@ -403,17 +423,42 @@ export default async function LpPage({
         </section>
       )}
 
+      {ai?.closing && (
+        <>
+          <div className="divider" />
+          <div className="closing-section">
+            <div className="closing-inner">
+              <p className="section-label" style={{ textAlign: 'center', display: 'block', marginBottom: 16 }}>MESSAGE</p>
+              <h2 className="closing-title">
+                <span>{ai.closing.title}</span>
+              </h2>
+              <p className="closing-body">{ai.closing.body}</p>
+              {ai.closing.guarantee && (
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <span className="closing-guarantee">✓ {ai.closing.guarantee}</span>
+                </div>
+              )}
+              <a href="#cta" className="btn-primary" style={{ margin: '0 auto' }}>
+                {ai?.cta_text ?? 'まずは相談する'} →
+              </a>
+            </div>
+          </div>
+        </>
+      )}
+
       <div className="divider" />
 
-      <section className="cta-section" id="cta">
-        <div style={{ maxWidth: 600, margin: '0 auto' }}>
-          <p className="section-label" style={{ justifyContent: 'center', display: 'flex' }}>CONTACT</p>
+      <section className="cta-section" style={{ background: `linear-gradient(135deg,rgba(var(--rgb),0.08),rgba(var(--rgb),0.02))` }} id="cta">
+        <div className="cta-inner">
+          <p className="section-label" style={{ textAlign: 'center', display: 'block', marginBottom: 16 }}>CONTACT</p>
           <h2 className="cta-title">{ai?.cta_text ?? 'お問い合わせ'}</h2>
           <p className="cta-sub">{ai?.cta_sub ?? 'お気軽にご相談ください'}</p>
-          <a href="mailto:" className="btn-primary" style={{ margin: '0 auto' }}>
-            {ai?.cta_text ?? 'お問い合わせ'} →
-          </a>
-          <p className="cta-note">※ 相談・見積もり無料　※ 営業電話は一切しません</p>
+          <div className="cta-buttons">
+            <a href="mailto:" className="btn-primary">
+              {ai?.cta_text ?? 'お問い合わせ'} →
+            </a>
+          </div>
+          <p className="cta-note">※ 相談・見積もり無料　※ しつこい営業は一切しません</p>
         </div>
       </section>
 
