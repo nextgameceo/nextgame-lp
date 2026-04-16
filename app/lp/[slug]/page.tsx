@@ -69,13 +69,14 @@ export default async function LpPage({
     accent_color: AccentKey;
     original: string;
     image_url?: string;
+    logo_url?: string;
     features: { icon: string; title: string; desc: string }[];
     services: { name: string; desc: string; price?: string }[];
     reasons: { num: string; title: string; desc: string }[];
     reviews: { name: string; role: string; text: string; star: number }[];
-    faq: { q: string; a: string }[];
     flow: { step: string; title: string; desc: string }[];
-    closing: { title: string; body: string; guarantee: string };
+    faq: { q: string; a: string }[];
+    closing: { title: string; body: string; guarantee: string } | null;
     cta_text: string;
     cta_sub: string;
   } | null = null;
@@ -94,6 +95,7 @@ export default async function LpPage({
   const a = ACCENT[accentKey];
   const isDark = themeKey === "dark";
   const imageUrl = ai?.image_url ?? site.main_visual?.url ?? "";
+  const logoUrl = ai?.logo_url ?? "";
 
   const overlayGradient =
     accentKey === 'green'  ? 'linear-gradient(to right, rgba(255,255,255,0.97) 45%, rgba(255,255,255,0.6) 100%)' :
@@ -121,9 +123,11 @@ export default async function LpPage({
         .delay-2{animation-delay:0.25s;opacity:0;}
         .delay-3{animation-delay:0.4s;opacity:0;}
         nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:${t.navBg};backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+        .nav-logo{height:36px;object-fit:contain;max-width:160px;}
         .nav-title{font-size:0.95rem;font-weight:700;color:var(--text);}
         .nav-cta{display:inline-flex;align-items:center;padding:8px 20px;background:var(--primary);color:#fff;border-radius:100px;font-size:0.78rem;font-weight:700;text-decoration:none;transition:opacity 0.2s;}
         .nav-cta:hover{opacity:0.85;}
+        .nav-credit{font-size:0.6rem;color:${isDark ? '#2d3748' : '#cbd5e1'};letter-spacing:0.08em;}
         .hero{min-height:100vh;padding-top:64px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
         .hero-light{background:var(--bg2);}
         .hero-light .hero-img{position:absolute;inset:0;z-index:0;}
@@ -176,11 +180,11 @@ export default async function LpPage({
         .review-name{font-size:0.88rem;font-weight:700;color:var(--text);}
         .review-role{font-size:0.75rem;color:var(--muted);margin-top:3px;}
         .flow-list{display:flex;flex-direction:column;gap:0;}
-        .flow-item{display:flex;gap:24px;align-items:flex-start;padding:24px 0;border-bottom:1px solid var(--border);}
+        .flow-item{display:flex;gap:24px;align-items:flex-start;padding:28px 0;border-bottom:1px solid var(--border);}
         .flow-item:last-child{border-bottom:none;}
-        .flow-step{width:48px;height:48px;border-radius:50%;background:rgba(var(--rgb),0.1);border:2px solid rgba(var(--rgb),0.3);display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:0.78rem;font-weight:700;color:var(--primary);flex-shrink:0;}
-        .flow-title{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:6px;}
-        .flow-desc{font-size:0.88rem;color:var(--muted);line-height:1.7;}
+        .flow-step{width:52px;height:52px;border-radius:50%;background:rgba(var(--rgb),0.1);border:2px solid rgba(var(--rgb),0.3);display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:0.82rem;font-weight:700;color:var(--primary);flex-shrink:0;}
+        .flow-title{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:8px;}
+        .flow-desc{font-size:0.88rem;color:var(--muted);line-height:1.75;}
         .faq-list{display:flex;flex-direction:column;gap:12px;}
         .faq-item{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
         .faq-q{padding:22px 28px;font-size:0.95rem;font-weight:700;color:var(--text);display:flex;align-items:flex-start;gap:16px;}
@@ -190,15 +194,15 @@ export default async function LpPage({
         .closing-inner{max-width:680px;margin:0 auto;text-align:center;}
         .closing-title{font-size:clamp(1.4rem,3vw,2rem);font-weight:900;color:var(--text);margin-bottom:20px;line-height:1.4;}
         .closing-title span{color:var(--primary);}
-        .closing-body{font-size:0.95rem;color:var(--muted);line-height:2;margin-bottom:28px;}
+        .closing-body{font-size:0.95rem;color:var(--muted);line-height:2.1;margin-bottom:28px;}
         .closing-guarantee{display:inline-flex;align-items:center;gap:8px;padding:10px 24px;background:rgba(var(--rgb),0.08);border:1px solid rgba(var(--rgb),0.2);border-radius:100px;font-size:0.82rem;color:var(--primary);font-weight:700;margin-bottom:36px;}
         .cta-section{padding:96px 2rem;text-align:center;}
         .cta-inner{max-width:640px;margin:0 auto;}
         .cta-title{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:900;color:var(--text);margin-bottom:14px;line-height:1.3;}
         .cta-sub{font-size:0.95rem;color:var(--muted);margin-bottom:36px;line-height:1.85;}
-        .cta-buttons{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
-        .cta-note{font-size:0.75rem;color:var(--muted);opacity:0.7;}
+        .cta-note{font-size:0.75rem;color:var(--muted);margin-top:16px;opacity:0.7;}
         footer{padding:36px 2rem;text-align:center;border-top:1px solid var(--border);}
+        .footer-logo{height:40px;object-fit:contain;margin-bottom:12px;}
         .footer-name{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:6px;}
         .footer-copy{font-size:0.78rem;color:var(--muted);margin-bottom:8px;}
         .footer-credit{font-size:0.6rem;color:${isDark ? '#2d3748' : '#e2e8f0'};letter-spacing:0.08em;}
@@ -212,8 +216,8 @@ export default async function LpPage({
           nav{padding:0 1.2rem;}
           .section{padding:64px 1.2rem;}
           .nav-cta{font-size:0.72rem;padding:7px 14px;}
-          .cta-buttons{flex-direction:column;}
-          .cta-buttons a{width:100%!important;justify-content:center;}
+          .closing-section{padding:60px 1.2rem;}
+          .cta-section{padding:64px 1.2rem;}
         }
         @media(min-width:481px) and (max-width:768px){
           .features-grid,.services-grid,.reviews-grid{grid-template-columns:repeat(2,1fr);}
@@ -221,10 +225,16 @@ export default async function LpPage({
       `}</style>
 
       <nav>
-        <span className="nav-title">{site.title}</span>
+        <div>
+          {logoUrl ? (
+            <img src={logoUrl} alt={site.title} className="nav-logo" />
+          ) : (
+            <span className="nav-title">{site.title}</span>
+          )}
+        </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <a href="#cta" className="nav-cta">{ai?.cta_text ?? 'お問い合わせ'}</a>
-          <span className="nav-credit" style={{ fontSize: '0.6rem', color: isDark ? '#2d3748' : '#cbd5e1', letterSpacing: '0.08em' }}>Powered by NEXTGAME</span>
+          <span className="nav-credit">Powered by NEXTGAME</span>
         </div>
       </nav>
 
@@ -234,10 +244,15 @@ export default async function LpPage({
           <div className="hero-overlay" />
           <div className="hero-content">
             <div className="hero-text">
-              <div className="badge fade-up">
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--primary)', display: 'inline-block' }} />
-                {site.title}
-              </div>
+              {logoUrl && (
+                <img src={logoUrl} alt={site.title} style={{ height: 48, objectFit: 'contain', marginBottom: 20 }} />
+              )}
+              {!logoUrl && (
+                <div className="badge fade-up">
+                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--primary)', display: 'inline-block' }} />
+                  {site.title}
+                </div>
+              )}
               <h1 className="hero-catch fade-up delay-1">
                 {site.sub_title.includes('、') ? (
                   <>{site.sub_title.split('、')[0]}、<br /><span>{site.sub_title.split('、').slice(1).join('、')}</span></>
@@ -264,10 +279,14 @@ export default async function LpPage({
         <section className="hero hero-dark">
           <div className="hero-glow" />
           <div className="hero-content">
-            <div className="badge fade-up" style={{ margin: '0 auto 16px' }}>
-              <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--primary)', display: 'inline-block' }} />
-              {site.title}
-            </div>
+            {logoUrl ? (
+              <img src={logoUrl} alt={site.title} style={{ height: 52, objectFit: 'contain', margin: '0 auto 20px', display: 'block' }} className="fade-up" />
+            ) : (
+              <div className="badge fade-up" style={{ margin: '0 auto 16px' }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--primary)', display: 'inline-block' }} />
+                {site.title}
+              </div>
+            )}
             <h1 className="hero-catch fade-up delay-1"><span>{site.sub_title}</span></h1>
             <p className="hero-desc fade-up delay-2">{ai?.original ?? ''}</p>
             <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }} className="fade-up delay-3">
@@ -361,9 +380,7 @@ export default async function LpPage({
               {ai.reviews.map((r, i) => (
                 <div key={i} className="review-card">
                   <div className="review-stars">
-                    {Array.from({ length: r.star ?? 5 }).map((_, j) => (
-                      <span key={j} className="review-star">★</span>
-                    ))}
+                    {Array.from({ length: r.star ?? 5 }).map((_, j) => <span key={j} className="review-star">★</span>)}
                   </div>
                   <p className="review-text">{r.text}</p>
                   <div>
@@ -389,7 +406,7 @@ export default async function LpPage({
               {ai.flow.map((f, i) => (
                 <div key={i} className="flow-item">
                   <div className="flow-step">{f.step}</div>
-                  <div>
+                  <div style={{ paddingTop: 8 }}>
                     <div className="flow-title">{f.title}</div>
                     <div className="flow-desc">{f.desc}</div>
                   </div>
@@ -434,13 +451,15 @@ export default async function LpPage({
               </h2>
               <p className="closing-body">{ai.closing.body}</p>
               {ai.closing.guarantee && (
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 36 }}>
                   <span className="closing-guarantee">✓ {ai.closing.guarantee}</span>
                 </div>
               )}
-              <a href="#cta" className="btn-primary" style={{ margin: '0 auto' }}>
-                {ai?.cta_text ?? 'まずは相談する'} →
-              </a>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <a href="#cta" className="btn-primary">
+                  {ai?.cta_text ?? 'まずは相談する'} →
+                </a>
+              </div>
             </div>
           </div>
         </>
@@ -453,7 +472,7 @@ export default async function LpPage({
           <p className="section-label" style={{ textAlign: 'center', display: 'block', marginBottom: 16 }}>CONTACT</p>
           <h2 className="cta-title">{ai?.cta_text ?? 'お問い合わせ'}</h2>
           <p className="cta-sub">{ai?.cta_sub ?? 'お気軽にご相談ください'}</p>
-          <div className="cta-buttons">
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
             <a href="mailto:" className="btn-primary">
               {ai?.cta_text ?? 'お問い合わせ'} →
             </a>
@@ -463,7 +482,11 @@ export default async function LpPage({
       </section>
 
       <footer>
-        <p className="footer-name">{site.title}</p>
+        {logoUrl ? (
+          <img src={logoUrl} alt={site.title} className="footer-logo" />
+        ) : (
+          <p className="footer-name">{site.title}</p>
+        )}
         <p className="footer-copy">© {new Date().getFullYear()} {site.title} All rights reserved.</p>
         <p className="footer-credit">Powered by NEXTGAME</p>
       </footer>
