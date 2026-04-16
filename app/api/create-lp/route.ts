@@ -3,7 +3,7 @@ import { NextResponse } from "next/server"
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { title, content, client_name, prompt } = body;
+    const { title, content, client_name, prompt, logo_url } = body;
 
     const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
 - キャッチコピー：その業種のターゲットが「これは自分のことだ」と感じる具体的な言葉
 - 説明文：なぜそのサービスが必要なのか、どんな課題を解決するのかを丁寧に説明
 - レビュー：「〇〇に悩んでいたが、△△が改善された」など具体的なBefore→After
-- FAQ：質問に対して具体的かつ詳細に答える
+- FAQ：質問に対して具体的かつ詳細に答える（「お問い合わせください」はNG）
 - サービス料金：その業種の実際の相場感に合わせた現実的な金額
 - 選ばれる理由：他社との明確な差別化（「経験豊富」「高品質」はNG）
 - closing：読者の背中を優しく押す温かいメッセージ
@@ -81,9 +81,9 @@ ${client_name ? `担当者: ${client_name}` : ''}
   ],
   "faq": [
     {"q": "よくある質問（30文字以内）", "a": "具体的で詳細な回答（100文字以内・安心感を与える・次のアクションを促す）"},
-    {"q": "よくある質問（30文字以内）", "a": "具体的で詳細な回答（100文字以内・安心感を与える・次のアクションを促す）"},
-    {"q": "よくある質問（30文字以内）", "a": "具体的で詳細な回答（100文字以内・安心感を与える・次のアクションを促す）"},
-    {"q": "よくある質問（30文字以内）", "a": "具体的で詳細な回答（100文字以内・安心感を与える・次のアクションを促す）"}
+    {"q": "よくある質問（30文字以内）", "a": "具体的で詳細な回答（100文字以内）"},
+    {"q": "よくある質問（30文字以内）", "a": "具体的で詳細な回答（100文字以内）"},
+    {"q": "よくある質問（30文字以内）", "a": "具体的で詳細な回答（100文字以内）"}
   ],
   "closing": {
     "title": "迷っている方へのメッセージ（30文字以内・背中を押す温かい言葉）",
@@ -171,6 +171,7 @@ ${client_name ? `担当者: ${client_name}` : ''}
       accent_color: ai.accent_color,
       original: ai.original,
       image_url: imageUrl,
+      logo_url: logo_url ?? '',
       features: ai.features,
       services: ai.services,
       reasons: ai.reasons,
