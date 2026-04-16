@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     uploadFormData.append('file', blob, file.name);
 
     const res = await fetch(
-      `https://${process.env.MICROCMS_SERVICE_DOMAIN}.microcms.io/api/v1/media`,
+      `https://media.microcms.io/api/v1/${process.env.MICROCMS_SERVICE_DOMAIN}/media`,
       {
         method: 'POST',
         headers: {
