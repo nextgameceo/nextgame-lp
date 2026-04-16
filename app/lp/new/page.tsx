@@ -1,10 +1,12 @@
-'use client';
+"use client"
 
-import { useState } from 'react';
+import { useState } from "react"
 
 const INDUSTRIES = [
   '飲食店', '美容サロン', '歯科クリニック', '整体院・整骨院',
-  '不動産', '学習塾', 'EC・通販', 'IT・Web', '建設・工務店', 'その他',
+  '不動産', '学習塾', 'EC・通販', 'IT・Web', '建設・工務店',
+  'コンサルタント', '士業（税理士・弁護士等）', '医療・クリニック',
+  'フィットネス・スポーツ', 'ブライダル・イベント', 'その他',
 ];
 
 export default function NewLpPage() {
@@ -15,6 +17,7 @@ export default function NewLpPage() {
   const [industry, setIndustry] = useState('');
   const [otherIndustry, setOtherIndustry] = useState('');
   const [clientName, setClientName] = useState('');
+  const [prompt, setPrompt] = useState('');
 
   const handleSubmit = async () => {
     if (!title) { setError('会社名・サービス名を入力してください'); return; }
@@ -31,6 +34,7 @@ export default function NewLpPage() {
           sub_title: '',
           content: industryLabel ? ('業種：' + industryLabel) : '',
           client_name: clientName,
+          prompt: prompt,
         }),
       });
       const data = await res.json();
@@ -53,11 +57,11 @@ export default function NewLpPage() {
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
         .fade-up { animation: fadeUp 0.6s ease forwards; }
-        .ind-btn { background: transparent; border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 8px 14px; color: #666; font-size: 12px; cursor: pointer; transition: all 0.15s; font-family: inherit; }
+        .ind-btn { background: transparent; border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 8px 12px; color: #666; font-size: 0.75rem; cursor: pointer; transition: all 0.15s; font-family: inherit; }
         .ind-btn:hover { border-color: rgba(109,190,214,0.4); color: #999; }
         .ind-btn.active { border-color: #6dbed6; color: #6dbed6; background: rgba(109,190,214,0.06); }
-        .inp { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 16px 18px; color: #e8e8e8; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; }
-        .inp:focus { border-color: rgba(109,190,214,0.5); }
+        .inp { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 14px 16px; color: #e8e8e8; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; }
+        .inp:focus { border-color: rgba(200,168,74,0.5); }
         .inp::placeholder { color: #333; }
       `}</style>
 
@@ -72,105 +76,123 @@ export default function NewLpPage() {
       </nav>
 
       {step === 'form' && (
-        <div className="fade-up" style={{ maxWidth: 560, margin: '0 auto', padding: '72px 24px 80px' }}>
-          <div style={{ marginBottom: '48px' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', border: '1px solid rgba(109,190,214,0.2)', padding: '4px 14px', borderRadius: '2px', marginBottom: '20px' }}>
-              <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#6dbed6', display: 'inline-block' }} />
-              <span style={{ fontSize: '10px', letterSpacing: '0.3em', color: '#6dbed6', fontWeight: 700 }}>FREE LP GENERATOR</span>
+        <div className="fade-up" style={{ maxWidth: 600, margin: '0 auto', padding: '60px 24px 80px' }}>
+          <div style={{ marginBottom: '40px' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', border: '1px solid rgba(200,168,74,0.2)', padding: '4px 14px', borderRadius: '2px', marginBottom: '16px' }}>
+              <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#c8a84a', display: 'inline-block' }} />
+              <span style={{ fontSize: '10px', letterSpacing: '0.3em', color: '#c8a84a', fontWeight: 700 }}>FREE LP GENERATOR</span>
             </div>
-            <h1 style={{ fontFamily: 'Inter, monospace', fontSize: 'clamp(1.8rem,5vw,2.6rem)', fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em', marginBottom: '12px' }}>
+            <h1 style={{ fontFamily: 'Inter, monospace', fontSize: 'clamp(1.8rem,5vw,2.6rem)', fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em', marginBottom: '10px' }}>
               会社名を入れるだけ。
               <br />
               <span style={{ color: '#6dbed6' }}>AIが全部作る。</span>
             </h1>
             <p style={{ fontSize: '14px', color: '#666', lineHeight: 1.8 }}>
-              業種・キャッチコピー・デザイン・コンテンツすべてAIが自動生成。30秒で本格LPが完成します。
+              業種・キャッチコピー・デザイン・コンテンツすべてAIが自動生成。要望を伝えるほど、クオリティが上がります。
             </p>
           </div>
 
-          <div style={{ marginBottom: '28px' }}>
-            <label style={{ display: 'block', fontSize: '11px', color: '#6dbed6', letterSpacing: '0.2em', fontWeight: 700, marginBottom: '10px' }}>
-              会社名・サービス名 *
-            </label>
-            <input
-              className="inp"
-              type="text"
-              placeholder="例：山田整体院"
-              value={title}
-              onChange={e => setTitle(e.target.value)}
-            />
-          </div>
-
-          <div style={{ marginBottom: '28px' }}>
-            <label style={{ display: 'block', fontSize: '11px', color: '#888', letterSpacing: '0.2em', fontWeight: 700, marginBottom: '10px' }}>
-              業種を選ぶ（任意）
-            </label>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-              {INDUSTRIES.map(ind => (
-                <button
-                  key={ind}
-                  className={industry === ind ? 'ind-btn active' : 'ind-btn'}
-                  onClick={() => {
-                    setIndustry(industry === ind ? '' : ind);
-                    setOtherIndustry('');
-                  }}
-                >
-                  {ind}
-                </button>
-              ))}
-            </div>
-            {industry === 'その他' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '11px', color: '#c8a84a', letterSpacing: '0.2em', fontWeight: 700, marginBottom: '10px' }}>
+                会社名・サービス名 *
+              </label>
               <input
                 className="inp"
                 type="text"
-                placeholder="業種を入力（例：ペットサロン、農園、占い師）"
-                value={otherIndustry}
-                onChange={e => setOtherIndustry(e.target.value)}
-                style={{ marginTop: '12px' }}
+                placeholder="例：山田整体院"
+                value={title}
+                onChange={e => setTitle(e.target.value)}
               />
-            )}
-          </div>
+            </div>
 
-          <div style={{ marginBottom: '36px' }}>
-            <label style={{ display: 'block', fontSize: '11px', color: '#888', letterSpacing: '0.2em', fontWeight: 700, marginBottom: '10px' }}>
-              お名前（任意・管理用）
-            </label>
-            <input
-              className="inp"
-              type="text"
-              placeholder="例：山田 太郎"
-              value={clientName}
-              onChange={e => setClientName(e.target.value)}
-            />
+            <div>
+              <label style={{ display: 'block', fontSize: '11px', color: '#888', letterSpacing: '0.2em', fontWeight: 700, marginBottom: '10px' }}>
+                業種を選ぶ（任意）
+              </label>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {INDUSTRIES.map(ind => (
+                  <button
+                    key={ind}
+                    className={industry === ind ? 'ind-btn active' : 'ind-btn'}
+                    onClick={() => {
+                      setIndustry(industry === ind ? '' : ind);
+                      setOtherIndustry('');
+                    }}
+                  >
+                    {ind}
+                  </button>
+                ))}
+              </div>
+              {industry === 'その他' && (
+                <input
+                  className="inp"
+                  type="text"
+                  placeholder="業種を入力（例：ペットサロン、農園、占い師）"
+                  value={otherIndustry}
+                  onChange={e => setOtherIndustry(e.target.value)}
+                  style={{ marginTop: '10px' }}
+                />
+              )}
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '11px', color: '#888', letterSpacing: '0.2em', fontWeight: 700, marginBottom: '10px' }}>
+                こだわり・改善要望（任意）
+              </label>
+              <textarea
+                className="inp"
+                placeholder="例：高級感のあるデザインにしたい、30代女性向け、予約を増やしたい、競合と差別化したい..."
+                value={prompt}
+                onChange={e => setPrompt(e.target.value)}
+                style={{ minHeight: 100, resize: 'vertical', lineHeight: 1.7 }}
+              />
+              <p style={{ fontSize: '11px', color: '#444', marginTop: 6, lineHeight: 1.6 }}>
+                ターゲット・デザインイメージ・強みなど、自由に記述してください。詳しいほどクオリティが上がります。
+              </p>
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '11px', color: '#888', letterSpacing: '0.2em', fontWeight: 700, marginBottom: '10px' }}>
+                お名前（任意・管理用）
+              </label>
+              <input
+                className="inp"
+                type="text"
+                placeholder="例：山田 太郎"
+                value={clientName}
+                onChange={e => setClientName(e.target.value)}
+              />
+            </div>
           </div>
 
           {error && (
-            <div style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)', borderRadius: '4px', padding: '12px 16px', fontSize: '13px', color: '#f87171', marginBottom: '20px' }}>
+            <div style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)', borderRadius: '6px', padding: '12px 16px', fontSize: '13px', color: '#f87171', marginTop: '20px' }}>
               {error}
             </div>
           )}
 
           <button
             onClick={handleSubmit}
-            style={{ width: '100%', padding: '17px', background: 'linear-gradient(135deg,#6dbed6,#7f5af0)', border: 'none', borderRadius: '4px', color: '#fff', fontFamily: 'Inter, monospace', fontSize: '13px', fontWeight: 700, cursor: 'pointer', letterSpacing: '0.05em' }}
+            style={{ width: '100%', padding: '18px', background: 'linear-gradient(135deg,#c8a84a,#e8d48a)', border: 'none', borderRadius: '6px', color: '#000', fontFamily: 'Inter, monospace', fontSize: '1rem', fontWeight: 900, cursor: 'pointer', marginTop: '24px', letterSpacing: '0.03em' }}
           >
             AIでLPを生成する（無料）
           </button>
 
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '14px' }}>
-            <span style={{ fontSize: '11px', color: '#2a2a2a' }}>✓ クレカ不要</span>
-            <span style={{ fontSize: '11px', color: '#2a2a2a' }}>✓ 登録不要</span>
-            <span style={{ fontSize: '11px', color: '#2a2a2a' }}>✓ 完全無料</span>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '12px' }}>
+            <span style={{ fontSize: '11px', color: '#2a2a2a' }}>クレカ不要</span>
+            <span style={{ fontSize: '11px', color: '#2a2a2a' }}>登録不要</span>
+            <span style={{ fontSize: '11px', color: '#2a2a2a' }}>完全無料</span>
           </div>
         </div>
       )}
 
       {step === 'loading' && (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: '24px' }}>
-          <div style={{ width: '48px', height: '48px', border: '2px solid rgba(109,190,214,0.15)', borderTopColor: '#6dbed6', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+          <div style={{ width: '48px', height: '48px', border: '2px solid rgba(200,168,74,0.15)', borderTopColor: '#c8a84a', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
           <div style={{ textAlign: 'center' }}>
-            <p style={{ fontFamily: 'Inter, monospace', fontSize: '13px', color: '#6dbed6', letterSpacing: '0.15em', marginBottom: '8px' }}>AIがLPを生成中...</p>
-            <p style={{ fontSize: '12px', color: '#333' }}>業種分析 → キャッチコピー生成 → デザイン適用</p>
+            <p style={{ fontFamily: 'Inter, monospace', fontSize: '13px', color: '#c8a84a', letterSpacing: '0.15em', marginBottom: '8px' }}>AIがLPを生成中...</p>
+            <p style={{ fontSize: '12px', color: '#444' }}>業種分析 → コピー生成 → デザイン適用 → 画像選定</p>
           </div>
         </div>
       )}
@@ -178,7 +200,7 @@ export default function NewLpPage() {
       {step === 'done' && (
         <div className="fade-up" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '70vh', padding: '60px 24px', textAlign: 'center' }}>
           <div style={{ marginBottom: '24px' }}>
-            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#6dbed6" strokeWidth="1.5" style={{ display: 'block', margin: '0 auto' }}>
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#c8a84a" strokeWidth="1.5" style={{ display: 'block', margin: '0 auto' }}>
               <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
               <polyline points="22 4 12 14.01 9 11.01" />
             </svg>
@@ -191,14 +213,22 @@ export default function NewLpPage() {
             <br />
             下のボタンからアクセスできます。
           </p>
-          <div style={{ background: 'rgba(109,190,214,0.04)', border: '1px solid rgba(109,190,214,0.12)', borderRadius: '4px', padding: '14px 20px', marginBottom: '16px', wordBreak: 'break-all', fontFamily: 'monospace', fontSize: '12px', color: '#4a6580', maxWidth: '440px', width: '100%' }}>
+          <div style={{ background: 'rgba(200,168,74,0.04)', border: '1px solid rgba(200,168,74,0.12)', borderRadius: '6px', padding: '14px 20px', marginBottom: '16px', wordBreak: 'break-all', fontFamily: 'monospace', fontSize: '12px', color: '#6a5a30', maxWidth: '440px', width: '100%' }}>
             {url}
           </div>
           <div style={{ display: 'flex', gap: '10px', marginBottom: '36px', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <a href={url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 28px', background: 'linear-gradient(135deg,#6dbed6,#7f5af0)', borderRadius: '4px', color: '#fff', fontSize: '13px', fontWeight: 700, textDecoration: 'none' }}>
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 28px', background: 'linear-gradient(135deg,#c8a84a,#e8d48a)', borderRadius: '6px', color: '#000', fontSize: '13px', fontWeight: 900, textDecoration: 'none' }}
+            >
               生成されたLPを見る
             </a>
-            <button onClick={() => navigator.clipboard.writeText(url)} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 20px', background: 'transparent', border: '1px solid rgba(109,190,214,0.25)', borderRadius: '4px', color: '#6dbed6', fontFamily: 'Inter, monospace', fontSize: '12px', fontWeight: 700, cursor: 'pointer', letterSpacing: '0.05em' }}>
+            <button
+              onClick={() => navigator.clipboard.writeText(url)}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 20px', background: 'transparent', border: '1px solid rgba(200,168,74,0.25)', borderRadius: '6px', color: '#c8a84a', fontFamily: 'Inter, monospace', fontSize: '12px', fontWeight: 700, cursor: 'pointer', letterSpacing: '0.05em' }}
+            >
               URLをコピー
             </button>
           </div>
@@ -208,7 +238,12 @@ export default function NewLpPage() {
               <br />
               NEXTGAMEのサブスクをご検討ください。
             </p>
-            <a href="https://lin.ee/SJDJXQv" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '13px 28px', background: '#06C755', borderRadius: '4px', color: '#fff', fontSize: '13px', fontWeight: 700, textDecoration: 'none' }}>
+            <a
+              href="https://lin.ee/SJDJXQv"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '13px 28px', background: '#06C755', borderRadius: '6px', color: '#fff', fontSize: '13px', fontWeight: 900, textDecoration: 'none' }}
+            >
               LINEで相談する
             </a>
           </div>
