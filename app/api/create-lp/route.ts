@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { title, content, client_name } = body;
+    const { title, content, client_name, prompt } = body;
 
     const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -13,45 +13,66 @@ export async function POST(req: Request) {
       },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
-        temperature: 0.7,
+        temperature: 0.8,
         messages: [
           {
             role: 'system',
-            content: `あなたはLP（ランディングページ）のコンテンツ生成の専門家です。
-与えられた会社・サービス情報から、魅力的なLPコンテンツをJSON形式で生成してください。
-必ずJSON形式のみで返答し、マークダウンやコードブロックは使わないでください。`,
+            content: `あなたは日本トップクラスのWebコピーライター兼マーケターです。
+中小企業・個人事業主向けのLP（ランディングページ）コンテンツを生成します。
+以下の原則を必ず守ってください：
+
+【コピーライティング原則】
+- キャッチコピーは感情に訴える・具体的な数字を使う・ベネフィットを明確に
+- 「です・ます」より体言止めや短い文で力強く
+- ターゲットの悩み・不安・願望を具体的に反映する
+- 競合との差別化ポイントを明確にする
+- CTAは行動を促す動詞で始める
+
+【品質基準】
+- キャッチコピー：思わず読み続けたくなる、業種特有の表現を使う
+- 特徴：具体的な数字・事実ベース・信頼性を高める内容
+- サービス：お客様目線のベネフィット訴求
+- 選ばれる理由：競合との明確な差別化
+
+必ずJSON形式のみで返答し、マークダウンやコードブロックは絶対に使わないでください。`,
           },
           {
             role: 'user',
-            content: `以下の情報からLPコンテンツを生成してください。
+            content: `以下の情報から高品質なLPコンテンツを生成してください。
 
+【基本情報】
 会社名・サービス名: ${title}
 業種・説明: ${content || '不明'}
+${prompt ? `【追加要望・改善点】\n${prompt}` : ''}
+${client_name ? `【担当者名】${client_name}` : ''}
+
+【重要】業種・サービスの特性を深く理解して、その業界で刺さるコピーを書いてください。
+ターゲット顧客が抱える具体的な悩みや不安を解消するメッセージにしてください。
 
 以下のJSON形式で返答してください：
 {
-  "sub_title": "キャッチコピー（20文字以内・インパクトある一文・業種に合わせて）",
-  "original": "ヒーローの説明文（40文字以内・業種に合わせた自然な一文・サービスの魅力を伝える）",
-  "theme": "light" または "dark"（医療・福祉・教育・士業は"light"、IT・エンタメ・飲食・美容は"dark"）,
-  "accent_color": "blue" または "green" または "orange" または "red" または "purple"（業種イメージに合わせて）,
-  "unsplash_keyword": "Unsplash検索用の英語キーワード1〜2単語（例: dental clinic, coffee shop, yoga studio）",
+  "sub_title": "キャッチコピー（25文字以内・数字や具体性を含む・感情に訴える・業種特有の表現）",
+  "original": "サブキャッチコピー（50文字以内・ターゲットの悩みに寄り添う・共感を呼ぶ文章）",
+  "theme": "light または dark（医療・福祉・教育・士業・コンサルは light、IT・エンタメ・飲食・美容・スポーツは dark）",
+  "accent_color": "blue または green または orange または red または purple（業種イメージに合わせて）",
+  "unsplash_keyword": "Unsplash検索用の英語キーワード2〜3単語（業種に最適な写真・人物が写っているものが望ましい）",
   "features": [
-    {"icon": "絵文字1つ", "title": "特徴タイトル（10文字以内）", "desc": "説明文（30文字以内）"},
-    {"icon": "絵文字1つ", "title": "特徴タイトル（10文字以内）", "desc": "説明文（30文字以内）"},
-    {"icon": "絵文字1つ", "title": "特徴タイトル（10文字以内）", "desc": "説明文（30文字以内）"}
+    {"icon": "絵文字1つ", "title": "特徴タイトル（12文字以内・ベネフィット訴求）", "desc": "具体的な説明（40文字以内・数字や実績を含める）"},
+    {"icon": "絵文字1つ", "title": "特徴タイトル（12文字以内・ベネフィット訴求）", "desc": "具体的な説明（40文字以内・数字や実績を含める）"},
+    {"icon": "絵文字1つ", "title": "特徴タイトル（12文字以内・ベネフィット訴求）", "desc": "具体的な説明（40文字以内・数字や実績を含める）"}
   ],
   "services": [
-    {"name": "サービス名（10文字以内）", "desc": "説明（25文字以内）"},
-    {"name": "サービス名（10文字以内）", "desc": "説明（25文字以内）"},
-    {"name": "サービス名（10文字以内）", "desc": "説明（25文字以内）"}
+    {"name": "サービス名（12文字以内・お客様目線）", "desc": "ベネフィット中心の説明（30文字以内）"},
+    {"name": "サービス名（12文字以内・お客様目線）", "desc": "ベネフィット中心の説明（30文字以内）"},
+    {"name": "サービス名（12文字以内・お客様目線）", "desc": "ベネフィット中心の説明（30文字以内）"}
   ],
   "reasons": [
-    {"num": "01", "title": "選ばれる理由（15文字以内）", "desc": "説明（40文字以内）"},
-    {"num": "02", "title": "選ばれる理由（15文字以内）", "desc": "説明（40文字以内）"},
-    {"num": "03", "title": "選ばれる理由（15文字以内）", "desc": "説明（40文字以内）"}
+    {"num": "01", "title": "選ばれる理由（18文字以内・競合差別化）", "desc": "具体的な根拠（45文字以内・数字・実績・保証）"},
+    {"num": "02", "title": "選ばれる理由（18文字以内・競合差別化）", "desc": "具体的な根拠（45文字以内・数字・実績・保証）"},
+    {"num": "03", "title": "選ばれる理由（18文字以内・競合差別化）", "desc": "具体的な根拠（45文字以内・数字・実績・保証）"}
   ],
-  "cta_text": "問い合わせボタンのテキスト（15文字以内）",
-  "cta_sub": "CTAの補足文（30文字以内）"
+  "cta_text": "行動を促すCTAボタンテキスト（18文字以内・動詞で始める）",
+  "cta_sub": "CTAの補足文（35文字以内・安心感・緊急性・限定性）"
 }`,
           },
         ],
@@ -85,11 +106,11 @@ export async function POST(req: Request) {
         original: '',
         theme: 'light',
         accent_color: 'blue',
-        unsplash_keyword: 'business office',
+        unsplash_keyword: 'professional business',
         features: [],
         services: [],
         reasons: [],
-        cta_text: 'お問い合わせ',
+        cta_text: 'お問い合わせはこちら',
         cta_sub: 'お気軽にご相談ください',
       };
     }
@@ -97,24 +118,22 @@ export async function POST(req: Request) {
     // Unsplashで画像取得
     let imageUrl = '';
     try {
-      const keyword = encodeURIComponent(ai.unsplash_keyword ?? 'business');
+      const keyword = encodeURIComponent(ai.unsplash_keyword ?? 'business professional');
       const unsplashRes = await fetch(
-        `https://api.unsplash.com/search/photos?query=${keyword}&per_page=1&orientation=landscape`,
-        {
-          headers: {
-            Authorization: `Client-ID ${process.env.UNSPLASH_ACCESS_KEY}`,
-          },
-        }
+        `https://api.unsplash.com/search/photos?query=${keyword}&per_page=3&orientation=landscape`,
+        { headers: { Authorization: `Client-ID ${process.env.UNSPLASH_ACCESS_KEY}` } }
       );
       if (unsplashRes.ok) {
         const unsplashData = await unsplashRes.json();
-        imageUrl = unsplashData.results?.[0]?.urls?.regular ?? '';
+        // ランダムに1枚選ぶ
+        const results = unsplashData.results ?? [];
+        const idx = Math.floor(Math.random() * Math.min(results.length, 3));
+        imageUrl = results[idx]?.urls?.regular ?? '';
       }
     } catch {
       imageUrl = '';
     }
 
-    // microCMSに保存
     const random = Math.random().toString(36).substring(2, 8);
     const slug = `lp-${random}`;
 
