@@ -8,32 +8,46 @@ export async function POST(req: Request) {
 
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
+    const base64 = buffer.toString('base64');
+    const dataUri = `data:${file.type};base64,${base64}`;
+
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME!;
+    const apiKey = process.env.CLOUDINARY_API_KEY!;
+    const apiSecret = process.env.CLOUDINARY_API_SECRET!;
+
+    const timestamp = Math.floor(Date.now() / 1000);
+    const folder = 'nextgame-logos';
+
+    // 署名生成
+    const crypto = await import('crypto');
+    const signatureString = `folder=${folder}&timestamp=${timestamp}${apiSecret}`;
+    const signature = crypto.createHash('sha256').update(signatureString).digest('hex');
 
     const uploadFormData = new FormData();
-    const blob = new Blob([buffer], { type: file.type });
-    uploadFormData.append('file', blob, file.name);
+    uploadFormData.append('file', dataUri);
+    uploadFormData.append('api_key', apiKey);
+    uploadFormData.append('timestamp', String(timestamp));
+    uploadFormData.append('signature', signature);
+    uploadFormData.append('folder', folder);
 
     const res = await fetch(
-      `https://${process.env.MICROCMS_SERVICE_DOMAIN}.microcms.io/api/v1/media`,
+      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
       {
         method: 'POST',
-        headers: {
-          'X-MICROCMS-API-KEY': process.env.MICROCMS_API_KEY!,
-        },
         body: uploadFormData,
       }
     );
 
     const responseText = await res.text();
-    console.log('microCMS status:', res.status);
-    console.log('microCMS response:', responseText);
+    console.log('Cloudinary status:', res.status);
+    console.log('Cloudinary response:', responseText.slice(0, 200));
 
     if (!res.ok) {
       return NextResponse.json({ error: responseText }, { status: 500 });
     }
 
     const data = JSON.parse(responseText);
-    return NextResponse.json({ url: data.url });
+    return NextResponse.json({ url: data.secure_url });
   } catch (e) {
     console.error('upload error:', String(e));
     return NextResponse.json({ error: String(e) }, { status: 500 });
