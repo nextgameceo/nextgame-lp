@@ -1,17 +1,18 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Suspense } from "react"
 
 interface DiagResult {
   score: number;
   company: string;
   industry: string;
-  problems: { icon: string; title: string; desc: string }[];
+  problems: { title: string; desc: string }[];
   suggestion: string;
   prompt: string;
 }
+
+const PROBLEM_ICONS = ['🔍', '⚡', '📉', '🎯', '💬'];
 
 function DiagnoseContent() {
   const router = useRouter();
@@ -19,6 +20,7 @@ function DiagnoseContent() {
   const [result, setResult] = useState<DiagResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('サイトにアクセス中...');
+  const [error, setError] = useState('');
 
   const gold = '#c8a84a';
   const cyan = '#6dbed6';
@@ -38,13 +40,10 @@ function DiagnoseContent() {
       'コンテンツを解析中...',
       'SEOスコアを計算中...',
       'デザイン品質を評価中...',
-      'プロンプトを生成中...',
+      'リデザインプロンプトを生成中...',
     ];
     let i = 0;
-    const t = setInterval(() => {
-      i = Math.min(i + 1, msgs.length - 1);
-      setMessage(msgs[i]);
-    }, 1200);
+    const t = setInterval(() => { i = Math.min(i + 1, msgs.length - 1); setMessage(msgs[i]); }, 1400);
 
     fetch('/api/diagnose', {
       method: 'POST',
@@ -54,24 +53,27 @@ function DiagnoseContent() {
       .then(r => r.json())
       .then(data => {
         clearInterval(t);
+        if (data.error) { setError(data.error); setLoading(false); return; }
         setResult(data);
         setLoading(false);
       })
       .catch(() => {
         clearInterval(t);
-        router.push('/lp/new');
+        setError('診断に失敗しました。URLを確認してください。');
+        setLoading(false);
       });
   }, []);
 
   const scoreColor = (s: number) => s >= 70 ? '#10b981' : s >= 40 ? gold : '#ef4444';
   const scoreLabel = (s: number) => s >= 70 ? '良好' : s >= 40 ? '要改善' : '緊急改善が必要';
 
-  const handleGoToDemo = () => {
+  const handleGoToRedesign = () => {
     if (!result) return;
     const params = new URLSearchParams({
-      prompt: result.prompt ?? result.suggestion ?? '',
+      prompt: result.prompt ?? '',
       company: result.company ?? '',
       industry: result.industry ?? '',
+      is_redesign: 'true',
     });
     router.push(`/lp/new?${params.toString()}`);
   };
@@ -110,35 +112,48 @@ function DiagnoseContent() {
           </div>
         )}
 
+        {!loading && error && (
+          <div style={{ textAlign: 'center', paddingTop: 60 }}>
+            <p style={{ fontSize: '1rem', color: '#f87171', marginBottom: 24 }}>{error}</p>
+            <button onClick={() => router.push('/')} style={{ padding: '14px 28px', background: `linear-gradient(135deg,${gold},#e8d48a)`, border: 'none', borderRadius: 8, color: '#000', fontWeight: 900, cursor: 'pointer', fontSize: '0.95rem' }}>
+              TOPへ戻る
+            </button>
+          </div>
+        )}
+
         {!loading && result && (
           <div className="fade-up">
+            {/* ヘッダー */}
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: '0.65rem', letterSpacing: '0.3em', color: gold, border: `1px solid ${borderGold}`, padding: '4px 14px', borderRadius: 2, marginBottom: 24 }}>
               DIAGNOSIS COMPLETE
             </div>
 
-            {/* スコア */}
-            <div style={{ background: bg2, border: `1px solid ${borderGold}`, borderRadius: 16, padding: '28px 24px', marginBottom: 20 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+            {/* スコアカード */}
+            <div style={{ background: bg2, border: `1px solid ${borderGold}`, borderRadius: 16, padding: '28px 24px', marginBottom: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
                 <div>
                   <p style={{ fontSize: '0.68rem', color: muted, marginBottom: 4, letterSpacing: '0.1em' }}>診断完了</p>
                   <p style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fff' }}>{result.company || 'あなたのサイト'}</p>
+                  <p style={{ fontSize: '0.75rem', color: muted, marginTop: 2 }}>{result.industry}</p>
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontFamily: 'monospace', fontSize: '3rem', fontWeight: 900, color: scoreColor(result.score), lineHeight: 1 }}>{result.score}</div>
-                  <div style={{ fontSize: '0.65rem', color: scoreColor(result.score), fontWeight: 700 }}>{scoreLabel(result.score)}</div>
+                  <div style={{ fontFamily: 'monospace', fontSize: '3.2rem', fontWeight: 900, color: scoreColor(result.score), lineHeight: 1 }}>{result.score}</div>
+                  <div style={{ fontSize: '0.65rem', color: scoreColor(result.score), fontWeight: 700, marginTop: 4 }}>{scoreLabel(result.score)}</div>
                 </div>
               </div>
               <div style={{ height: 6, background: 'rgba(255,255,255,0.05)', borderRadius: 3, overflow: 'hidden', marginBottom: 24 }}>
-                <div style={{ height: '100%', width: `${result.score}%`, background: scoreColor(result.score), borderRadius: 3, transition: 'width 1.2s ease' }} />
+                <div style={{ height: '100%', width: `${result.score}%`, background: `linear-gradient(90deg,${scoreColor(result.score)},${scoreColor(result.score)}88)`, borderRadius: 3, transition: 'width 1.2s ease' }} />
               </div>
 
               <p style={{ fontSize: '0.65rem', color: gold, letterSpacing: '0.2em', fontWeight: 700, marginBottom: 12 }}>検出された問題点</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {result.problems?.map((p, i) => (
-                  <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', background: bg3, border: `1px solid ${border}`, borderRadius: 8, padding: '12px 14px' }}>
-                    <span style={{ fontSize: '1.1rem', flexShrink: 0 }}>{p.icon}</span>
+                  <div key={i} style={{ display: 'flex', gap: 14, alignItems: 'flex-start', background: bg3, border: `1px solid ${border}`, borderRadius: 10, padding: '14px 16px' }}>
+                    <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(200,168,74,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <span style={{ fontSize: '1rem' }}>{PROBLEM_ICONS[i] ?? '⚠️'}</span>
+                    </div>
                     <div>
-                      <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#fff', marginBottom: 2 }}>{p.title}</div>
+                      <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#fff', marginBottom: 3 }}>{p.title}</div>
                       <div style={{ fontSize: '0.78rem', color: muted, lineHeight: 1.6 }}>{p.desc}</div>
                     </div>
                   </div>
@@ -147,29 +162,29 @@ function DiagnoseContent() {
             </div>
 
             {/* 改善提案 */}
-            <div style={{ background: 'rgba(109,190,214,0.05)', border: `1px solid rgba(109,190,214,0.15)`, borderRadius: 12, padding: '20px 20px', marginBottom: 20 }}>
-              <p style={{ fontSize: '0.65rem', color: cyan, letterSpacing: '0.2em', fontWeight: 700, marginBottom: 10 }}>💡 AI改善提案</p>
+            <div style={{ background: 'rgba(109,190,214,0.05)', border: `1px solid rgba(109,190,214,0.15)`, borderRadius: 12, padding: '20px', marginBottom: 16 }}>
+              <p style={{ fontSize: '0.65rem', color: cyan, letterSpacing: '0.2em', fontWeight: 700, marginBottom: 10 }}>改善提案</p>
               <p style={{ fontSize: '0.9rem', color: '#e2e8f0', lineHeight: 1.8 }}>{result.suggestion}</p>
             </div>
 
-            {/* 自動生成プロンプト */}
-            <div style={{ background: bg2, border: `1px solid ${borderGold}`, borderRadius: 12, padding: '20px 20px', marginBottom: 24 }}>
-              <p style={{ fontSize: '0.65rem', color: gold, letterSpacing: '0.2em', fontWeight: 700, marginBottom: 10 }}>✨ 自動生成されたプロンプト</p>
-              <p style={{ fontSize: '0.82rem', color: '#888', lineHeight: 1.8, fontStyle: 'italic' }}>{result.prompt}</p>
-              <p style={{ fontSize: '0.7rem', color: '#444', marginTop: 10 }}>このプロンプトがデモページに自動で反映されます</p>
+            {/* 生成プロンプト */}
+            <div style={{ background: bg2, border: `1px solid ${borderGold}`, borderRadius: 12, padding: '20px', marginBottom: 28 }}>
+              <p style={{ fontSize: '0.65rem', color: gold, letterSpacing: '0.2em', fontWeight: 700, marginBottom: 10 }}>リデザイン用プロンプト（自動生成）</p>
+              <p style={{ fontSize: '0.82rem', color: '#888', lineHeight: 1.8 }}>{result.prompt}</p>
+              <p style={{ fontSize: '0.68rem', color: '#444', marginTop: 10 }}>このプロンプトがリデザインに自動反映されます</p>
             </div>
 
             <button
-              onClick={handleGoToDemo}
-              style={{ width: '100%', padding: '18px', background: `linear-gradient(135deg,${gold},#e8d48a)`, border: 'none', borderRadius: 10, color: '#000', fontSize: '1rem', fontWeight: 900, cursor: 'pointer', marginBottom: 12 }}
+              onClick={handleGoToRedesign}
+              style={{ width: '100%', padding: '18px', background: `linear-gradient(135deg,${gold},#e8d48a)`, border: 'none', borderRadius: 10, color: '#000', fontSize: '1rem', fontWeight: 900, cursor: 'pointer', marginBottom: 10 }}
             >
-              このプロンプトでLP生成へ進む →
+              このサイトをリデザインする →
             </button>
             <button
               onClick={() => router.push('/lp/new')}
               style={{ width: '100%', padding: '13px', background: 'transparent', border: `1px solid ${border}`, borderRadius: 10, color: muted, fontSize: '0.85rem', cursor: 'pointer', fontFamily: 'inherit' }}
             >
-              プロンプトなしで生成する
+              新規LPを作成する
             </button>
           </div>
         )}
