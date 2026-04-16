@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useRef, useState } from 'react';
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 import Image from "next/image"
 
 const LINE_URL = "https://lin.ee/SJDJXQv"
@@ -40,21 +41,13 @@ const FAQ = [
   { q: '相談だけでも大丈夫ですか？', a: 'もちろんです。相談・見積もりは完全無料。しつこい営業は一切しません。' },
 ];
 
-const INDUSTRIES = [
-  '飲食店','美容サロン','歯科クリニック','整体院・整骨院',
-  '不動産','学習塾','EC・通販','IT・Web','建設・工務店','その他',
-];
-
 function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
-  const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
+  const ref = (el: HTMLDivElement | null) => {
     if (!el) return;
     const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setInView(true); obs.disconnect(); } }, { threshold: 0.1 });
     obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
+  };
   return (
     <div ref={ref} style={{ opacity: inView ? 1 : 0, transform: inView ? 'translateY(0)' : 'translateY(24px)', transition: `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s` }}>
       {children}
@@ -62,14 +55,17 @@ function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
   );
 }
 
-type DiagStep = 'input' | 'diagnosing' | 'result' | 'generating' | 'done';
-interface DiagResult {
-  score: number; company: string; industry: string;
-  problems: { icon: string; title: string; desc: string }[];
-  suggestion: string;
+function LineBtn({ text = 'LINEで無料相談する', full = false }: { text?: string; full?: boolean }) {
+  return (
+    <a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10, background: '#06C755', color: '#fff', fontWeight: 900, fontSize: '1rem', padding: '16px 28px', borderRadius: 8, textDecoration: 'none', boxShadow: '0 4px 24px rgba(6,199,85,0.35)', width: full ? '100%' : 'auto' }}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z"/></svg>
+      {text}
+    </a>
+  );
 }
 
 export default function Page() {
+  const router = useRouter();
   const gold = '#c8a84a';
   const cyan = '#6dbed6';
   const bg = '#000';
@@ -80,55 +76,25 @@ export default function Page() {
   const muted = '#666';
   const textColor = '#e2e8f0';
 
-  const [diagStep, setDiagStep] = useState<DiagStep>('input');
   const [url, setUrl] = useState('');
-  const [diagResult, setDiagResult] = useState<DiagResult | null>(null);
-  const [diagError, setDiagError] = useState('');
-  const [diagMessage, setDiagMessage] = useState('');
-  const [lpTitle, setLpTitle] = useState('');
-  const [lpIndustry, setLpIndustry] = useState('');
-  const [lpOther, setLpOther] = useState('');
-  const [lpError, setLpError] = useState('');
-  const [generatedSlug, setGeneratedSlug] = useState('');
+  const [urlError, setUrlError] = useState('');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  const handleDiagnose = async () => {
-    if (!url.trim()) { setDiagStep('result'); setDiagResult(null); return; }
-    setDiagError(''); setDiagStep('diagnosing');
-    const msgs = ['サイトにアクセス中...','コンテンツを解析中...','SEOスコアを計算中...','AI診断レポートを生成中...'];
-    let i = 0; setDiagMessage(msgs[0]);
-    const t = setInterval(() => { i = Math.min(i + 1, msgs.length - 1); setDiagMessage(msgs[i]); }, 1400);
-    try {
-      const res = await fetch('/api/diagnose', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url }) });
-      clearInterval(t);
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      setDiagResult(data);
-      if (data.company) setLpTitle(data.company);
-      if (data.industry) setLpIndustry(data.industry);
-      setDiagStep('result');
-    } catch {
-      clearInterval(t);
-      setDiagError('診断に失敗しました。URLを確認してください。');
-      setDiagStep('input');
+  const handleDiagnose = () => {
+    if (!url.trim()) {
+      router.push('/lp/new');
+      return;
     }
-  };
-
-  const handleGenerate = async () => {
-    if (!lpTitle) { setLpError('会社名を入力してください'); return; }
-    if (lpIndustry === 'その他' && !lpOther) { setLpError('業種を入力してください'); return; }
-    setLpError(''); setDiagStep('generating');
-    const ind = lpIndustry === 'その他' ? lpOther : lpIndustry;
     try {
-      const res = await fetch('/api/create-lp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title: lpTitle, sub_title: '', content: ind ? '業種：' + ind : '', client_name: '' }) });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      setGeneratedSlug(data.slug); setDiagStep('done');
-    } catch (e) { setLpError(String(e)); setDiagStep('result'); }
+      new URL(url.startsWith('http') ? url : 'https://' + url);
+    } catch {
+      setUrlError('正しいURLを入力してください（例：https://your-site.com）');
+      return;
+    }
+    setUrlError('');
+    const normalizedUrl = url.startsWith('http') ? url : 'https://' + url;
+    router.push(`/lp/diagnose?url=${encodeURIComponent(normalizedUrl)}`);
   };
-
-  const scoreColor = (s: number) => s >= 70 ? '#10b981' : s >= 40 ? gold : '#ef4444';
-  const scoreLabel = (s: number) => s >= 70 ? '良好' : s >= 40 ? '要改善' : '要緊急改善';
 
   return (
     <div style={{ fontFamily: 'Noto Sans JP, sans-serif', background: bg, color: textColor, overflowX: 'hidden' }}>
@@ -138,7 +104,6 @@ export default function Page() {
         html{scroll-behavior:smooth;}
         @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-        @keyframes spin{to{transform:rotate(360deg)}}
         @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
         .fixed-cta{position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:10px 16px 18px;background:linear-gradient(to top,rgba(0,0,0,0.98) 60%,transparent);pointer-events:none;}
         .fixed-cta a{pointer-events:all;display:flex;align-items:center;justify-content:center;gap:10px;background:#06C755;color:#fff;font-weight:900;font-size:0.95rem;padding:15px 24px;border-radius:8px;text-decoration:none;box-shadow:0 4px 24px rgba(6,199,85,0.4);animation:bounce 3s ease-in-out infinite;max-width:480px;margin:0 auto;width:100%;}
@@ -152,9 +117,6 @@ export default function Page() {
         .inp{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:16px 18px;color:#e8e8e8;font-size:16px;font-family:inherit;outline:none;transition:border-color 0.2s;}
         .inp:focus{border-color:rgba(200,168,74,0.5);}
         .inp::placeholder{color:#2a2a2a;}
-        .ind-btn{background:transparent;border:1px solid rgba(255,255,255,0.07);border-radius:6px;padding:7px 12px;color:#666;font-size:0.78rem;cursor:pointer;transition:all 0.15s;font-family:inherit;}
-        .ind-btn:hover{border-color:rgba(109,190,214,0.4);color:#aaa;}
-        .ind-btn.active{border-color:#6dbed6;color:#6dbed6;background:rgba(109,190,214,0.06);}
         .plan-card{background:#0a0a0a;border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:32px 24px;}
         .plan-card.featured{border:1.5px solid #6dbed6;background:rgba(109,190,214,0.03);}
         .check-item{display:flex;align-items:flex-start;gap:10px;font-size:0.85rem;color:#888;line-height:1.6;margin-bottom:9px;}
@@ -170,6 +132,7 @@ export default function Page() {
         }
       `}</style>
 
+      {/* 固定CTA */}
       <div className="fixed-cta">
         <a href={LINE_URL} target="_blank" rel="noopener noreferrer">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z"/></svg>
@@ -177,163 +140,56 @@ export default function Page() {
         </a>
       </div>
 
+      {/* HERO */}
       <section className="hero-pad" style={{ paddingTop: 100, paddingBottom: 80, textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(200,168,74,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(200,168,74,0.025) 1px,transparent 1px)`, backgroundSize: '48px 48px', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', top: -60, left: '50%', transform: 'translateX(-50%)', width: 500, height: 400, background: 'radial-gradient(ellipse,rgba(109,190,214,0.07) 0%,transparent 70%)', pointerEvents: 'none' }} />
 
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 520, margin: '0 auto', padding: '0 16px' }}>
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 520, margin: '0 auto', padding: '0 16px', animation: 'fadeUp 0.5s ease forwards' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: '0.65rem', letterSpacing: '0.3em', color: gold, border: `1px solid rgba(200,168,74,0.2)`, padding: '4px 14px', borderRadius: 2, marginBottom: 24 }}>
+            <span style={{ width: 4, height: 4, borderRadius: '50%', background: gold, display: 'inline-block', animation: 'pulse 2s ease-in-out infinite' }} />
+            AI WEB DIAGNOSTIC
+          </div>
+          <h1 style={{ fontSize: 'clamp(2rem,6vw,3.2rem)', fontWeight: 900, lineHeight: 1.15, color: '#fff', marginBottom: 16, letterSpacing: '-0.02em' }}>
+            あなたのサイト、<br />
+            <span style={{ color: gold }}>診断します。</span>
+          </h1>
+          <p style={{ fontSize: 'clamp(0.88rem,2vw,1rem)', color: muted, lineHeight: 1.9, marginBottom: 36 }}>
+            URLを入力するだけ。AIが問題点を洗い出し、<br />改善サンプルLPを無料で生成します。
+          </p>
 
-          {diagStep === 'input' && (
-            <div style={{ animation: 'fadeUp 0.5s ease forwards' }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: '0.65rem', letterSpacing: '0.3em', color: gold, border: `1px solid ${borderGold}`, padding: '4px 14px', borderRadius: 2, marginBottom: 24 }}>
-                <span style={{ width: 4, height: 4, borderRadius: '50%', background: gold, display: 'inline-block', animation: 'pulse 2s ease-in-out infinite' }} />
-                AI WEB DIAGNOSTIC
-              </div>
-              <h1 style={{ fontSize: 'clamp(2rem,6vw,3.2rem)', fontWeight: 900, lineHeight: 1.15, color: '#fff', marginBottom: 16, letterSpacing: '-0.02em' }}>
-                あなたのサイト、<br />
-                <span style={{ color: gold }}>診断します。</span>
-              </h1>
-              <p style={{ fontSize: 'clamp(0.88rem,2vw,1rem)', color: muted, lineHeight: 1.9, marginBottom: 36 }}>
-                URLを入力するだけ。AIが問題点を洗い出し、<br />改善サンプルLPを無料で生成します。
-              </p>
-              <div style={{ background: bg2, border: `1px solid ${borderGold}`, borderRadius: 16, padding: '24px 20px', textAlign: 'left', marginBottom: 14 }}>
-                <label style={{ display: 'block', fontSize: '0.7rem', color: gold, letterSpacing: '0.15em', fontWeight: 700, marginBottom: 10 }}>現在のサイトURL</label>
-                <input className="inp" type="url" placeholder="https://your-site.com" value={url} onChange={e => setUrl(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleDiagnose()} style={{ marginBottom: 12 }} />
-                {diagError && <p style={{ fontSize: '0.82rem', color: '#f87171', marginBottom: 10 }}>{diagError}</p>}
-                <button onClick={handleDiagnose} style={{ width: '100%', padding: '17px', background: `linear-gradient(135deg,${gold},#e8d48a)`, border: 'none', borderRadius: 8, color: '#000', fontSize: '1rem', fontWeight: 900, cursor: 'pointer', marginBottom: 10 }}>
-                  AIで無料診断する
-                </button>
-                <button onClick={() => { setDiagStep('result'); setDiagResult(null); }} style={{ width: '100%', padding: '13px', background: 'transparent', border: `1px solid ${border}`, borderRadius: 8, color: muted, fontSize: '0.85rem', cursor: 'pointer', fontFamily: 'inherit' }}>
-                  サイトなし → LP生成へスキップ
-                </button>
-              </div>
-              <p style={{ fontSize: '0.7rem', color: '#333' }}>✓ 完全無料　✓ 登録不要　✓ 30秒で完了</p>
-            </div>
-          )}
-
-          {diagStep === 'diagnosing' && (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '45vh', justifyContent: 'center', gap: 28 }}>
-              <div style={{ position: 'relative', width: 72, height: 72 }}>
-                <div style={{ position: 'absolute', inset: 0, border: `2px solid rgba(200,168,74,0.15)`, borderTopColor: gold, borderRadius: '50%', animation: 'spin 0.9s linear infinite' }} />
-                <div style={{ position: 'absolute', inset: 10, border: `1px solid rgba(109,190,214,0.1)`, borderTopColor: cyan, borderRadius: '50%', animation: 'spin 1.3s linear infinite reverse' }} />
-                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem' }}>🔍</div>
-              </div>
-              <div style={{ textAlign: 'center' }}>
-                <p style={{ fontSize: '1rem', color: gold, fontWeight: 700, marginBottom: 8 }}>AI診断中...</p>
-                <p style={{ fontSize: '0.85rem', color: muted }}>{diagMessage}</p>
-              </div>
-            </div>
-          )}
-
-          {diagStep === 'result' && (
-            <div style={{ animation: 'fadeUp 0.5s ease forwards', textAlign: 'left' }}>
-              {diagResult ? (
-                <div style={{ background: bg2, border: `1px solid ${borderGold}`, borderRadius: 16, padding: '24px 20px', marginBottom: 20 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-                    <div>
-                      <p style={{ fontSize: '0.65rem', color: muted, marginBottom: 4, letterSpacing: '0.1em' }}>DIAGNOSIS COMPLETE</p>
-                      <p style={{ fontSize: '1rem', fontWeight: 700, color: '#fff' }}>{diagResult.company || 'あなたのサイト'}</p>
-                    </div>
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontFamily: 'monospace', fontSize: '2.8rem', fontWeight: 900, color: scoreColor(diagResult.score), lineHeight: 1 }}>{diagResult.score}</div>
-                      <div style={{ fontSize: '0.62rem', color: scoreColor(diagResult.score), fontWeight: 700 }}>{scoreLabel(diagResult.score)}</div>
-                    </div>
-                  </div>
-                  <div style={{ height: 4, background: 'rgba(255,255,255,0.05)', borderRadius: 2, overflow: 'hidden', marginBottom: 20 }}>
-                    <div style={{ height: '100%', width: `${diagResult.score}%`, background: scoreColor(diagResult.score), borderRadius: 2, transition: 'width 1.2s ease' }} />
-                  </div>
-                  <p style={{ fontSize: '0.65rem', color: gold, letterSpacing: '0.2em', fontWeight: 700, marginBottom: 10 }}>検出された問題点</p>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
-                    {diagResult.problems.map((p, i) => (
-                      <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', background: bg3, border: `1px solid ${border}`, borderRadius: 8, padding: '12px 14px' }}>
-                        <span style={{ fontSize: '1.1rem', flexShrink: 0 }}>{p.icon}</span>
-                        <div>
-                          <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#fff', marginBottom: 2 }}>{p.title}</div>
-                          <div style={{ fontSize: '0.78rem', color: muted, lineHeight: 1.6 }}>{p.desc}</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div style={{ background: 'rgba(109,190,214,0.05)', border: `1px solid rgba(109,190,214,0.15)`, borderRadius: 8, padding: '14px 16px' }}>
-                    <p style={{ fontSize: '0.65rem', color: cyan, letterSpacing: '0.15em', fontWeight: 700, marginBottom: 6 }}>改善提案</p>
-                    <p style={{ fontSize: '0.85rem', color: textColor, lineHeight: 1.7 }}>{diagResult.suggestion}</p>
-                  </div>
-                </div>
-              ) : (
-                <div style={{ textAlign: 'center', marginBottom: 24 }}>
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: '0.65rem', letterSpacing: '0.3em', color: gold, border: `1px solid ${borderGold}`, padding: '4px 14px', borderRadius: 2, marginBottom: 16 }}>
-                    FREE LP GENERATOR
-                  </div>
-                  <h2 style={{ fontSize: 'clamp(1.7rem,5vw,2.6rem)', fontWeight: 900, color: '#fff', marginBottom: 8, lineHeight: 1.2, letterSpacing: '-0.02em' }}>
-                    会社名を入れるだけ。<br /><span style={{ color: gold }}>AIが全部作る。</span>
-                  </h2>
-                  <p style={{ fontSize: '0.9rem', color: muted, lineHeight: 1.8 }}>30秒で本格LPが完成します。</p>
-                </div>
-              )}
-              <div style={{ background: bg2, border: `1px solid ${borderGold}`, borderRadius: 16, padding: '24px 20px' }}>
-                <p style={{ fontSize: '0.72rem', color: gold, letterSpacing: '0.15em', fontWeight: 700, marginBottom: 16 }}>
-                  {diagResult ? '改善版LPを無料生成する' : '無料でLPを生成する'}
-                </p>
-                <div style={{ marginBottom: 14 }}>
-                  <label style={{ display: 'block', fontSize: '0.7rem', color: muted, fontWeight: 700, marginBottom: 8 }}>会社名・サービス名</label>
-                  <input className="inp" type="text" placeholder="例：山田整体院" value={lpTitle} onChange={e => setLpTitle(e.target.value)} />
-                </div>
-                <div style={{ marginBottom: 16 }}>
-                  <label style={{ display: 'block', fontSize: '0.7rem', color: muted, fontWeight: 700, marginBottom: 8 }}>業種（任意）</label>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                    {INDUSTRIES.map(ind => (
-                      <button key={ind} className={lpIndustry === ind ? 'ind-btn active' : 'ind-btn'} onClick={() => { setLpIndustry(lpIndustry === ind ? '' : ind); setLpOther(''); }}>{ind}</button>
-                    ))}
-                  </div>
-                  {lpIndustry === 'その他' && <input className="inp" type="text" placeholder="業種を入力" value={lpOther} onChange={e => setLpOther(e.target.value)} style={{ marginTop: 10 }} />}
-                </div>
-                {lpError && <p style={{ fontSize: '0.82rem', color: '#f87171', marginBottom: 12 }}>{lpError}</p>}
-                <button onClick={handleGenerate} style={{ width: '100%', padding: '17px', background: `linear-gradient(135deg,${gold},#e8d48a)`, border: 'none', borderRadius: 8, color: '#000', fontSize: '1rem', fontWeight: 900, cursor: 'pointer' }}>
-                  AIでLPを無料生成する
-                </button>
-              </div>
-              <p style={{ fontSize: '0.7rem', color: '#333', marginTop: 12, textAlign: 'center' }}>クレカ不要　登録不要　完全無料</p>
-            </div>
-          )}
-
-          {diagStep === 'generating' && (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '45vh', justifyContent: 'center', gap: 24 }}>
-              <div style={{ width: 52, height: 52, border: `2px solid rgba(200,168,74,0.15)`, borderTopColor: gold, borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-              <div style={{ textAlign: 'center' }}>
-                <p style={{ fontSize: '1rem', color: gold, fontWeight: 700, marginBottom: 8 }}>AIがLPを生成中...</p>
-                <p style={{ fontSize: '0.82rem', color: muted }}>キャッチコピー生成 → デザイン適用 → 画像選定</p>
-              </div>
-            </div>
-          )}
-
-          {diagStep === 'done' && (
-            <div style={{ textAlign: 'center', animation: 'fadeUp 0.5s ease forwards' }}>
-              <div style={{ marginBottom: 20 }}>
-                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="1.5" style={{ display: 'block', margin: '0 auto' }}>
-                  <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-                </svg>
-              </div>
-              <h2 style={{ fontSize: 'clamp(1.6rem,5vw,2.4rem)', fontWeight: 900, color: '#fff', marginBottom: 8 }}>LP生成完了！</h2>
-              <p style={{ fontSize: '0.9rem', color: muted, marginBottom: 28, lineHeight: 1.7 }}>約1〜2分でビルドが完了します。</p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                <a href={`/lp/${generatedSlug}`} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '17px', background: `linear-gradient(135deg,${gold},#e8d48a)`, borderRadius: 8, color: '#000', fontSize: '1rem', fontWeight: 900, textDecoration: 'none' }}>
-                  生成されたLPを見る
-                </a>
-                <a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '16px', background: '#06C755', borderRadius: 8, color: '#fff', fontSize: '0.95rem', fontWeight: 900, textDecoration: 'none' }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z"/></svg>
-                  このLPをサブスクで運用する
-                </a>
-                <button onClick={() => { setDiagStep('input'); setUrl(''); setLpTitle(''); setLpIndustry(''); setLpOther(''); setDiagResult(null); }} style={{ padding: '13px', background: 'transparent', border: `1px solid ${border}`, borderRadius: 8, color: muted, fontSize: '0.85rem', cursor: 'pointer', fontFamily: 'inherit' }}>
-                  もう一度診断する
-                </button>
-              </div>
-            </div>
-          )}
+          <div style={{ background: bg2, border: `1px solid ${borderGold}`, borderRadius: 16, padding: '24px 20px', textAlign: 'left', marginBottom: 14 }}>
+            <label style={{ display: 'block', fontSize: '0.7rem', color: gold, letterSpacing: '0.15em', fontWeight: 700, marginBottom: 10 }}>現在のサイトURL</label>
+            <input
+              className="inp"
+              type="url"
+              placeholder="https://your-site.com"
+              value={url}
+              onChange={e => { setUrl(e.target.value); setUrlError(''); }}
+              onKeyDown={e => e.key === 'Enter' && handleDiagnose()}
+              style={{ marginBottom: 12 }}
+            />
+            {urlError && <p style={{ fontSize: '0.82rem', color: '#f87171', marginBottom: 10 }}>{urlError}</p>}
+            <button
+              onClick={handleDiagnose}
+              style={{ width: '100%', padding: '17px', background: `linear-gradient(135deg,${gold},#e8d48a)`, border: 'none', borderRadius: 8, color: '#000', fontSize: '1rem', fontWeight: 900, cursor: 'pointer', marginBottom: 10 }}
+            >
+              AIで無料診断する →
+            </button>
+            <button
+              onClick={() => router.push('/lp/new')}
+              style={{ width: '100%', padding: '13px', background: 'transparent', border: `1px solid rgba(255,255,255,0.07)`, borderRadius: 8, color: muted, fontSize: '0.85rem', cursor: 'pointer', fontFamily: 'inherit' }}
+            >
+              サイトなし → LP生成へスキップ
+            </button>
+          </div>
+          <p style={{ fontSize: '0.7rem', color: '#333' }}>完全無料　登録不要　30秒で完了</p>
         </div>
       </section>
 
       <div className="divider" />
 
+      {/* サブスク説明 */}
       <section className="section" style={{ background: bg2, textAlign: 'center' }}>
         <div className="inner">
           <FadeIn>
@@ -357,6 +213,7 @@ export default function Page() {
 
       <div className="divider" />
 
+      {/* 料金プラン */}
       <section className="section" style={{ background: bg }} id="pricing">
         <div className="inner-w">
           <FadeIn>
@@ -376,23 +233,24 @@ export default function Page() {
                   <p style={{ fontSize: '0.68rem', letterSpacing: '0.2em', color: gold, marginBottom: 8, fontWeight: 700 }}>{plan.name}</p>
                   <div style={{ fontFamily: 'monospace', fontSize: '2rem', fontWeight: 900, color: '#fff', lineHeight: 1, marginBottom: 4 }}>{plan.price}</div>
                   <div style={{ fontSize: '0.7rem', color: muted, marginBottom: 4 }}>{plan.note}</div>
-                  <div style={{ fontSize: '0.75rem', color: cyan, marginBottom: 20, paddingBottom: 20, borderBottom: `1px solid ${border}` }}>{plan.target}</div>
+                  <div style={{ fontSize: '0.75rem', color: cyan, marginBottom: 20, paddingBottom: 20, borderBottom: `1px solid rgba(255,255,255,0.07)` }}>{plan.target}</div>
                   <div style={{ marginBottom: 24 }}>
                     {plan.features.map((f, j) => <div key={j} className="check-item"><span className="check-icon">✓</span>{f}</div>)}
                   </div>
-                  <a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '14px', background: 'transparent', border: `1px solid ${borderGold}`, borderRadius: 8, color: gold, fontSize: '0.88rem', fontWeight: 700, textDecoration: 'none' }}>
+                  <a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '14px', background: 'transparent', border: `1px solid rgba(200,168,74,0.2)`, borderRadius: 8, color: gold, fontSize: '0.88rem', fontWeight: 700, textDecoration: 'none' }}>
                     相談する
                   </a>
                 </div>
               </FadeIn>
             ))}
           </div>
-          <p style={{ textAlign: 'center', fontSize: '0.72rem', color: muted, marginTop: 20 }}>表示価格は税抜　月3社限定・枠が埋まり次第受付終了</p>
+          <p style={{ textAlign: 'center', fontSize: '0.72rem', color: muted, marginTop: 20 }}>表示価格は税抜　月3社限定</p>
         </div>
       </section>
 
       <div className="divider" />
 
+      {/* 口コミ */}
       <section className="section" style={{ background: bg2 }} id="reviews">
         <div className="inner">
           <FadeIn>
@@ -402,13 +260,13 @@ export default function Page() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {REVIEWS.map((r, i) => (
               <FadeIn key={i} delay={i * 0.08}>
-                <div style={{ background: bg3, border: `1px solid ${border}`, borderRadius: 12, padding: '22px 20px' }}>
+                <div style={{ background: bg3, border: `1px solid rgba(255,255,255,0.07)`, borderRadius: 12, padding: '22px 20px' }}>
                   <div style={{ display: 'flex', gap: 2, marginBottom: 10 }}>
                     {Array.from({ length: r.star }).map((_, j) => <span key={j} style={{ color: gold, fontSize: '0.9rem' }}>★</span>)}
                   </div>
                   <p style={{ fontSize: '0.9rem', color: textColor, lineHeight: 1.8, marginBottom: 14 }}>{r.text}</p>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(200,168,74,0.08)', border: `1px solid ${borderGold}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', flexShrink: 0 }}>{r.icon}</div>
+                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(200,168,74,0.08)', border: `1px solid rgba(200,168,74,0.2)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', flexShrink: 0 }}>{r.icon}</div>
                     <div>
                       <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#fff' }}>{r.name}</div>
                       <div style={{ fontSize: '0.72rem', color: muted }}>{r.role}</div>
@@ -423,6 +281,7 @@ export default function Page() {
 
       <div className="divider" />
 
+      {/* FAQ */}
       <section className="section" style={{ background: bg }} id="faq">
         <div className="inner">
           <FadeIn>
@@ -443,6 +302,7 @@ export default function Page() {
             ))}
           </div>
 
+          {/* CTA */}
           <FadeIn>
             <div style={{ background: bg2, border: `1px solid ${borderGold}`, borderRadius: 16, padding: '32px 24px', textAlign: 'center' }}>
               <Image src="/logo.png" alt="NEXTGAME株式会社" width={120} height={30} style={{ objectFit: 'contain', marginBottom: 20, opacity: 0.9 }} />
@@ -452,11 +312,8 @@ export default function Page() {
               <p style={{ fontSize: '0.85rem', color: muted, marginBottom: 24, lineHeight: 1.8 }}>
                 相談・見積もり完全無料。しつこい営業は一切しません。
               </p>
-              <a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '17px', background: '#06C755', borderRadius: 8, color: '#fff', fontSize: '1rem', fontWeight: 900, textDecoration: 'none', boxShadow: '0 4px 20px rgba(6,199,85,0.3)', marginBottom: 12 }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z"/></svg>
-                LINEで無料相談する
-              </a>
-              <p style={{ fontSize: '0.7rem', color: '#333' }}>初期費用0円　制作費0円　最短3日　3ヶ月後は自由解約</p>
+              <LineBtn text="LINEで無料相談する" full />
+              <p style={{ fontSize: '0.7rem', color: '#333', marginTop: 12 }}>初期費用0円　制作費0円　最短3日　3ヶ月後は自由解約</p>
             </div>
           </FadeIn>
         </div>
