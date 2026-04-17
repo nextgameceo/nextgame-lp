@@ -56,15 +56,6 @@ const PLANS = [
   },
 ];
 
-const PROBLEMS = [
-  { icon: '📉', text: '制作会社に50万払ったのに、集客が増えない' },
-  { icon: '🕰️', text: 'サイトを作ったきり、3年以上放置している' },
-  { icon: '😓', text: '更新のたびに費用が発生して、頼みづらい' },
-  { icon: '📊', text: 'アクセスはあるのに、問い合わせが来ない' },
-  { icon: '🆚', text: '競合と何が違うのか、うまく説明できない' },
-  { icon: '💸', text: '広告費をかけても費用対効果が見えない' },
-];
-
 const REVIEWS = [
   {
     star: 5,
@@ -100,39 +91,33 @@ const FAQ = [
   { q: 'AIで生成したLPはどのくらいの品質ですか？', a: '実際にサンプルをご覧いただくのが一番です。このページのサンプルセクションからご確認ください。' },
 ];
 
+// SVGアイコン
 const IconCheck = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="20 6 9 17 4 12"/>
   </svg>
 );
-
 const IconChevron = ({ open }: { open: boolean }) => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(45deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
-    <line x1="12" y1="5" x2="12" y2="19"/>
-    <line x1="5" y1="12" x2="19" y2="12"/>
+    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
   </svg>
 );
-
 const IconStar = () => (
   <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none">
     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
   </svg>
 );
-
 const IconMail = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
     <polyline points="22,6 12,13 2,6"/>
   </svg>
 );
-
 const IconArrow = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="5" y1="12" x2="19" y2="12"/>
-    <polyline points="12 5 19 12 12 19"/>
+    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
   </svg>
 );
-
 const IconAI = () => (
   <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="3" width="20" height="14" rx="2"/>
@@ -141,7 +126,6 @@ const IconAI = () => (
     <path d="M9 12s.5 1 3 1 3-1 3-1"/>
   </svg>
 );
-
 const IconMoney = () => (
   <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="10"/>
@@ -149,13 +133,60 @@ const IconMoney = () => (
     <path d="M8.5 9.5A3.5 1.5 0 0 1 12 8a3.5 1.5 0 0 1 3.5 1.5c0 2-3.5 3-3.5 3s-3.5 1-3.5 3A3.5 1.5 0 0 0 12 17a3.5 1.5 0 0 0 3.5-1.5"/>
   </svg>
 );
-
 const IconRefresh = () => (
   <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
     <path d="M3 3v5h5"/>
   </svg>
 );
+const IconAlert = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="12" y1="8" x2="12" y2="12"/>
+    <line x1="12" y1="16" x2="12.01" y2="16"/>
+  </svg>
+);
+const IconClock = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <polyline points="12 6 12 12 16 14"/>
+  </svg>
+);
+const IconTrendDown = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/>
+    <polyline points="17 18 23 18 23 12"/>
+  </svg>
+);
+const IconTarget = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <circle cx="12" cy="12" r="6"/>
+    <circle cx="12" cy="12" r="2"/>
+  </svg>
+);
+const IconBarChart = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="20" x2="12" y2="10"/>
+    <line x1="18" y1="20" x2="18" y2="4"/>
+    <line x1="6" y1="20" x2="6" y2="16"/>
+  </svg>
+);
+const IconSearch = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+  </svg>
+);
+
+const PROBLEMS = [
+  { Icon: IconAlert, text: '制作会社に50万払ったのに、集客が増えない' },
+  { Icon: IconClock, text: 'サイトを作ったきり、3年以上放置している' },
+  { Icon: IconTrendDown, text: '更新のたびに費用が発生して、頼みづらい' },
+  { Icon: IconTarget, text: 'アクセスはあるのに、問い合わせが来ない' },
+  { Icon: IconSearch, text: '競合と何が違うのか、うまく説明できない' },
+  { Icon: IconBarChart, text: '広告費をかけても費用対効果が見えない' },
+];
 
 const REASONS = [
   { Icon: IconAI, title: 'AIが診断・即生成', desc: 'URLを入れるだけで課題を自動分析。改善版LPを30秒で生成。他社で数週間かかる作業が即完了。' },
@@ -211,11 +242,12 @@ export default function Page() {
   const gold = '#c8a84a';
   const cyan = '#6dbed6';
   const bg = '#000';
-  const bg2 = '#0a0a0a';
-  const bg3 = '#111';
-  const border = 'rgba(255,255,255,0.07)';
-  const borderGold = 'rgba(200,168,74,0.2)';
-  const muted = '#666';
+  const bg2 = '#070710';
+  const bg3 = '#0c0c18';
+  const bg4 = '#080810';
+  const border = 'rgba(255,255,255,0.06)';
+  const borderGold = 'rgba(200,168,74,0.18)';
+  const muted = '#555';
   const textColor = '#e2e8f0';
 
   const [url, setUrl] = useState('');
@@ -240,32 +272,31 @@ export default function Page() {
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
         @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
         @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-        @keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
         .fade-up{animation:fadeUp 0.5s ease forwards;}
         .fixed-cta{position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:10px 16px 20px;background:linear-gradient(to top,rgba(0,0,0,0.98) 60%,transparent);pointer-events:none;}
-        .fixed-cta a{pointer-events:all;display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,#c8a84a,#e8d48a);color:#000;font-weight:900;font-size:0.95rem;padding:16px 24px;border-radius:8px;text-decoration:none;box-shadow:0 4px 24px rgba(200,168,74,0.3);animation:bounce 3s ease-in-out infinite;max-width:480px;margin:0 auto;width:100%;}
+        .fixed-cta a{pointer-events:all;display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,#c8a84a,#e8d48a);color:#000;font-weight:900;font-size:0.95rem;padding:16px 24px;border-radius:8px;text-decoration:none;box-shadow:0 4px 24px rgba(200,168,74,0.25);animation:bounce 3s ease-in-out infinite;max-width:480px;margin:0 auto;width:100%;}
         .section{padding:72px 20px;}
         .inner{max-width:560px;margin:0 auto;}
         .inner-w{max-width:860px;margin:0 auto;}
         .sec-label{font-size:0.62rem;letter-spacing:0.35em;color:#c8a84a;font-weight:700;margin-bottom:10px;text-transform:uppercase;display:block;}
         .sec-title{font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:900;color:#fff;line-height:1.3;margin-bottom:12px;letter-spacing:-0.02em;}
-        .sec-sub{font-size:0.9rem;color:#666;line-height:1.9;margin-bottom:36px;}
-        .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(200,168,74,0.1),transparent);}
-        .inp{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:16px 18px;color:#e8e8e8;font-size:16px;font-family:inherit;outline:none;transition:border-color 0.2s;}
-        .inp:focus{border-color:rgba(200,168,74,0.5);}
-        .inp::placeholder{color:#2a2a2a;}
-        .plan-card{background:#0a0a0a;border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:28px 22px;transition:border-color 0.2s,transform 0.2s;}
+        .sec-sub{font-size:0.88rem;color:#555;line-height:1.9;margin-bottom:36px;}
+        .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(200,168,74,0.08),transparent);}
+        .inp{width:100%;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.09);border-radius:8px;padding:16px 18px;color:#e8e8e8;font-size:16px;font-family:inherit;outline:none;transition:border-color 0.2s;}
+        .inp:focus{border-color:rgba(200,168,74,0.45);}
+        .inp::placeholder{color:#252525;}
+        .plan-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:28px 22px;}
         .plan-card.featured{border:1.5px solid #6dbed6;background:rgba(109,190,214,0.03);}
-        .faq-item{background:#0a0a0a;border:1px solid rgba(255,255,255,0.07);border-radius:10px;overflow:hidden;cursor:pointer;margin-bottom:8px;transition:border-color 0.2s;}
-        .faq-item:hover{border-color:rgba(200,168,74,0.2);}
+        .faq-item{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden;cursor:pointer;margin-bottom:8px;transition:border-color 0.2s;}
+        .faq-item:hover{border-color:rgba(200,168,74,0.18);}
         .faq-q{padding:18px 20px;font-size:0.9rem;font-weight:700;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:12px;}
-        .faq-a{padding:0 20px 18px 20px;font-size:0.85rem;color:#666;line-height:1.85;}
-        .reason-card{background:#0a0a0a;border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:28px 24px;display:flex;flex-direction:column;gap:16px;transition:border-color 0.2s,box-shadow 0.2s;}
-        .reason-card:hover{border-color:rgba(200,168,74,0.25);box-shadow:0 8px 32px rgba(200,168,74,0.05);}
-        .stat-card{padding:24px 16px;text-align:center;border-right:1px solid rgba(200,168,74,0.12);}
+        .faq-a{padding:0 20px 18px 20px;font-size:0.85rem;color:#555;line-height:1.85;}
+        .reason-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:28px 24px;display:flex;flex-direction:column;gap:16px;transition:border-color 0.2s,box-shadow 0.2s;}
+        .reason-card:hover{border-color:rgba(200,168,74,0.2);box-shadow:0 8px 32px rgba(200,168,74,0.04);}
+        .stat-card{padding:24px 16px;text-align:center;border-right:1px solid rgba(200,168,74,0.1);}
         .stat-card:last-child{border-right:none;}
-        .problem-card{background:#0a0a0a;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px 18px;display:flex;align-items:center;gap:14px;transition:border-color 0.2s;}
-        .problem-card:hover{border-color:rgba(200,168,74,0.2);}
+        .problem-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px 18px;display:flex;align-items:center;gap:14px;transition:border-color 0.2s;}
+        .problem-card:hover{border-color:rgba(200,168,74,0.18);}
         @media(max-width:768px){
           .section{padding:52px 16px;}
           .plans-grid{grid-template-columns:1fr !important;}
@@ -284,14 +315,13 @@ export default function Page() {
         </a>
       </div>
 
-      {/* HERO */}
-      <section className="hero-pad" style={{ paddingTop: 100, paddingBottom: 80, textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(200,168,74,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(200,168,74,0.02) 1px,transparent 1px)`, backgroundSize: '48px 48px', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 600, height: 500, background: 'radial-gradient(ellipse,rgba(109,190,214,0.06) 0%,transparent 70%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: -40, right: -40, width: 300, height: 300, background: 'radial-gradient(ellipse,rgba(200,168,74,0.05) 0%,transparent 70%)', pointerEvents: 'none' }} />
+      {/* HERO ── bg: #000 */}
+      <section className="hero-pad" style={{ paddingTop: 100, paddingBottom: 80, textAlign: 'center', position: 'relative', overflow: 'hidden', background: bg }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(200,168,74,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(200,168,74,0.018) 1px,transparent 1px)`, backgroundSize: '48px 48px', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 600, height: 500, background: 'radial-gradient(ellipse,rgba(109,190,214,0.055) 0%,transparent 70%)', pointerEvents: 'none' }} />
 
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 520, margin: '0 auto', padding: '0 16px', animation: 'fadeUp 0.5s ease forwards' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: '0.62rem', letterSpacing: '0.3em', color: gold, border: `1px solid rgba(200,168,74,0.2)`, padding: '4px 14px', borderRadius: 2, marginBottom: 24 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: '0.62rem', letterSpacing: '0.3em', color: gold, border: `1px solid rgba(200,168,74,0.18)`, padding: '4px 14px', borderRadius: 2, marginBottom: 24 }}>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: gold, display: 'inline-block', animation: 'pulse 2s ease-in-out infinite' }} />
             AI WEB DIAGNOSTIC
           </div>
@@ -299,17 +329,16 @@ export default function Page() {
             あなたのサイト、<br />
             <span style={{ color: gold }}>診断します。</span>
           </h1>
-          <p style={{ fontSize: 'clamp(0.82rem,2vw,0.95rem)', color: '#444', lineHeight: 1.9, marginBottom: 10 }}>
+          <p style={{ fontSize: 'clamp(0.8rem,2vw,0.9rem)', color: '#3a3a3a', lineHeight: 1.9, marginBottom: 8 }}>
             初期費用0円・制作費0円・最短3日納品
           </p>
           <p style={{ fontSize: 'clamp(0.88rem,2vw,1rem)', color: muted, lineHeight: 1.9, marginBottom: 36 }}>
             URLを入力するだけ。AIが問題点を洗い出し、<br />改善サンプルLPを無料で生成します。
           </p>
-
           <div style={{ background: bg2, border: `1px solid ${borderGold}`, borderRadius: 16, padding: '24px 20px', textAlign: 'left', marginBottom: 14 }}>
             <label style={{ display: 'block', fontSize: '0.68rem', color: gold, letterSpacing: '0.15em', fontWeight: 700, marginBottom: 10 }}>現在のサイトURL</label>
             <input className="inp" type="url" placeholder="https://your-site.com" value={url} onChange={e => { setUrl(e.target.value); setUrlError(''); }} onKeyDown={e => e.key === 'Enter' && handleDiagnose()} style={{ marginBottom: 12 }} />
-            {urlError && <p style={{ fontSize: '0.82rem', color: '#f87171', marginBottom: 10 }}>{urlError}</p>}
+            {urlError && <p style={{ fontSize: '0.82rem', color: '#e8a84a', marginBottom: 10 }}>{urlError}</p>}
             <button onClick={handleDiagnose} style={{ width: '100%', padding: '17px', background: `linear-gradient(135deg,${gold},#e8d48a)`, border: 'none', borderRadius: 8, color: '#000', fontSize: '1rem', fontWeight: 900, cursor: 'pointer', marginBottom: 10 }}>
               AIで無料診断する →
             </button>
@@ -323,7 +352,7 @@ export default function Page() {
 
       <div className="divider" />
 
-      {/* STATS */}
+      {/* STATS ── bg: #070710 */}
       <section style={{ padding: '0 20px', background: bg2 }}>
         <div style={{ maxWidth: 860, margin: '0 auto' }}>
           <FadeIn>
@@ -348,20 +377,22 @@ export default function Page() {
 
       <div className="divider" />
 
-      {/* PROBLEM */}
-      <section className="section" style={{ background: bg }}>
+      {/* PROBLEM ── bg: #0c0c18 */}
+      <section className="section" style={{ background: bg3 }}>
         <div className="inner">
           <FadeIn>
             <span className="sec-label">PROBLEM</span>
-            <h2 className="sec-title">こんな<span style={{ color: '#ef4444' }}>悩み</span>、ありませんか？</h2>
+            <h2 className="sec-title">こんな<span style={{ color: gold }}>悩み</span>、ありませんか？</h2>
             <p className="sec-sub">多くの中小企業・個人事業主が抱えるWeb集客の課題</p>
           </FadeIn>
           <div className="problems-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 10 }}>
             {PROBLEMS.map((p, i) => (
               <FadeIn key={i} delay={i * 0.06}>
                 <div className="problem-card">
-                  <span style={{ fontSize: '1.3rem', flexShrink: 0 }}>{p.icon}</span>
-                  <span style={{ fontSize: '0.82rem', color: '#aaa', lineHeight: 1.6 }}>{p.text}</span>
+                  <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(200,168,74,0.07)', border: `1px solid rgba(200,168,74,0.14)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: gold, flexShrink: 0 }}>
+                    <p.Icon />
+                  </div>
+                  <span style={{ fontSize: '0.82rem', color: '#888', lineHeight: 1.6 }}>{p.text}</span>
                 </div>
               </FadeIn>
             ))}
@@ -379,8 +410,8 @@ export default function Page() {
 
       <div className="divider" />
 
-      {/* SAMPLE */}
-      <section className="section" style={{ background: bg2, paddingLeft: 0, paddingRight: 0 }}>
+      {/* SAMPLE ── bg: #000 */}
+      <section className="section" style={{ background: bg, paddingLeft: 0, paddingRight: 0 }}>
         <div style={{ maxWidth: 860, margin: '0 auto', paddingLeft: 20, paddingRight: 20 }}>
           <FadeIn>
             <div style={{ textAlign: 'center', marginBottom: 36 }}>
@@ -398,15 +429,15 @@ export default function Page() {
               { slug: 'lp-2bcaik', label: '税理士', title: '山田税理士事務所', catch: '税務申告、もう迷わない', desc: '個人事業主・フリーランス専門の税理士が、経営判断を税務面からサポート。', img: 'https://images.unsplash.com/photo-1589153954649-9ebab5ddefed?w=600&q=80', accent: '#3b82f6' },
               { slug: 'lp-ymsrwj', label: 'IT・Web', title: 'NEXTGAME', catch: '制作費0円。Web運用の常識を変える。', desc: 'AIが診断し、プロが運用。月額サブスクで集客を加速させる新しいWebの形。', img: 'https://images.unsplash.com/photo-1677469684112-5dfb3aa4d3df?w=600&q=80', accent: '#00D1FF' },
             ].map((s, i) => (
-              <div key={i} style={{ width: 260, flexShrink: 0, scrollSnapAlign: 'start', background: '#0a0a0a', border: `1px solid ${s.accent}22`, borderRadius: 16, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              <div key={i} style={{ width: 260, flexShrink: 0, scrollSnapAlign: 'start', background: bg2, border: `1px solid ${s.accent}22`, borderRadius: 16, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                 <div style={{ position: 'relative', height: 160, overflow: 'hidden' }}>
                   <img src={s.img} alt={s.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                   <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom,transparent 40%,rgba(0,0,0,0.4))' }} />
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 22, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', padding: '0 8px', gap: 5 }}>
-                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#ef4444' }} />
-                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#f59e0b' }} />
-                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981' }} />
-                    <div style={{ flex: 1, height: 10, background: 'rgba(255,255,255,0.08)', borderRadius: 6, marginLeft: 6 }} />
+                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#555' }} />
+                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#555' }} />
+                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#555' }} />
+                    <div style={{ flex: 1, height: 10, background: 'rgba(255,255,255,0.07)', borderRadius: 6, marginLeft: 6 }} />
                   </div>
                   <div style={{ position: 'absolute', bottom: 10, left: 10 }}>
                     <span style={{ fontSize: '0.6rem', color: '#fff', background: s.accent, padding: '3px 10px', borderRadius: 100, fontWeight: 700 }}>{s.label}</span>
@@ -439,8 +470,8 @@ export default function Page() {
 
       <div className="divider" />
 
-      {/* WHY */}
-      <section className="section" style={{ background: bg }}>
+      {/* WHY ── bg: #070710 */}
+      <section className="section" style={{ background: bg2 }}>
         <div className="inner-w">
           <FadeIn>
             <div style={{ textAlign: 'center', marginBottom: 40 }}>
@@ -453,7 +484,7 @@ export default function Page() {
             {REASONS.map((r, i) => (
               <FadeIn key={i} delay={i * 0.1}>
                 <div className="reason-card">
-                  <div style={{ width: 52, height: 52, borderRadius: 14, background: 'rgba(200,168,74,0.08)', border: '1px solid rgba(200,168,74,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: gold }}>
+                  <div style={{ width: 52, height: 52, borderRadius: 14, background: 'rgba(200,168,74,0.07)', border: '1px solid rgba(200,168,74,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: gold }}>
                     <r.Icon />
                   </div>
                   <div>
@@ -469,8 +500,8 @@ export default function Page() {
 
       <div className="divider" />
 
-      {/* SUBSCRIPTION */}
-      <section className="section" style={{ background: bg2, textAlign: 'center' }}>
+      {/* SUBSCRIPTION ── bg: #080810 */}
+      <section className="section" style={{ background: bg4, textAlign: 'center' }}>
         <div className="inner">
           <FadeIn>
             <span className="sec-label">AI × WEB SUBSCRIPTION</span>
@@ -478,15 +509,15 @@ export default function Page() {
               サイトは作った瞬間から<br />
               <span style={{ color: cyan }}>劣化する。</span>
             </h2>
-            <p className="sec-sub">運用し続けるから、成果が出る。Web制作・運用・改善をまるごと月額サブスクで。<br /><span style={{ color: gold }}>初期費用0円・制作費0円。</span></p>
+            <p className="sec-sub">運用し続けるから、成果が出る。Web制作・運用・改善をまるごと月額サブスクで。<br /><span style={{ color: gold, fontWeight: 700 }}>初期費用0円・制作費0円。</span></p>
           </FadeIn>
         </div>
       </section>
 
       <div className="divider" />
 
-      {/* PRICING */}
-      <section className="section" style={{ background: bg }} id="pricing">
+      {/* PRICING ── bg: #0c0c18 */}
+      <section className="section" style={{ background: bg3 }} id="pricing">
         <div className="inner-w">
           <FadeIn>
             <div style={{ textAlign: 'center', marginBottom: 40 }}>
@@ -500,38 +531,38 @@ export default function Page() {
               <FadeIn key={i} delay={i * 0.08}>
                 <div className={`plan-card${plan.featured ? ' featured' : ''}`} style={{ position: 'relative' }}>
                   {plan.badge && (
-                    <div style={{ position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)', background: plan.featured ? cyan : 'rgba(109,190,214,0.12)', color: plan.featured ? '#000' : cyan, fontSize: '0.6rem', fontWeight: 700, padding: '3px 14px', borderRadius: 2, whiteSpace: 'nowrap', letterSpacing: '0.05em' }}>{plan.badge}</div>
+                    <div style={{ position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)', background: plan.featured ? cyan : 'rgba(109,190,214,0.1)', color: plan.featured ? '#000' : cyan, fontSize: '0.6rem', fontWeight: 700, padding: '3px 14px', borderRadius: 2, whiteSpace: 'nowrap', letterSpacing: '0.05em' }}>{plan.badge}</div>
                   )}
                   <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: gold, marginBottom: 8, fontWeight: 700 }}>{plan.name}</p>
                   <div style={{ marginBottom: 2 }}>
                     <span style={{ fontFamily: 'Inter, monospace', fontSize: '1.9rem', fontWeight: 900, color: '#fff' }}>¥{plan.price}</span>
                     <span style={{ fontSize: '0.7rem', color: muted }}>/月</span>
                   </div>
-                  <p style={{ fontSize: '0.68rem', color: '#444', marginBottom: 4 }}>税込 ¥{plan.tax}/月</p>
-                  <p style={{ fontSize: '0.75rem', color: cyan, marginBottom: 20, paddingBottom: 20, borderBottom: `1px solid rgba(255,255,255,0.06)` }}>{plan.target}</p>
+                  <p style={{ fontSize: '0.68rem', color: '#333', marginBottom: 4 }}>税込 ¥{plan.tax}/月</p>
+                  <p style={{ fontSize: '0.75rem', color: cyan, marginBottom: 20, paddingBottom: 20, borderBottom: `1px solid rgba(255,255,255,0.05)` }}>{plan.target}</p>
                   <div style={{ marginBottom: 24 }}>
                     {plan.features.map((f, j) => (
-                      <div key={j} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: '0.82rem', color: '#777', lineHeight: 1.6, marginBottom: 9 }}>
+                      <div key={j} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: '0.82rem', color: '#666', lineHeight: 1.6, marginBottom: 9 }}>
                         <span style={{ color: gold, flexShrink: 0, marginTop: 3 }}><IconCheck /></span>
                         {f}
                       </div>
                     ))}
                   </div>
-                  <a href={CONTACT_URL} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '13px', background: 'transparent', border: `1px solid rgba(200,168,74,0.2)`, borderRadius: 8, color: gold, fontSize: '0.85rem', fontWeight: 700, textDecoration: 'none' }}>
+                  <a href={CONTACT_URL} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '13px', background: 'transparent', border: `1px solid rgba(200,168,74,0.18)`, borderRadius: 8, color: gold, fontSize: '0.85rem', fontWeight: 700, textDecoration: 'none' }}>
                     相談する
                   </a>
                 </div>
               </FadeIn>
             ))}
           </div>
-          <p style={{ textAlign: 'center', fontSize: '0.7rem', color: '#333', marginTop: 20 }}>月3社限定　表示価格は税抜</p>
+          <p style={{ textAlign: 'center', fontSize: '0.7rem', color: '#2a2a2a', marginTop: 20 }}>月3社限定　表示価格は税抜</p>
         </div>
       </section>
 
       <div className="divider" />
 
-      {/* REVIEWS */}
-      <section className="section" style={{ background: bg2 }} id="reviews">
+      {/* REVIEWS ── bg: #000 */}
+      <section className="section" style={{ background: bg }} id="reviews">
         <div className="inner">
           <FadeIn>
             <span className="sec-label">REVIEWS</span>
@@ -540,19 +571,19 @@ export default function Page() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {REVIEWS.map((r, i) => (
               <FadeIn key={i} delay={i * 0.08}>
-                <div style={{ background: bg3, border: `1px solid rgba(255,255,255,0.06)`, borderRadius: 14, padding: '22px 20px' }}>
+                <div style={{ background: bg2, border: `1px solid ${border}`, borderRadius: 14, padding: '22px 20px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
                     <div style={{ display: 'flex', gap: 2 }}>
                       {Array.from({ length: r.star }).map((_, j) => (
                         <span key={j} style={{ color: gold }}><IconStar /></span>
                       ))}
                     </div>
-                    <span style={{ fontSize: '0.7rem', fontWeight: 900, color: gold, background: 'rgba(200,168,74,0.08)', border: `1px solid ${borderGold}`, padding: '3px 10px', borderRadius: 100 }}>
+                    <span style={{ fontSize: '0.68rem', fontWeight: 900, color: gold, background: 'rgba(200,168,74,0.07)', border: `1px solid ${borderGold}`, padding: '3px 10px', borderRadius: 100 }}>
                       {r.result}
                     </span>
                   </div>
                   <p style={{ fontSize: '0.9rem', color: textColor, lineHeight: 1.85, marginBottom: 16 }}>{r.text}</p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, paddingTop: 14, borderTop: `1px solid rgba(255,255,255,0.05)` }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, paddingTop: 14, borderTop: `1px solid rgba(255,255,255,0.04)` }}>
                     <div style={{ width: 34, height: 34, borderRadius: '50%', background: `linear-gradient(135deg,${gold},#e8d48a)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.82rem', fontWeight: 900, color: '#000', flexShrink: 0 }}>
                       {r.initial}
                     </div>
@@ -570,14 +601,14 @@ export default function Page() {
 
       <div className="divider" />
 
-      {/* FAQ */}
-      <section className="section" style={{ background: bg }} id="faq">
+      {/* FAQ ── bg: #070710 */}
+      <section className="section" style={{ background: bg2 }} id="faq">
         <div className="inner">
           <FadeIn>
             <span className="sec-label">FAQ</span>
             <h2 className="sec-title">よくある<span style={{ color: cyan }}>質問</span></h2>
           </FadeIn>
-          <div style={{ marginBottom: 0 }}>
+          <div>
             {FAQ.map((f, i) => (
               <FadeIn key={i} delay={i * 0.05}>
                 <div className="faq-item" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
@@ -595,9 +626,10 @@ export default function Page() {
 
       <div className="divider" />
 
-      {/* CLOSING */}
-      <section className="section" style={{ background: 'radial-gradient(ellipse 100% 80% at 50% 100%,rgba(200,168,74,0.07) 0%,transparent 70%)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(200,168,74,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(200,168,74,0.015) 1px,transparent 1px)`, backgroundSize: '48px 48px', pointerEvents: 'none' }} />
+      {/* CLOSING ── bg: #0c0c18 + グロー */}
+      <section className="section" style={{ background: bg3, position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(200,168,74,0.012) 1px,transparent 1px),linear-gradient(90deg,rgba(200,168,74,0.012) 1px,transparent 1px)`, backgroundSize: '48px 48px', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: -100, left: '50%', transform: 'translateX(-50%)', width: 700, height: 400, background: 'radial-gradient(ellipse,rgba(200,168,74,0.06) 0%,transparent 65%)', pointerEvents: 'none' }} />
         <div className="inner" style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
           <FadeIn>
             <span className="sec-label">CONTACT</span>
@@ -611,17 +643,17 @@ export default function Page() {
             </p>
             <div style={{ display: 'flex', justifyContent: 'center', gap: 20, marginBottom: 32, flexWrap: 'wrap' }}>
               {['相談・見積もり完全無料', '最短3日で公開', '解約はいつでも'].map((t, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.78rem', color: '#888' }}>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.78rem', color: '#777' }}>
                   <span style={{ color: gold }}><IconCheck /></span>
                   {t}
                 </div>
               ))}
             </div>
-            <a href={CONTACT_URL} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '18px 40px', background: `linear-gradient(135deg,${gold},#e8d48a)`, borderRadius: 100, color: '#000', fontSize: '1rem', fontWeight: 900, textDecoration: 'none', boxShadow: `0 8px 32px rgba(200,168,74,0.25)`, marginBottom: 16 }}>
+            <a href={CONTACT_URL} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '18px 40px', background: `linear-gradient(135deg,${gold},#e8d48a)`, borderRadius: 100, color: '#000', fontSize: '1rem', fontWeight: 900, textDecoration: 'none', boxShadow: `0 8px 32px rgba(200,168,74,0.2)`, marginBottom: 20 }}>
               <IconMail />
               無料相談・お問い合わせ
             </a>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 24, marginTop: 20 }}>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 28, marginTop: 4 }}>
               {[
                 { val: '0円', label: '初期費用' },
                 { val: '3日', label: '最短納品' },
@@ -629,7 +661,7 @@ export default function Page() {
               ].map((s, i) => (
                 <div key={i} style={{ textAlign: 'center' }}>
                   <div style={{ fontFamily: 'Inter, monospace', fontSize: '1.3rem', fontWeight: 900, color: gold, lineHeight: 1 }}>{s.val}</div>
-                  <div style={{ fontSize: '0.6rem', color: '#444', marginTop: 4, letterSpacing: '0.05em' }}>{s.label}</div>
+                  <div style={{ fontSize: '0.6rem', color: '#333', marginTop: 4, letterSpacing: '0.05em' }}>{s.label}</div>
                 </div>
               ))}
             </div>
@@ -639,10 +671,11 @@ export default function Page() {
 
       <div className="divider" />
 
-      <footer style={{ padding: '28px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+      {/* FOOTER ── bg: #000 */}
+      <footer style={{ padding: '28px 20px', background: bg, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
         <Image src="/logo.png" alt="NEXTGAME株式会社" width={110} height={28} style={{ objectFit: 'contain' }} />
         <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
-          <a href="/privacy" style={{ fontSize: '0.7rem', color: '#333', textDecoration: 'none' }}>Privacy Policy</a>
+          <a href="/privacy" style={{ fontSize: '0.7rem', color: '#2a2a2a', textDecoration: 'none' }}>Privacy Policy</a>
           <span style={{ fontSize: '0.7rem', color: '#2a2a2a' }}>© 2026 NEXTGAME株式会社</span>
         </div>
       </footer>
