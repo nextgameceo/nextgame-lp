@@ -25,27 +25,17 @@ export async function generateMetadata(): Promise<Metadata> {
   if (!data) {
     return {
       metadataBase: new URL(baseUrl),
-      title: {
-        default: defaultTitle,
-        template: '%s | NEXTGAME株式会社',
-      },
+      title: { default: defaultTitle, template: '%s | NEXTGAME株式会社' },
       description: defaultDesc,
       keywords: ['Web制作', 'Web運用', 'サブスク', '名古屋', 'AI', 'LP制作', 'NEXTGAME'],
-      verification: {
-        google: '2sC_rYGGxiVwF5tE6DUiqsp8HhszO7aGSl_ka14Yj1Q',
-      },
+      verification: { google: '2sC_rYGGxiVwF5tE6DUiqsp8HhszO7aGSl_ka14Yj1Q' },
       openGraph: {
-        type: 'website',
-        locale: 'ja_JP',
-        siteName: 'NEXTGAME株式会社',
-        title: defaultTitle,
-        description: defaultDesc,
+        type: 'website', locale: 'ja_JP', siteName: 'NEXTGAME株式会社',
+        title: defaultTitle, description: defaultDesc,
         images: [{ url: `${baseUrl}/ogp.png`, width: 1200, height: 630 }],
       },
       twitter: {
-        card: 'summary_large_image',
-        title: defaultTitle,
-        description: defaultDesc,
+        card: 'summary_large_image', title: defaultTitle, description: defaultDesc,
         images: [`${baseUrl}/ogp.png`],
       },
       icons: {
@@ -59,41 +49,27 @@ export async function generateMetadata(): Promise<Metadata> {
         apple: [{ url: '/favicons/apple-touch-icon.png', sizes: '180x180' }],
       },
       manifest: '/favicons/manifest.json',
-      alternates: {
-        canonical: baseUrl,
-      },
+      alternates: { canonical: baseUrl },
     };
   }
 
   return {
     metadataBase: new URL(baseUrl),
-    title: {
-      default: data.title || defaultTitle,
-      template: '%s | NEXTGAME株式会社',
-    },
+    title: { default: data.title || defaultTitle, template: '%s | NEXTGAME株式会社' },
     description: data.description || defaultDesc,
     keywords: ['Web制作', 'Web運用', 'サブスク', '名古屋', 'AI', 'LP制作', 'NEXTGAME'],
-    verification: {
-      google: '2sC_rYGGxiVwF5tE6DUiqsp8HhszO7aGSl_ka14Yj1Q',
-    },
+    verification: { google: '2sC_rYGGxiVwF5tE6DUiqsp8HhszO7aGSl_ka14Yj1Q' },
     openGraph: {
-      type: 'website',
-      locale: 'ja_JP',
-      url: baseUrl,
-      siteName: 'NEXTGAME株式会社',
+      type: 'website', locale: 'ja_JP', url: baseUrl, siteName: 'NEXTGAME株式会社',
       title: data.ogTitle || data.title || defaultTitle,
       description: data.ogDescription || data.description || defaultDesc,
-      images: data.ogImage?.url
-        ? [{ url: data.ogImage.url }]
-        : [{ url: `${baseUrl}/ogp.png`, width: 1200, height: 630 }],
+      images: data.ogImage?.url ? [{ url: data.ogImage.url }] : [{ url: `${baseUrl}/ogp.png`, width: 1200, height: 630 }],
     },
     twitter: {
       card: 'summary_large_image',
       title: data.ogTitle || data.title || defaultTitle,
       description: data.ogDescription || data.description || defaultDesc,
-      images: data.ogImage?.url
-        ? [data.ogImage.url]
-        : [`${baseUrl}/ogp.png`],
+      images: data.ogImage?.url ? [data.ogImage.url] : [`${baseUrl}/ogp.png`],
     },
     icons: {
       icon: [
@@ -106,9 +82,7 @@ export async function generateMetadata(): Promise<Metadata> {
       apple: [{ url: '/favicons/apple-touch-icon.png', sizes: '180x180' }],
     },
     manifest: '/favicons/manifest.json',
-    alternates: {
-      canonical: data.canonical || baseUrl,
-    },
+    alternates: { canonical: data.canonical || baseUrl },
   };
 }
 
@@ -156,26 +130,8 @@ export default function RootLayout({ children }: Props) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdWebSite) }}
         />
         <InitialLoading />
-        <HeaderWrapper />
-        <main className={styles.main}>
-          <MotionWrapper>
-            {children}
-          </MotionWrapper>
-        </main>
-        <FooterWrapper />
+        {children}
         <ChatBot />
-        <div style={{
-          position: 'fixed',
-          bottom: '64px',
-          right: '8px',
-          fontSize: '0.55rem',
-          color: 'rgba(255,255,255,0.15)',
-          zIndex: 9999,
-          pointerEvents: 'none',
-          letterSpacing: '0.05em',
-        }}>
-          Powered by Google Translate
-        </div>
       </body>
     </html>
   );
