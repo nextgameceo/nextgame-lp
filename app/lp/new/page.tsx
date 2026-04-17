@@ -1,4 +1,4 @@
-'use client';
+"use client"
 
 import { useState, useRef, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -119,6 +119,9 @@ function NewLpContent() {
   const [logoUploading, setLogoUploading] = useState(false);
   const [genStep, setGenStep] = useState<'quiz' | 'name' | 'loading' | 'done'>('quiz');
   const [slug, setSlug] = useState('');
+  const [lpImageUrl, setLpImageUrl] = useState('');
+  const [lpSubTitle, setLpSubTitle] = useState('');
+  const [lpAccent, setLpAccent] = useState('#3b82f6');
   const [error, setError] = useState('');
 
   const gold = '#c8a84a';
@@ -224,6 +227,13 @@ function NewLpContent() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setSlug(data.slug);
+      setLpImageUrl(data.image_url ?? '');
+      setLpSubTitle(data.sub_title ?? '');
+      const accentMap: Record<string, string> = {
+        blue: '#3b82f6', green: '#10b981', orange: '#f97316',
+        red: '#ef4444', purple: '#8b5cf6',
+      };
+      setLpAccent(accentMap[data.accent_color] ?? '#3b82f6');
       setGenStep('done');
     } catch (e) {
       setError(String(e));
@@ -454,68 +464,48 @@ function NewLpContent() {
                 </a>
               </div>
 
-              {/* スマホモックアップ */}
-              <div style={{ padding: '24px 20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 24, background: 'radial-gradient(ellipse at center,rgba(200,168,74,0.04) 0%,transparent 70%)' }}>
-                {/* iPhone SVG */}
-                <div style={{ position: 'relative', width: 160, flexShrink: 0 }}>
-                  <svg viewBox="0 0 160 330" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 2, pointerEvents: 'none', filter: 'drop-shadow(0 16px 40px rgba(0,0,0,0.7))' }}>
-                    <rect x="1" y="1" width="158" height="328" rx="32" ry="32" fill="#1c1c1e" stroke="#3a3a3c" strokeWidth="1.5"/>
-                    <rect x="7" y="7" width="146" height="316" rx="27" ry="27" fill="#000"/>
-                    <rect x="55" y="11" width="50" height="20" rx="10" ry="10" fill="#000"/>
-                    <circle cx="93" cy="21" r="4" fill="#1c1c1e"/>
-                    <rect x="158" y="88" width="3" height="50" rx="1.5" fill="#3a3a3c"/>
-                    <rect x="158" y="148" width="3" height="38" rx="1.5" fill="#3a3a3c"/>
-                    <rect x="0" y="84" width="3" height="26" rx="1.5" fill="#3a3a3c"/>
-                    <rect x="0" y="120" width="3" height="50" rx="1.5" fill="#3a3a3c"/>
-                    <rect x="0" y="178" width="3" height="50" rx="1.5" fill="#3a3a3c"/>
-                    <rect x="58" y="318" width="44" height="4" rx="2" fill="#3a3a3c"/>
-                  </svg>
-                  <div style={{ position: 'relative', zIndex: 1, margin: '7px', borderRadius: 27, overflow: 'hidden', height: 316, background: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 10 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(200,168,74,0.15)', border: '1px solid rgba(200,168,74,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8a84a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                        <polyline points="15 3 21 3 21 9"/>
-                        <line x1="10" y1="14" x2="21" y2="3"/>
-                      </svg>
+              {/* LP画像カード */}
+              <div style={{ position: 'relative', overflow: 'hidden' }}>
+                {lpImageUrl ? (
+                  <>
+                    <img
+                      src={lpImageUrl}
+                      alt={title}
+                      style={{ width: '100%', height: 200, objectFit: 'cover', display: 'block' }}
+                    />
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.75) 100%)' }} />
+                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '20px' }}>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', fontSize: '0.6rem', color: '#fff', background: lpAccent, padding: '3px 10px', borderRadius: 100, fontWeight: 700, marginBottom: 8 }}>
+                        {title}
+                      </div>
+                      <p style={{ fontSize: 'clamp(1rem,3vw,1.2rem)', fontWeight: 900, color: '#fff', lineHeight: 1.35, textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>
+                        {lpSubTitle}
+                      </p>
                     </div>
-                    <p style={{ fontSize: '0.58rem', color: '#444', textAlign: 'center', padding: '0 16px', lineHeight: 1.6 }}>
-                      タップして<br />LPを確認
-                    </p>
-                    <a
-                      href={'/lp/' + slug}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ fontSize: '0.62rem', color: '#c8a84a', fontWeight: 700, textDecoration: 'none', background: 'rgba(200,168,74,0.08)', padding: '5px 14px', borderRadius: 20, border: '1px solid rgba(200,168,74,0.25)' }}
-                    >
-                      開く →
-                    </a>
+                  </>
+                ) : (
+                  <div style={{ height: 160, background: 'linear-gradient(135deg,#0a0a0a,#111)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 8 }}>
+                    <div style={{ fontSize: '2rem' }}>✨</div>
+                    <p style={{ fontSize: '0.88rem', fontWeight: 700, color: '#fff' }}>{title}</p>
+                    <p style={{ fontSize: '0.72rem', color: '#555', textAlign: 'center', padding: '0 20px' }}>{lpSubTitle}</p>
                   </div>
-                </div>
+                )}
+              </div>
 
-                {/* 情報テキスト */}
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  <div style={{ background: 'rgba(200,168,74,0.05)', border: '1px solid rgba(200,168,74,0.15)', borderRadius: 10, padding: '12px 14px' }}>
-                    <p style={{ fontSize: '0.58rem', color: gold, letterSpacing: '0.15em', fontWeight: 700, marginBottom: 5 }}>TITLE</p>
-                    <p style={{ fontSize: '0.85rem', fontWeight: 700, color: '#fff', lineHeight: 1.3 }}>{title}</p>
-                  </div>
-                  {isRedesign && diagScore && (
-                    <div style={{ background: 'rgba(109,190,214,0.05)', border: '1px solid rgba(109,190,214,0.15)', borderRadius: 10, padding: '12px 14px' }}>
-                      <p style={{ fontSize: '0.58rem', color: cyan, letterSpacing: '0.15em', fontWeight: 700, marginBottom: 5 }}>DIAG SCORE</p>
-                      <p style={{ fontFamily: 'monospace', fontSize: '1.6rem', fontWeight: 900, color: Number(diagScore) >= 70 ? '#10b981' : Number(diagScore) >= 40 ? gold : '#ef4444', lineHeight: 1 }}>{diagScore}</p>
-                    </div>
-                  )}
-                  <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, padding: '12px 14px' }}>
-                    <p style={{ fontSize: '0.58rem', color: '#555', letterSpacing: '0.15em', fontWeight: 700, marginBottom: 5 }}>STATUS</p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981', animation: 'pulse 2s ease-in-out infinite' }} />
-                      <p style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: 700 }}>公開中</p>
-                    </div>
-                  </div>
-                  <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, padding: '12px 14px' }}>
-                    <p style={{ fontSize: '0.58rem', color: '#555', letterSpacing: '0.15em', fontWeight: 700, marginBottom: 5 }}>URL</p>
-                    <p style={{ fontSize: '0.6rem', color: '#444', fontFamily: 'monospace', wordBreak: 'break-all', lineHeight: 1.5 }}>nextgame-limited.com/lp/{slug}</p>
-                  </div>
+              {/* ステータスバー */}
+              <div style={{ padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981', animation: 'pulse 2s ease-in-out infinite' }} />
+                  <span style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: 700 }}>公開中</span>
                 </div>
+                {isRedesign && diagScore && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ fontSize: '0.65rem', color: '#444' }}>診断スコア</span>
+                    <span style={{ fontFamily: 'monospace', fontSize: '1.1rem', fontWeight: 900, color: Number(diagScore) >= 70 ? '#10b981' : Number(diagScore) >= 40 ? gold : '#ef4444' }}>
+                      {diagScore}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -567,6 +557,9 @@ function NewLpContent() {
                   setLogoPreview('');
                   setExtraPrompt('');
                   setIsRedesign(false);
+                  setLpImageUrl('');
+                  setLpSubTitle('');
+                  setLpAccent('#3b82f6');
                 }}
                 style={{ padding: '13px', background: 'transparent', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, color: '#555', fontSize: '0.85rem', cursor: 'pointer', fontFamily: 'inherit' }}
               >
