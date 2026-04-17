@@ -8,79 +8,29 @@ const CONTACT_URL = '/contact';
 
 const PLANS = [
   {
-    name: 'STARTER',
-    price: '29,800',
-    tax: '32,780',
+    name: 'STARTER', price: '29,800', tax: '32,780',
     target: '個人事業主・小規模店舗',
-    features: [
-      'Webサイト制作（LP）込み',
-      '月2回コンテンツ更新',
-      '月次アクセスレポート',
-      'チャット即レスサポート',
-      '最低3ヶ月・以降月単位',
-    ],
-    featured: false,
-    badge: '',
+    features: ['Webサイト制作（LP）込み', '月2回コンテンツ更新', '月次アクセスレポート', 'チャット即レスサポート', '最低3ヶ月・以降月単位'],
+    featured: false, badge: '',
   },
   {
-    name: 'GROWTH',
-    price: '59,800',
-    tax: '65,780',
+    name: 'GROWTH', price: '59,800', tax: '65,780',
     target: '中小企業・複数店舗オーナー',
-    features: [
-      'Webサイト制作（複数P）込み',
-      '週1回コンテンツ更新',
-      'SEO対策・検索順位改善',
-      '月次改善提案レポート',
-      'チャット即レスサポート',
-      '最低3ヶ月・以降月単位',
-    ],
-    featured: true,
-    badge: '人気No.1',
+    features: ['Webサイト制作（複数P）込み', '週1回コンテンツ更新', 'SEO対策・検索順位改善', '月次改善提案レポート', 'チャット即レスサポート', '最低3ヶ月・以降月単位'],
+    featured: true, badge: '人気No.1',
   },
   {
-    name: 'SCALE',
-    price: '99,800',
-    tax: '109,780',
+    name: 'SCALE', price: '99,800', tax: '109,780',
     target: '成長企業・EC・複数事業',
-    features: [
-      'フルWebサイト制作込み',
-      '無制限コンテンツ更新',
-      'SEO・AI自動化・広告連携',
-      '専任担当者アサイン',
-      '週次戦略MTG',
-      '最低3ヶ月・以降月単位',
-    ],
-    featured: false,
-    badge: 'フルサポート',
+    features: ['フルWebサイト制作込み', '無制限コンテンツ更新', 'SEO・AI自動化・広告連携', '専任担当者アサイン', '週次戦略MTG', '最低3ヶ月・以降月単位'],
+    featured: false, badge: 'フルサポート',
   },
 ];
 
 const REVIEWS = [
-  {
-    star: 5,
-    text: '制作費0円で本格サイトが3日で完成。問い合わせが月2件→12件に。広告費ゼロで集客が回り始めた実感があります。',
-    name: '山田 太郎',
-    role: '整体院オーナー',
-    result: '問い合わせ6倍',
-    initial: '山',
-  },
-  {
-    star: 5,
-    text: '他社から制作費30万の見積もりを断り、こちらへ。半年でGoogle検索1位を獲得。月次レポートで改善が可視化されます。',
-    name: '佐藤 花子',
-    role: '美容サロン経営者',
-    result: 'Google検索1位',
-    initial: '佐',
-  },
-  {
-    star: 5,
-    text: 'AIでLP生成を体験した瞬間に即決。営業感ゼロで相談しやすく、3ヶ月でサイト経由の売上が1.8倍になりました。',
-    name: '鈴木 一郎',
-    role: '不動産会社 代表',
-    result: '売上1.8倍',
-    initial: '鈴',
-  },
+  { star: 5, text: '制作費0円で本格サイトが3日で完成。問い合わせが月2件→12件に。広告費ゼロで集客が回り始めた実感があります。', name: '山田 太郎', role: '整体院オーナー', result: '問い合わせ6倍', initial: '山' },
+  { star: 5, text: '他社から制作費30万の見積もりを断り、こちらへ。半年でGoogle検索1位を獲得。月次レポートで改善が可視化されます。', name: '佐藤 花子', role: '美容サロン経営者', result: 'Google検索1位', initial: '佐' },
+  { star: 5, text: 'AIでLP生成を体験した瞬間に即決。営業感ゼロで相談しやすく、3ヶ月でサイト経由の売上が1.8倍になりました。', name: '鈴木 一郎', role: '不動産会社 代表', result: '売上1.8倍', initial: '鈴' },
 ];
 
 const FAQ = [
@@ -102,14 +52,11 @@ const SAMPLES = [
   { slug: 'lp-ymsrwj', label: 'フィットネス', catch: '3ヶ月で体が変わる。続けられる理由がある', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80', accent: '#a855f7' },
 ];
 
-// SVGアイコン
 const IconCheck = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="20 6 9 17 4 12"/>
-  </svg>
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
 );
 const IconChevron = ({ open }: { open: boolean }) => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(45deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(45deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
     <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
   </svg>
 );
@@ -119,7 +66,7 @@ const IconStar = () => (
   </svg>
 );
 const IconMail = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
     <polyline points="22,6 12,13 2,6"/>
   </svg>
@@ -159,16 +106,16 @@ const IconClock = () => (
   </svg>
 );
 
+const FEATURES = [
+  { Icon: IconZap, title: '制作費0円で即サイト化', desc: '通常50〜100万円の制作費がかかりません。月額運用費のみで、更新・改善も含まれます。リスクゼロで始められます。' },
+  { Icon: IconShield, title: 'AI×人間ハイブリッド', desc: 'AIが診断・生成、人間が戦略・改善。機械の速さと人間の洞察を組み合わせ、品質と速度を両立します。' },
+  { Icon: IconClock, title: '最短3日・24時間対応', desc: '受注から最短3日で公開。困った時いつでも連絡できます。夜間・休日のご質問も対応します。' },
+];
+
 const JOURNEY = [
   { step: '01', Icon: IconZap, title: 'AI診断', desc: 'URLを入力するだけ。30秒で課題を可視化', color: '#c8a84a' },
   { step: '02', Icon: IconLayers, title: 'LP自動生成', desc: '業種・強みを選ぶだけで本格LPが完成', color: '#6dbed6' },
   { step: '03', Icon: IconTrendUp, title: 'サブスク運用', desc: '毎月改善・更新で集客が継続的に成長', color: '#10b981' },
-];
-
-const STRENGTHS = [
-  { Icon: IconZap, title: 'AI×人間ハイブリッド', desc: 'AIが診断・生成、人間が戦略・改善。機械の速さと人間の洞察で成果を最大化。' },
-  { Icon: IconShield, title: '制作費0円の継続運用', desc: '初期投資ゼロで始められるから、解約リスクなし。成果が出るまで続けられます。' },
-  { Icon: IconClock, title: '24時間対応・最短3日', desc: '受注から最短3日で公開。チャットサポートで疑問はその日のうちに解決。' },
 ];
 
 function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
@@ -220,7 +167,7 @@ export default function Page() {
   const cyan = '#6dbed6';
   const bg = '#000';
   const bg2 = '#06060f';
-  const bg3 = '#0a0a16';
+  const bg3 = '#0a0a18';
   const bg4 = '#03030a';
   const border = 'rgba(255,255,255,0.06)';
   const borderGold = 'rgba(200,168,74,0.15)';
@@ -250,7 +197,7 @@ export default function Page() {
         @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
         .fade-up{animation:fadeUp 0.5s ease forwards;}
         .fixed-cta{position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:10px 16px 20px;background:linear-gradient(to top,rgba(0,0,0,0.98) 55%,transparent);pointer-events:none;}
-        .fixed-cta a{pointer-events:all;display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,#c8a84a,#e0c96a);color:#000;font-weight:900;font-size:0.93rem;padding:15px 24px;border-radius:8px;text-decoration:none;box-shadow:0 4px 20px rgba(200,168,74,0.2);animation:bounce 3s ease-in-out infinite;max-width:480px;margin:0 auto;width:100%;}
+        .fixed-cta a{pointer-events:all;display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,#c8a84a,#e0c96a);color:#000;font-weight:900;font-size:0.92rem;padding:15px 24px;border-radius:8px;text-decoration:none;box-shadow:0 4px 20px rgba(200,168,74,0.2);animation:bounce 3s ease-in-out infinite;max-width:480px;margin:0 auto;width:100%;}
         .section{padding:60px 20px;}
         .inner{max-width:520px;margin:0 auto;}
         .inner-w{max-width:840px;margin:0 auto;}
@@ -269,15 +216,15 @@ export default function Page() {
         .faq-a{padding:0 18px 16px 18px;font-size:0.82rem;color:#404055;line-height:1.85;}
         .stat-card{padding:20px 12px;text-align:center;border-right:1px solid rgba(200,168,74,0.07);}
         .stat-card:last-child{border-right:none;}
-        .strength-card{background:rgba(255,255,255,0.018);border:1px solid rgba(255,255,255,0.05);border-radius:13px;padding:24px 20px;display:flex;flex-direction:column;gap:13px;transition:border-color 0.2s;}
-        .strength-card:hover{border-color:rgba(200,168,74,0.18);}
+        .feature-card{background:rgba(255,255,255,0.018);border:1px solid rgba(255,255,255,0.05);border-radius:13px;padding:24px 20px;display:flex;flex-direction:column;gap:13px;transition:border-color 0.2s,box-shadow 0.2s;}
+        .feature-card:hover{border-color:rgba(200,168,74,0.18);box-shadow:0 8px 28px rgba(200,168,74,0.04);}
         @media(max-width:768px){
           .section{padding:44px 16px;}
           .plans-grid{grid-template-columns:1fr !important;}
           .stats-grid{grid-template-columns:repeat(2,1fr) !important;}
-          .strengths-grid{grid-template-columns:1fr !important;}
+          .features-grid{grid-template-columns:1fr !important;}
           .journey-grid{grid-template-columns:1fr !important;}
-          .hero-pad{padding-top:84px !important;padding-bottom:52px !important;}
+          .hero-pad{padding-top:32px !important;padding-bottom:48px !important;}
         }
       `}</style>
 
@@ -290,15 +237,22 @@ export default function Page() {
       </div>
 
       {/* HERO ── #000 */}
-      <section className="hero-pad" style={{ paddingTop: 92, paddingBottom: 68, textAlign: 'center', position: 'relative', overflow: 'hidden', background: bg }}>
+      <section className="hero-pad" style={{ paddingTop: 56, paddingBottom: 64, textAlign: 'center', position: 'relative', overflow: 'hidden', background: bg }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(200,168,74,0.012) 1px,transparent 1px),linear-gradient(90deg,rgba(200,168,74,0.012) 1px,transparent 1px)`, backgroundSize: '52px 52px', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', top: -100, left: '50%', transform: 'translateX(-50%)', width: 640, height: 520, background: 'radial-gradient(ellipse,rgba(109,190,214,0.042) 0%,transparent 68%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 600, height: 480, background: 'radial-gradient(ellipse,rgba(109,190,214,0.045) 0%,transparent 68%)', pointerEvents: 'none' }} />
+
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 490, margin: '0 auto', padding: '0 16px', animation: 'fadeUp 0.5s ease forwards' }}>
+          {/* ロゴ */}
+          <div style={{ marginBottom: 28 }}>
+            <Image src="/logo.png" alt="NEXTGAME株式会社" width={160} height={40} style={{ objectFit: 'contain' }} />
+          </div>
+
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: '0.58rem', letterSpacing: '0.32em', color: gold, border: `1px solid rgba(200,168,74,0.14)`, padding: '4px 13px', borderRadius: 2, marginBottom: 20 }}>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: gold, display: 'inline-block', animation: 'pulse 2s ease-in-out infinite' }} />
             AI × WEB SUBSCRIPTION
           </div>
-          <h1 style={{ fontSize: 'clamp(1.85rem,5.2vw,3rem)', fontWeight: 900, lineHeight: 1.14, color: '#fff', marginBottom: 14, letterSpacing: '-0.03em' }}>
+
+          <h1 style={{ fontSize: 'clamp(1.9rem,5.5vw,3.2rem)', fontWeight: 900, lineHeight: 1.12, color: '#fff', marginBottom: 14, letterSpacing: '-0.03em' }}>
             サイトは運用で<br />
             <span style={{ color: gold }}>成長する。</span>
           </h1>
@@ -308,6 +262,7 @@ export default function Page() {
           <p style={{ fontSize: 'clamp(0.84rem,1.7vw,0.94rem)', color: muted, lineHeight: 1.9, marginBottom: 28 }}>
             AIが診断し、プロが運用。集客を仕組み化します。
           </p>
+
           <div style={{ background: bg2, border: `1px solid ${borderGold}`, borderRadius: 13, padding: '20px 18px', textAlign: 'left', marginBottom: 12 }}>
             <label style={{ display: 'block', fontSize: '0.63rem', color: gold, letterSpacing: '0.14em', fontWeight: 700, marginBottom: 9 }}>サイトURLを入力して無料診断</label>
             <input className="inp" type="url" placeholder="https://your-site.com" value={url} onChange={e => { setUrl(e.target.value); setUrlError(''); }} onKeyDown={e => e.key === 'Enter' && handleDiagnose()} style={{ marginBottom: 9 }} />
@@ -350,7 +305,7 @@ export default function Page() {
 
       <div className="divider" />
 
-      {/* JOURNEY ── #0a0a16 */}
+      {/* HOW IT WORKS ── #0a0a18 */}
       <section className="section" style={{ background: bg3 }}>
         <div className="inner-w">
           <FadeIn>
@@ -387,8 +342,37 @@ export default function Page() {
 
       <div className="divider" />
 
-      {/* SAMPLE ── #000 */}
-      <section className="section" style={{ background: bg, paddingLeft: 0, paddingRight: 0 }}>
+      {/* FEATURES ── #000 */}
+      <section className="section" style={{ background: bg }}>
+        <div className="inner-w">
+          <FadeIn>
+            <div style={{ textAlign: 'center', marginBottom: 32 }}>
+              <span className="sec-label">FEATURES</span>
+              <h2 className="sec-title">選ばれる<span style={{ color: cyan }}>3つの特徴</span></h2>
+            </div>
+          </FadeIn>
+          <div className="features-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
+            {FEATURES.map((f, i) => (
+              <FadeIn key={i} delay={i * 0.1}>
+                <div className="feature-card">
+                  <div style={{ width: 46, height: 46, borderRadius: 12, background: 'rgba(200,168,74,0.07)', border: '1px solid rgba(200,168,74,0.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: gold }}>
+                    <f.Icon />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '0.93rem', fontWeight: 700, color: '#e8e8f0', marginBottom: 7 }}>{f.title}</div>
+                    <div style={{ fontSize: '0.81rem', color: muted, lineHeight: 1.8 }}>{f.desc}</div>
+                  </div>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="divider" />
+
+      {/* SAMPLE ── #06060f */}
+      <section className="section" style={{ background: bg2, paddingLeft: 0, paddingRight: 0 }}>
         <div style={{ maxWidth: 840, margin: '0 auto', paddingLeft: 20, paddingRight: 20 }}>
           <FadeIn>
             <div style={{ textAlign: 'center', marginBottom: 28 }}>
@@ -401,7 +385,7 @@ export default function Page() {
         <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollSnapType: 'x mandatory', paddingLeft: 20, paddingBottom: 10 }}>
           <div style={{ display: 'flex', gap: 11, width: 'max-content', paddingRight: 20 }}>
             {SAMPLES.map((s, i) => (
-              <div key={i} style={{ width: 220, flexShrink: 0, scrollSnapAlign: 'start', background: bg2, border: `1px solid ${s.accent}18`, borderRadius: 13, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              <div key={i} style={{ width: 220, flexShrink: 0, scrollSnapAlign: 'start', background: bg3, border: `1px solid ${s.accent}18`, borderRadius: 13, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                 <div style={{ position: 'relative', height: 130, overflow: 'hidden' }}>
                   <img src={s.img} alt={s.label} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                   <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom,transparent 30%,rgba(0,0,0,0.5))' }} />
@@ -437,56 +421,8 @@ export default function Page() {
 
       <div className="divider" />
 
-      {/* STRENGTHS ── #06060f */}
-      <section className="section" style={{ background: bg2 }}>
-        <div className="inner-w">
-          <FadeIn>
-            <div style={{ textAlign: 'center', marginBottom: 32 }}>
-              <span className="sec-label">WHY NEXTGAME</span>
-              <h2 className="sec-title">選ばれる<span style={{ color: cyan }}>3つの強み</span></h2>
-            </div>
-          </FadeIn>
-          <div className="strengths-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
-            {STRENGTHS.map((s, i) => (
-              <FadeIn key={i} delay={i * 0.1}>
-                <div className="strength-card">
-                  <div style={{ width: 46, height: 46, borderRadius: 12, background: 'rgba(200,168,74,0.07)', border: '1px solid rgba(200,168,74,0.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: gold }}>
-                    <s.Icon />
-                  </div>
-                  <div>
-                    <div style={{ fontSize: '0.93rem', fontWeight: 700, color: '#e8e8f0', marginBottom: 7 }}>{s.title}</div>
-                    <div style={{ fontSize: '0.81rem', color: muted, lineHeight: 1.8 }}>{s.desc}</div>
-                  </div>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <div className="divider" />
-
-      {/* SUBSCRIPTION ── #0a0a16 */}
-      <section className="section" style={{ background: bg3, textAlign: 'center' }}>
-        <div className="inner">
-          <FadeIn>
-            <span className="sec-label">THE CORE MESSAGE</span>
-            <h2 className="sec-title" style={{ fontSize: 'clamp(1.35rem,3.6vw,2.1rem)' }}>
-              サイトは作った瞬間から<br />
-              <span style={{ color: cyan }}>劣化する。</span>
-            </h2>
-            <p style={{ fontSize: '0.84rem', color: '#404055', lineHeight: 1.9, marginBottom: 0 }}>
-              運用し続けるから、成果が出る。<br />
-              <span style={{ color: gold, fontWeight: 700 }}>制作費0円だから、継続できる。</span>
-            </p>
-          </FadeIn>
-        </div>
-      </section>
-
-      <div className="divider" />
-
-      {/* PRICING ── #03030a */}
-      <section className="section" style={{ background: bg4 }} id="pricing">
+      {/* PRICING ── #0a0a18 */}
+      <section className="section" style={{ background: bg3 }} id="pricing">
         <div className="inner-w">
           <FadeIn>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
@@ -530,8 +466,8 @@ export default function Page() {
 
       <div className="divider" />
 
-      {/* REVIEWS ── #0a0a16 */}
-      <section className="section" style={{ background: bg3 }} id="reviews">
+      {/* REVIEWS ── #000 */}
+      <section className="section" style={{ background: bg }} id="reviews">
         <div className="inner">
           <FadeIn>
             <span className="sec-label">REVIEWS</span>
@@ -543,19 +479,13 @@ export default function Page() {
                 <div style={{ background: bg2, border: `1px solid ${border}`, borderRadius: 13, padding: '18px 17px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 11 }}>
                     <div style={{ display: 'flex', gap: 2 }}>
-                      {Array.from({ length: r.star }).map((_, j) => (
-                        <span key={j} style={{ color: gold }}><IconStar /></span>
-                      ))}
+                      {Array.from({ length: r.star }).map((_, j) => <span key={j} style={{ color: gold }}><IconStar /></span>)}
                     </div>
-                    <span style={{ fontSize: '0.63rem', fontWeight: 900, color: gold, background: 'rgba(200,168,74,0.06)', border: `1px solid ${borderGold}`, padding: '2px 9px', borderRadius: 100 }}>
-                      {r.result}
-                    </span>
+                    <span style={{ fontSize: '0.63rem', fontWeight: 900, color: gold, background: 'rgba(200,168,74,0.06)', border: `1px solid ${borderGold}`, padding: '2px 9px', borderRadius: 100 }}>{r.result}</span>
                   </div>
                   <p style={{ fontSize: '0.86rem', color: '#dde4f0', lineHeight: 1.82, marginBottom: 13 }}>{r.text}</p>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 9, paddingTop: 11, borderTop: `1px solid rgba(255,255,255,0.035)` }}>
-                    <div style={{ width: 30, height: 30, borderRadius: '50%', background: `linear-gradient(135deg,${gold},#e0c96a)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.78rem', fontWeight: 900, color: '#000', flexShrink: 0 }}>
-                      {r.initial}
-                    </div>
+                    <div style={{ width: 30, height: 30, borderRadius: '50%', background: `linear-gradient(135deg,${gold},#e0c96a)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.78rem', fontWeight: 900, color: '#000', flexShrink: 0 }}>{r.initial}</div>
                     <div>
                       <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#e8e8f0' }}>{r.name}</div>
                       <div style={{ fontSize: '0.66rem', color: muted }}>{r.role}</div>
@@ -570,8 +500,42 @@ export default function Page() {
 
       <div className="divider" />
 
-      {/* FAQ ── #06060f */}
-      <section className="section" style={{ background: bg2 }} id="faq">
+      {/* MESSAGE ── #06060f */}
+      <section className="section" style={{ background: bg2 }}>
+        <div className="inner">
+          <FadeIn>
+            <span className="sec-label">MESSAGE</span>
+            <h2 className="sec-title">今が、<span style={{ color: gold }}>変わるチャンスです。</span></h2>
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <div style={{ background: bg3, border: `1px solid ${borderGold}`, borderRadius: 16, padding: '28px 24px', marginBottom: 20 }}>
+              <p style={{ fontSize: '0.92rem', color: '#dde4f0', lineHeight: 2, marginBottom: 20 }}>
+                制作費に悩んで、いつまでも古いサイトを使い続けますか？<br />
+                それとも、<span style={{ color: gold, fontWeight: 700 }}>今週中に新しいサイトを持ち</span>、来月から新しい客層を呼び込みますか？
+              </p>
+              <p style={{ fontSize: '0.88rem', color: muted, lineHeight: 1.9 }}>
+                30分のヒアリングは無料です。あなたのビジネスに合う戦略を、一緒に考えましょう。
+              </p>
+            </div>
+          </FadeIn>
+          <FadeIn delay={0.2}>
+            <div style={{ background: 'rgba(200,168,74,0.04)', border: `1px solid ${borderGold}`, borderRadius: 12, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(200,168,74,0.1)', border: `1px solid ${borderGold}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: gold, flexShrink: 0 }}>
+                <IconShield />
+              </div>
+              <div>
+                <p style={{ fontSize: '0.78rem', fontWeight: 700, color: gold, marginBottom: 3 }}>30日以内なら返金対応</p>
+                <p style={{ fontSize: '0.75rem', color: muted, lineHeight: 1.6 }}>ご納得いただけない場合は全額返金。リスクゼロで始められます。</p>
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      <div className="divider" />
+
+      {/* FAQ ── #0a0a18 */}
+      <section className="section" style={{ background: bg3 }} id="faq">
         <div className="inner">
           <FadeIn>
             <span className="sec-label">FAQ</span>
@@ -595,10 +559,10 @@ export default function Page() {
 
       <div className="divider" />
 
-      {/* CLOSING ── #03030a + グロー */}
-      <section className="section" style={{ background: bg4, position: 'relative', overflow: 'hidden' }}>
+      {/* CLOSING ── #000 + グロー */}
+      <section className="section" style={{ background: bg, position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(200,168,74,0.009) 1px,transparent 1px),linear-gradient(90deg,rgba(200,168,74,0.009) 1px,transparent 1px)`, backgroundSize: '52px 52px', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: -140, left: '50%', transform: 'translateX(-50%)', width: 680, height: 380, background: 'radial-gradient(ellipse,rgba(200,168,74,0.042) 0%,transparent 62%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: -140, left: '50%', transform: 'translateX(-50%)', width: 680, height: 380, background: 'radial-gradient(ellipse,rgba(200,168,74,0.04) 0%,transparent 62%)', pointerEvents: 'none' }} />
         <div className="inner" style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
           <FadeIn>
             <span className="sec-label">CONTACT</span>
@@ -636,8 +600,8 @@ export default function Page() {
       <div className="divider" />
 
       {/* FOOTER ── #000 */}
-      <footer style={{ padding: '22px 20px', background: bg, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 11 }}>
-        <Image src="/logo.png" alt="NEXTGAME株式会社" width={96} height={24} style={{ objectFit: 'contain' }} />
+      <footer style={{ padding: '24px 20px', background: bg, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 11 }}>
+        <Image src="/logo.png" alt="NEXTGAME株式会社" width={100} height={26} style={{ objectFit: 'contain' }} />
         <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
           <a href="/privacy" style={{ fontSize: '0.66rem', color: '#1e1e2a', textDecoration: 'none' }}>Privacy Policy</a>
           <span style={{ fontSize: '0.66rem', color: '#1e1e2a' }}>© 2026 NEXTGAME株式会社</span>
