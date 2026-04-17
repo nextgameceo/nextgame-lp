@@ -229,18 +229,16 @@ function NewLpContent() {
     }
   };
 
-  const handleViewMockup = () => {
-    if (isRedesign && diagUrl) {
-      const params = new URLSearchParams({
-        diag_url: diagUrl,
-        diag_score: diagScore,
-        diag_company: title,
-        diag_prompt: extraPrompt,
-      });
-      router.push('/lp/' + slug + '?contact=true&' + params.toString());
-    } else {
-      window.open('/lp/' + slug, '_blank');
-    }
+  const handleGoToContact = () => {
+    const params = new URLSearchParams({
+      diag_url: diagUrl,
+      diag_score: diagScore,
+      diag_company: title,
+      diag_prompt: extraPrompt,
+      mockup_url: 'https://nextgame-limited.com/lp/' + slug,
+      is_redesign: 'true',
+    });
+    router.push('/contact?' + params.toString());
   };
 
   return (
@@ -418,33 +416,112 @@ function NewLpContent() {
         )}
 
         {genStep === 'done' && (
-          <div className="fade-up" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: 40 }}>
-            <div style={{ marginBottom: 24 }}>
-              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="1.5" style={{ display: 'block', margin: '0 auto' }}>
-                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
-                <polyline points="22 4 12 14.01 9 11.01"/>
-              </svg>
+          <div className="fade-up" style={{ paddingTop: 20 }}>
+            <div style={{ textAlign: 'center', marginBottom: 20 }}>
+              <h2 style={{ fontFamily: 'Inter, monospace', fontSize: 'clamp(1.3rem,4vw,1.8rem)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 6 }}>
+                {isRedesign ? 'モックアップ完成！' : 'LP生成完了！'}
+              </h2>
+              <p style={{ fontSize: '0.85rem', color: '#555' }}>
+                {isRedesign ? '改善版のプレビューです' : '生成されたLPのプレビューです'}
+              </p>
             </div>
-            <h2 style={{ fontFamily: 'Inter, monospace', fontSize: 'clamp(1.5rem,4vw,2rem)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 8 }}>
-              {isRedesign ? 'モックアップ完成！' : 'LP生成完了！'}
-            </h2>
-            <p style={{ fontSize: '0.9rem', color: '#555', marginBottom: 32, lineHeight: 1.7 }}>
-              {isRedesign ? '改善版モックアップが完成しました。\n内容を確認してご相談ください。' : '約1〜2分でビルドが完了します。'}
-            </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%', maxWidth: 400 }}>
-              <button
-                onClick={handleViewMockup}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '18px', background: 'linear-gradient(135deg,#c8a84a,#e8d48a)', borderRadius: 10, color: '#000', fontSize: '1rem', fontWeight: 900, textDecoration: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}
-              >
-                {isRedesign ? 'モックアップを確認する →' : '生成されたLPを見る →'}
-              </button>
-              {!isRedesign && (
-                <a href="https://lin.ee/SJDJXQv" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '16px', background: '#06C755', borderRadius: 10, color: '#fff', fontSize: '0.95rem', fontWeight: 900, textDecoration: 'none' }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z"/></svg>
-                  このLPをサブスクで運用する
-                </a>
+
+            {/* iPhone 17 Pro Max モックアップ */}
+            <div style={{ position: 'relative', width: '100%', maxWidth: 320, margin: '0 auto 28px' }}>
+              {/* iPhone SVG枠 */}
+              <svg viewBox="0 0 320 660" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 2, pointerEvents: 'none', filter: 'drop-shadow(0 24px 48px rgba(0,0,0,0.6))' }}>
+                {/* 本体外枠 */}
+                <rect x="1" y="1" width="318" height="658" rx="50" ry="50" fill="#1c1c1e" stroke="#3a3a3c" strokeWidth="1.5"/>
+                {/* 画面背景 */}
+                <rect x="10" y="10" width="300" height="640" rx="42" ry="42" fill="#000"/>
+                {/* Dynamic Island */}
+                <rect x="110" y="18" width="100" height="28" rx="14" ry="14" fill="#000"/>
+                {/* カメラ */}
+                <circle cx="185" cy="32" r="5" fill="#1c1c1e"/>
+                <circle cx="185" cy="32" r="3" fill="#0a0a0a"/>
+                {/* 右サイドボタン */}
+                <rect x="317" y="130" width="5" height="72" rx="2.5" fill="#3a3a3c"/>
+                <rect x="317" y="220" width="5" height="52" rx="2.5" fill="#3a3a3c"/>
+                {/* 左サイドボタン */}
+                <rect x="0" y="120" width="4" height="36" rx="2" fill="#3a3a3c"/>
+                <rect x="0" y="168" width="4" height="64" rx="2" fill="#3a3a3c"/>
+                <rect x="0" y="244" width="4" height="64" rx="2" fill="#3a3a3c"/>
+                {/* 光沢エフェクト */}
+                <rect x="10" y="10" width="300" height="640" rx="42" ry="42" fill="url(#phoneGloss)" opacity="0.04"/>
+                {/* ホームインジケーター */}
+                <rect x="120" y="634" width="80" height="4" rx="2" fill="#3a3a3c"/>
+                <defs>
+                  <linearGradient id="phoneGloss" x1="0" y1="0" x2="0.5" y2="1">
+                    <stop offset="0%" stopColor="#fff" stopOpacity="1"/>
+                    <stop offset="100%" stopColor="#fff" stopOpacity="0"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+
+              {/* LP iframe */}
+              <div style={{ position: 'relative', zIndex: 1, margin: '10px 10px 10px 10px', borderRadius: 42, overflow: 'hidden', height: 640, background: '#fff' }}>
+                <iframe
+                  src={'/lp/' + slug}
+                  style={{ width: '390px', height: '100%', border: 'none', display: 'block', transform: 'scale(0.769)', transformOrigin: 'top left', pointerEvents: 'auto' }}
+                  title="LP Preview"
+                />
+              </div>
+            </div>
+
+            {/* ボタン群 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, maxWidth: 340, margin: '0 auto' }}>
+              {isRedesign ? (
+                <>
+                  <button
+                    onClick={handleGoToContact}
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '17px', background: 'linear-gradient(135deg,#c8a84a,#e8d48a)', borderRadius: 10, color: '#000', fontSize: '1rem', fontWeight: 900, border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}
+                  >
+                    このデザインで相談する →
+                  </button>
+                  <a
+                    href={'/lp/' + slug}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '14px', background: 'transparent', border: '1px solid rgba(200,168,74,0.3)', borderRadius: 10, color: gold, fontSize: '0.9rem', fontWeight: 700, textDecoration: 'none' }}
+                  >
+                    フルページで確認する
+                  </a>
+                </>
+              ) : (
+                <>
+                  <a
+                    href={'/lp/' + slug}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '17px', background: 'linear-gradient(135deg,#c8a84a,#e8d48a)', borderRadius: 10, color: '#000', fontSize: '1rem', fontWeight: 900, textDecoration: 'none' }}
+                  >
+                    フルページで見る →
+                  </a>
+                  <a
+                    href="https://lin.ee/SJDJXQv"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '15px', background: '#06C755', borderRadius: 10, color: '#fff', fontSize: '0.95rem', fontWeight: 900, textDecoration: 'none' }}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z"/></svg>
+                    このLPをサブスクで運用する
+                  </a>
+                </>
               )}
-              <button onClick={() => { setCurrentStep(0); setAnswers({}); setTitle(''); setGenStep('quiz'); setSlug(''); setLogoFile(null); setLogoPreview(''); setExtraPrompt(''); setIsRedesign(false); }} style={{ padding: '14px', background: 'transparent', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, color: '#555', fontSize: '0.85rem', cursor: 'pointer', fontFamily: 'inherit' }}>
+              <button
+                onClick={() => {
+                  setCurrentStep(0);
+                  setAnswers({});
+                  setTitle('');
+                  setGenStep('quiz');
+                  setSlug('');
+                  setLogoFile(null);
+                  setLogoPreview('');
+                  setExtraPrompt('');
+                  setIsRedesign(false);
+                }}
+                style={{ padding: '13px', background: 'transparent', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, color: '#555', fontSize: '0.85rem', cursor: 'pointer', fontFamily: 'inherit' }}
+              >
                 もう一度生成する
               </button>
             </div>
