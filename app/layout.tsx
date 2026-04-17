@@ -4,7 +4,6 @@ import FooterWrapper from '@/app/_components/FooterWrapper';
 import HeaderWrapper from '@/app/_components/HeaderWrapper';
 import InitialLoading from '@/app/_components/InitialLoading';
 import MotionWrapper from '@/app/_components/MotionWrapper';
-import FloatingCTAWrapper from '@/app/_components/FloatingCTAWrapper';
 import ChatBot from '@/app/_components/ChatBot';
 import { Orbitron } from 'next/font/google';
 import './globals.css';
@@ -164,7 +163,6 @@ export default function RootLayout({ children }: Props) {
           </MotionWrapper>
         </main>
         <FooterWrapper />
-        <FloatingCTAWrapper />
         <ChatBot />
         <div style={{
           position: 'fixed',
