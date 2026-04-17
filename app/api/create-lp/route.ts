@@ -275,7 +275,15 @@ ${is_redesign ? '【重要】これはリデザイン案件です。既存サイ
       return NextResponse.json({ error: err }, { status: 500 });
     }
 
-    return NextResponse.json({ slug });
+    // slug・画像・キャッチコピーをフロントに返す
+    return NextResponse.json({
+      slug,
+      image_url: imageUrl,
+      sub_title: ai.sub_title ?? title,
+      accent_color: analysis.accent_color,
+      theme: analysis.theme,
+    });
+
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 });
   }
