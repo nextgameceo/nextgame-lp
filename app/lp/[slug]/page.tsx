@@ -34,8 +34,8 @@ const ACCENT: Record<AccentKey, { primary: string; rgb: string; grad: string }> 
 };
 
 const THEME: Record<ThemeKey, { bg: string; bg2: string; bg3: string; text: string; muted: string; border: string; card: string; navBg: string }> = {
-  light: { bg: "#fff",     bg2: "#f8fafc", bg3: "#f1f5f9", text: "#0f172a", muted: "#64748b", border: "rgba(0,0,0,0.07)", card: "#fff",     navBg: "rgba(255,255,255,0.92)" },
-  dark:  { bg: "#080810",  bg2: "#0f0f1a", bg3: "#161625", text: "#f1f5f9", muted: "#94a3b8", border: "rgba(255,255,255,0.07)", card: "#161625", navBg: "rgba(8,8,16,0.92)" },
+  light: { bg: "#fff", bg2: "#f8fafc", bg3: "#f1f5f9", text: "#0f172a", muted: "#64748b", border: "rgba(0,0,0,0.07)", card: "#fff", navBg: "rgba(255,255,255,0.92)" },
+  dark:  { bg: "#080810", bg2: "#0f0f1a", bg3: "#161625", text: "#f1f5f9", muted: "#94a3b8", border: "rgba(255,255,255,0.07)", card: "#161625", navBg: "rgba(8,8,16,0.92)" },
 };
 
 const ICONS: Record<string, string> = {
@@ -64,11 +64,25 @@ const ICONS: Record<string, string> = {
 
 function getIcon(name: string, color = 'currentColor'): string {
   const svg = ICONS[name] ?? ICONS['Star'];
-  return svg.replace(/stroke="currentColor"/g, `stroke="${color}"`);
+  return svg.replace(/stroke="currentColor"/g, 'stroke="' + color + '"');
 }
 
-export default async function LpPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function LpPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ contact?: string; diag_url?: string; diag_score?: string; diag_company?: string; diag_prompt?: string }>;
+}) {
   const { slug } = await params;
+  const sp = await searchParams;
+  const isContactMode = sp.contact === 'true';
+  const diagUrl = sp.diag_url ?? '';
+  const diagScore = sp.diag_score ?? '';
+  const diagCompany = sp.diag_company ?? '';
+  const diagPrompt = sp.diag_prompt ?? '';
+  const mockupUrl = 'https://nextgame-limited.com/lp/' + slug;
+
   const site = await getSiteBySlug(slug);
   if (!site) notFound();
 
@@ -98,11 +112,14 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
   const imageUrl = ai?.image_url ?? "";
   const logoUrl = ai?.logo_url ?? "";
 
-  // テーマ別デザインバリアント
-  const variant = `${themeKey}-${accentKey}`;
-  const isStripe = variant === 'dark-purple' || variant === 'dark-blue';
-  const isNature = variant === 'light-green' || variant === 'light-orange';
-  const isEnergy = variant === 'dark-red';
+  const contactParams = new URLSearchParams({
+    diag_url: diagUrl,
+    diag_score: diagScore,
+    diag_company: diagCompany || site.title,
+    diag_prompt: diagPrompt,
+    mockup_url: mockupUrl,
+    is_redesign: 'true',
+  }).toString();
 
   return (
     <>
@@ -117,351 +134,116 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
         html{scroll-behavior:smooth;}
         body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP','Inter',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
-
         @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-        @keyframes slideRight{from{opacity:0;transform:translateX(-24px)}to{opacity:1;transform:translateX(0)}}
         @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
-        @keyframes gradMove{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-
         .fade-up{animation:fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards;}
-        .fade-in{animation:fadeIn 1s ease forwards;}
         .d1{animation-delay:0.05s;opacity:0;}
         .d2{animation-delay:0.15s;opacity:0;}
         .d3{animation-delay:0.28s;opacity:0;}
         .d4{animation-delay:0.42s;opacity:0;}
-
-        /* NAV */
-        nav{
-          position:fixed;top:0;left:0;right:0;z-index:200;
-          display:flex;align-items:center;justify-content:space-between;
-          padding:0 clamp(1rem,4vw,2.5rem);height:60px;
-          background:${t.navBg};backdrop-filter:blur(20px) saturate(180%);
-          border-bottom:1px solid var(--border);
-        }
+        nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1rem,4vw,2.5rem);height:60px;background:${t.navBg};backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border);}
         .nav-logo{height:32px;object-fit:contain;max-width:140px;}
-        .nav-title{font-size:0.9rem;font-weight:700;color:var(--text);letter-spacing:-0.01em;}
-        .nav-cta{
-          display:inline-flex;align-items:center;gap:6px;
-          padding:8px 18px;background:var(--grad);
-          color:#fff;border-radius:100px;font-size:0.75rem;font-weight:700;
-          text-decoration:none;letter-spacing:0.02em;
-          box-shadow:0 2px 12px rgba(var(--rgb),0.3);
-          transition:transform 0.2s,box-shadow 0.2s;
-        }
+        .nav-title{font-size:0.9rem;font-weight:700;color:var(--text);}
+        .nav-cta{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;background:var(--grad);color:#fff;border-radius:100px;font-size:0.75rem;font-weight:700;text-decoration:none;box-shadow:0 2px 12px rgba(var(--rgb),0.3);transition:transform 0.2s,box-shadow 0.2s;}
         .nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(var(--rgb),0.4);}
-        .nav-credit{font-size:0.55rem;color:${isDark?'#ffffff18':'#00000018'};letter-spacing:0.1em;margin-left:12px;}
-
-        /* HERO */
-        .hero{
-          min-height:100svh;padding-top:60px;
-          position:relative;overflow:hidden;
-          display:flex;align-items:center;justify-content:center;
-        }
+        .nav-credit{font-size:0.55rem;color:${isDark?'rgba(255,255,255,0.1)':'rgba(0,0,0,0.1)'};letter-spacing:0.1em;margin-left:12px;}
+        .hero{min-height:100svh;padding-top:60px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
         ${isDark ? `
-        .hero-bg{
-          position:absolute;inset:0;
-          background:radial-gradient(ellipse 80% 60% at 50% 20%,rgba(var(--rgb),0.18) 0%,transparent 65%),
-                      radial-gradient(ellipse 40% 40% at 80% 80%,rgba(var(--rgb),0.08) 0%,transparent 60%);
-        }
-        .hero-grid{
-          position:absolute;inset:0;
-          background-image:linear-gradient(rgba(var(--rgb),0.04) 1px,transparent 1px),
-                           linear-gradient(90deg,rgba(var(--rgb),0.04) 1px,transparent 1px);
-          background-size:60px 60px;
-          mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 0%,transparent 100%);
-        }
+        .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 20%,rgba(var(--rgb),0.18) 0%,transparent 65%),radial-gradient(ellipse 40% 40% at 80% 80%,rgba(var(--rgb),0.08) 0%,transparent 60%);}
+        .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(var(--rgb),0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(var(--rgb),0.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 0%,transparent 100%);}
         ` : `
         .hero-bg{position:absolute;inset:0;}
         .hero-bg img{width:100%;height:100%;object-fit:cover;}
-        .hero-overlay{
-          position:absolute;inset:0;
-          background:linear-gradient(110deg,rgba(255,255,255,0.97) 40%,rgba(255,255,255,0.7) 70%,rgba(255,255,255,0.3) 100%);
-        }
+        .hero-overlay{position:absolute;inset:0;background:linear-gradient(110deg,rgba(255,255,255,0.97) 40%,rgba(255,255,255,0.7) 70%,rgba(255,255,255,0.3) 100%);}
         `}
-        .hero-inner{
-          position:relative;z-index:2;
-          width:100%;max-width:1100px;
-          padding:clamp(3rem,8vw,6rem) clamp(1.2rem,5vw,3rem);
-          display:grid;
-          grid-template-columns:${isDark?'1fr':'1fr 1fr'};
-          gap:48px;align-items:center;
-        }
+        .hero-inner{position:relative;z-index:2;width:100%;max-width:1100px;padding:clamp(3rem,8vw,6rem) clamp(1.2rem,5vw,3rem);display:grid;grid-template-columns:${isDark?'1fr':'1fr 1fr'};gap:48px;align-items:center;}
         ${isDark?'.hero-text{text-align:center;}':'.hero-text{text-align:left;}'}
-        .hero-tag{
-          display:inline-flex;align-items:center;gap:8px;
-          padding:5px 14px;border-radius:100px;
-          background:rgba(var(--rgb),0.1);
-          border:1px solid rgba(var(--rgb),0.2);
-          font-size:0.7rem;font-weight:700;color:var(--primary);
-          letter-spacing:0.1em;text-transform:uppercase;
-          margin-bottom:20px;
-        }
+        .hero-tag{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:100px;background:rgba(var(--rgb),0.1);border:1px solid rgba(var(--rgb),0.2);font-size:0.7rem;font-weight:700;color:var(--primary);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:20px;}
         .hero-tag-dot{width:6px;height:6px;border-radius:50%;background:var(--primary);animation:pulse 2s ease-in-out infinite;}
-        .hero-h1{
-          font-size:clamp(2rem,5.5vw,3.8rem);
-          font-weight:900;line-height:1.15;
-          color:var(--text);letter-spacing:-0.03em;
-          margin-bottom:20px;
-        }
-        .hero-h1 em{
-          font-style:normal;
-          background:var(--grad);
-          -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-          background-clip:text;
-        }
-        .hero-desc{
-          font-size:clamp(0.9rem,1.8vw,1.05rem);
-          color:var(--muted);line-height:1.9;
-          margin-bottom:36px;font-weight:300;
-        }
+        .hero-h1{font-size:clamp(2rem,5.5vw,3.8rem);font-weight:900;line-height:1.15;color:var(--text);letter-spacing:-0.03em;margin-bottom:20px;}
+        .hero-h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+        .hero-desc{font-size:clamp(0.9rem,1.8vw,1.05rem);color:var(--muted);line-height:1.9;margin-bottom:36px;font-weight:300;}
         .hero-actions{display:flex;gap:12px;flex-wrap:wrap;${isDark?'justify-content:center;':''}}
-        .btn-primary{
-          display:inline-flex;align-items:center;gap:8px;
-          padding:15px 32px;
-          background:var(--grad);
-          border-radius:100px;color:#fff;
-          font-size:0.95rem;font-weight:700;
-          text-decoration:none;letter-spacing:0.01em;
-          box-shadow:0 8px 32px rgba(var(--rgb),0.35);
-          transition:transform 0.2s,box-shadow 0.2s;
-        }
+        .btn-primary{display:inline-flex;align-items:center;gap:8px;padding:15px 32px;background:var(--grad);border-radius:100px;color:#fff;font-size:0.95rem;font-weight:700;text-decoration:none;box-shadow:0 8px 32px rgba(var(--rgb),0.35);transition:transform 0.2s,box-shadow 0.2s;}
         .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(var(--rgb),0.45);}
-        .btn-ghost{
-          display:inline-flex;align-items:center;gap:8px;
-          padding:14px 28px;
-          border:1.5px solid var(--border);
-          border-radius:100px;color:var(--muted);
-          font-size:0.9rem;font-weight:600;
-          text-decoration:none;
-          transition:all 0.2s;
-        }
+        .btn-ghost{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border:1.5px solid var(--border);border-radius:100px;color:var(--muted);font-size:0.9rem;font-weight:600;text-decoration:none;transition:all 0.2s;}
         .btn-ghost:hover{border-color:var(--primary);color:var(--primary);}
-        .hero-visual{
-          position:relative;
-          aspect-ratio:4/3;border-radius:24px;overflow:hidden;
-          box-shadow:0 40px 80px rgba(var(--rgb),0.2),0 0 0 1px var(--border);
-          animation:float 6s ease-in-out infinite;
-        }
+        .hero-visual{position:relative;aspect-ratio:4/3;border-radius:24px;overflow:hidden;box-shadow:0 40px 80px rgba(var(--rgb),0.2),0 0 0 1px var(--border);animation:float 6s ease-in-out infinite;}
         .hero-visual img{width:100%;height:100%;object-fit:cover;}
-        .hero-visual-badge{
-          position:absolute;bottom:16px;left:16px;right:16px;
-          background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);
-          border-radius:12px;padding:12px 16px;
-          display:flex;align-items:center;gap:10px;
-        }
-        .hero-stats{
-          display:flex;gap:0;
-          margin-top:36px;
-          border:1px solid var(--border);border-radius:16px;overflow:hidden;
-          ${isDark?'':'background:rgba(255,255,255,0.8);backdrop-filter:blur(10px);'}
-        }
-        .hero-stat{
-          flex:1;padding:16px 12px;text-align:center;
-          border-right:1px solid var(--border);
-        }
+        .hero-visual-badge{position:absolute;bottom:16px;left:16px;right:16px;background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:10px;}
+        .hero-stats{display:flex;gap:0;margin-top:36px;border:1px solid var(--border);border-radius:16px;overflow:hidden;${isDark?'':'background:rgba(255,255,255,0.8);backdrop-filter:blur(10px);'}}
+        .hero-stat{flex:1;padding:16px 12px;text-align:center;border-right:1px solid var(--border);}
         .hero-stat:last-child{border-right:none;}
         .hero-stat-val{font-size:1.3rem;font-weight:900;color:var(--primary);font-family:'Inter',sans-serif;line-height:1;}
         .hero-stat-label{font-size:0.62rem;color:var(--muted);margin-top:4px;letter-spacing:0.05em;}
-
-        /* SECTIONS */
         .section{padding:clamp(60px,10vw,100px) clamp(1.2rem,5vw,3rem);}
         .section-inner{max-width:1100px;margin:0 auto;}
         .section-header{margin-bottom:clamp(36px,6vw,56px);}
-        .section-label{
-          font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;
-          color:var(--primary);font-weight:700;margin-bottom:12px;display:block;
-        }
-        .section-title{
-          font-size:clamp(1.5rem,3.5vw,2.4rem);font-weight:900;
-          color:var(--text);line-height:1.25;letter-spacing:-0.02em;
-        }
+        .section-label{font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--primary);font-weight:700;margin-bottom:12px;display:block;}
+        .section-title{font-size:clamp(1.5rem,3.5vw,2.4rem);font-weight:900;color:var(--text);line-height:1.25;letter-spacing:-0.02em;}
         .section-title em{font-style:normal;color:var(--primary);}
         .section-sub{font-size:0.92rem;color:var(--muted);margin-top:12px;line-height:1.8;}
         .divider{height:1px;background:var(--border);}
-
-        /* FEATURES */
         .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
-        .feature-card{
-          background:var(--card);border:1px solid var(--border);
-          border-radius:20px;padding:32px 28px;
-          position:relative;overflow:hidden;
-          transition:transform 0.3s cubic-bezier(0.16,1,0.3,1),box-shadow 0.3s;
-        }
-        .feature-card::before{
-          content:'';position:absolute;top:0;left:0;right:0;height:2px;
-          background:var(--grad);opacity:0;transition:opacity 0.3s;
-        }
+        .feature-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px 28px;position:relative;overflow:hidden;transition:transform 0.3s cubic-bezier(0.16,1,0.3,1),box-shadow 0.3s;}
+        .feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);opacity:0;transition:opacity 0.3s;}
         .feature-card:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(var(--rgb),0.12);}
         .feature-card:hover::before{opacity:1;}
-        .feature-icon{
-          width:48px;height:48px;border-radius:14px;
-          background:rgba(var(--rgb),0.1);
-          display:flex;align-items:center;justify-content:center;
-          margin-bottom:20px;
-        }
+        .feature-icon{width:48px;height:48px;border-radius:14px;background:rgba(var(--rgb),0.1);display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
         .feature-title{font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:10px;}
         .feature-desc{font-size:0.86rem;color:var(--muted);line-height:1.85;}
-
-        /* SERVICES */
         .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
-        .service-card{
-          background:var(--grad);
-          border-radius:20px;padding:32px 26px;
-          position:relative;overflow:hidden;color:#fff;
-        }
-        .service-card::after{
-          content:'';position:absolute;top:-40px;right:-40px;
-          width:120px;height:120px;border-radius:50%;
-          background:rgba(255,255,255,0.08);
-        }
+        .service-card{border-radius:20px;padding:32px 26px;position:relative;overflow:hidden;color:#fff;}
+        .service-card::after{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.08);}
         .service-num{font-size:0.62rem;letter-spacing:0.2em;opacity:0.7;margin-bottom:16px;font-weight:700;}
-        .service-icon{
-          width:40px;height:40px;border-radius:10px;
-          background:rgba(255,255,255,0.2);
-          display:flex;align-items:center;justify-content:center;
-          margin-bottom:16px;
-        }
+        .service-icon{width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
         .service-name{font-size:1.05rem;font-weight:700;margin-bottom:10px;}
         .service-desc{font-size:0.84rem;opacity:0.85;line-height:1.75;margin-bottom:16px;}
-        .service-price{
-          display:inline-block;font-size:0.78rem;font-weight:700;
-          background:rgba(255,255,255,0.2);
-          padding:5px 14px;border-radius:100px;
-        }
-
-        /* REASONS */
+        .service-price{display:inline-block;font-size:0.78rem;font-weight:700;background:rgba(255,255,255,0.2);padding:5px 14px;border-radius:100px;}
         .reasons-grid{display:flex;flex-direction:column;gap:16px;}
-        .reason-card{
-          display:grid;grid-template-columns:64px 1fr;gap:24px;
-          background:var(--card);border:1px solid var(--border);
-          border-radius:20px;padding:28px 32px;
-          align-items:start;
-          transition:border-color 0.3s,box-shadow 0.3s;
-        }
+        .reason-card{display:grid;grid-template-columns:64px 1fr;gap:24px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px 32px;align-items:start;transition:border-color 0.3s,box-shadow 0.3s;}
         .reason-card:hover{border-color:rgba(var(--rgb),0.3);box-shadow:0 8px 32px rgba(var(--rgb),0.06);}
-        .reason-icon-wrap{
-          width:56px;height:56px;border-radius:16px;
-          background:rgba(var(--rgb),0.1);border:1px solid rgba(var(--rgb),0.15);
-          display:flex;align-items:center;justify-content:center;flex-shrink:0;
-        }
+        .reason-icon-wrap{width:56px;height:56px;border-radius:16px;background:rgba(var(--rgb),0.1);border:1px solid rgba(var(--rgb),0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
         .reason-num{font-size:0.62rem;letter-spacing:0.15em;color:var(--primary);font-weight:700;margin-bottom:8px;}
         .reason-title{font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:10px;}
         .reason-desc{font-size:0.87rem;color:var(--muted);line-height:1.85;}
-
-        /* REVIEWS */
         .reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
-        .review-card{
-          background:var(--card);border:1px solid var(--border);
-          border-radius:20px;padding:28px 24px;
-          display:flex;flex-direction:column;
-        }
+        .review-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px 24px;display:flex;flex-direction:column;}
         .review-stars{display:flex;gap:3px;margin-bottom:14px;}
         .review-star{color:var(--primary);font-size:0.9rem;}
         .review-body{flex:1;font-size:0.9rem;color:var(--text);line-height:1.85;margin-bottom:20px;position:relative;}
-        .review-body::before{
-          content:'"';position:absolute;top:-8px;left:-4px;
-          font-size:3rem;color:rgba(var(--rgb),0.12);
-          font-family:'Georgia',serif;line-height:1;
-        }
+        .review-body::before{content:'"';position:absolute;top:-8px;left:-4px;font-size:3rem;color:rgba(var(--rgb),0.12);font-family:'Georgia',serif;line-height:1;}
         .review-author{display:flex;align-items:center;gap:12px;padding-top:16px;border-top:1px solid var(--border);}
-        .review-avatar{
-          width:36px;height:36px;border-radius:50%;
-          background:rgba(var(--rgb),0.15);
-          display:flex;align-items:center;justify-content:center;
-          font-size:0.75rem;font-weight:700;color:var(--primary);flex-shrink:0;
-        }
+        .review-avatar{width:36px;height:36px;border-radius:50%;background:rgba(var(--rgb),0.15);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:var(--primary);flex-shrink:0;}
         .review-name{font-size:0.85rem;font-weight:700;color:var(--text);}
         .review-role{font-size:0.72rem;color:var(--muted);}
-
-        /* FLOW */
         .flow-grid{display:flex;flex-direction:column;gap:0;}
-        .flow-item{
-          display:grid;grid-template-columns:56px 1fr;gap:20px;
-          padding:28px 0;border-bottom:1px solid var(--border);
-          align-items:start;
-        }
+        .flow-item{display:grid;grid-template-columns:56px 1fr;gap:20px;padding:28px 0;border-bottom:1px solid var(--border);align-items:start;}
         .flow-item:last-child{border-bottom:none;}
-        .flow-circle{
-          width:52px;height:52px;border-radius:50%;
-          background:rgba(var(--rgb),0.1);border:2px solid rgba(var(--rgb),0.25);
-          display:flex;align-items:center;justify-content:center;
-          flex-shrink:0;
-        }
+        .flow-circle{width:52px;height:52px;border-radius:50%;background:rgba(var(--rgb),0.1);border:2px solid rgba(var(--rgb),0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
         .flow-title{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:6px;}
         .flow-desc{font-size:0.86rem;color:var(--muted);line-height:1.75;}
-
-        /* FAQ */
         .faq-list{display:flex;flex-direction:column;gap:10px;}
-        .faq-item{
-          background:var(--card);border:1px solid var(--border);
-          border-radius:14px;overflow:hidden;
-        }
-        .faq-q{
-          padding:20px 24px;font-size:0.93rem;font-weight:700;
-          color:var(--text);display:flex;align-items:flex-start;gap:14px;
-        }
-        .faq-icon{
-          width:24px;height:24px;border-radius:50%;
-          background:rgba(var(--rgb),0.1);
-          display:flex;align-items:center;justify-content:center;
-          flex-shrink:0;font-size:0.72rem;font-weight:900;color:var(--primary);
-        }
+        .faq-item{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+        .faq-q{padding:20px 24px;font-size:0.93rem;font-weight:700;color:var(--text);display:flex;align-items:flex-start;gap:14px;}
+        .faq-icon{width:24px;height:24px;border-radius:50%;background:rgba(var(--rgb),0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.72rem;font-weight:900;color:var(--primary);}
         .faq-a{padding:0 24px 20px 62px;font-size:0.86rem;color:var(--muted);line-height:1.85;}
-
-        /* CLOSING */
-        .closing{
-          padding:clamp(60px,10vw,100px) clamp(1.2rem,5vw,3rem);
-          background:${isDark
-            ? 'linear-gradient(135deg,rgba(var(--rgb),0.08),transparent)'
-            : 'linear-gradient(135deg,rgba(var(--rgb),0.04),rgba(var(--rgb),0.02))'};
-          border-top:1px solid var(--border);
-          border-bottom:1px solid var(--border);
-        }
+        .closing{padding:clamp(60px,10vw,100px) clamp(1.2rem,5vw,3rem);background:${isDark?'linear-gradient(135deg,rgba(var(--rgb),0.08),transparent)':'linear-gradient(135deg,rgba(var(--rgb),0.04),rgba(var(--rgb),0.02))'};border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
         .closing-inner{max-width:700px;margin:0 auto;text-align:center;}
-        .closing-title{
-          font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:900;
-          color:var(--text);line-height:1.35;margin-bottom:20px;
-          letter-spacing:-0.02em;
-        }
+        .closing-title{font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:900;color:var(--text);line-height:1.35;margin-bottom:20px;letter-spacing:-0.02em;}
         .closing-title em{font-style:normal;color:var(--primary);}
         .closing-body{font-size:0.95rem;color:var(--muted);line-height:2;margin-bottom:28px;}
-        .closing-badge{
-          display:inline-flex;align-items:center;gap:8px;
-          padding:10px 22px;border-radius:100px;
-          background:rgba(var(--rgb),0.08);border:1px solid rgba(var(--rgb),0.2);
-          font-size:0.8rem;font-weight:700;color:var(--primary);margin-bottom:36px;
-        }
-
-        /* CTA */
-        .cta-section{
-          padding:clamp(60px,10vw,100px) clamp(1.2rem,5vw,3rem);
-          text-align:center;
-          background:${isDark
-            ? 'radial-gradient(ellipse 80% 60% at 50% 50%,rgba(var(--rgb),0.12) 0%,transparent 70%)'
-            : 'var(--bg2)'};
-        }
+        .closing-badge{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:100px;background:rgba(var(--rgb),0.08);border:1px solid rgba(var(--rgb),0.2);font-size:0.8rem;font-weight:700;color:var(--primary);margin-bottom:36px;}
+        .cta-section{padding:clamp(60px,10vw,100px) clamp(1.2rem,5vw,3rem);text-align:center;background:${isDark?'radial-gradient(ellipse 80% 60% at 50% 50%,rgba(var(--rgb),0.12) 0%,transparent 70%)':'var(--bg2)'};}
         .cta-inner{max-width:600px;margin:0 auto;}
-        .cta-title{
-          font-size:clamp(1.6rem,4vw,2.6rem);font-weight:900;
-          color:var(--text);margin-bottom:14px;line-height:1.25;
-          letter-spacing:-0.02em;
-        }
+        .cta-title{font-size:clamp(1.6rem,4vw,2.6rem);font-weight:900;color:var(--text);margin-bottom:14px;line-height:1.25;letter-spacing:-0.02em;}
         .cta-sub{font-size:0.93rem;color:var(--muted);margin-bottom:36px;line-height:1.8;}
         .cta-note{font-size:0.72rem;color:var(--muted);margin-top:16px;opacity:0.6;}
-
-        /* FOOTER */
-        footer{
-          padding:32px clamp(1.2rem,5vw,3rem);
-          display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
-          border-top:1px solid var(--border);
-        }
+        footer{padding:32px clamp(1.2rem,5vw,3rem);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid var(--border);}
         .footer-logo{height:28px;object-fit:contain;}
         .footer-copy{font-size:0.72rem;color:var(--muted);}
         .footer-credit{font-size:0.55rem;color:${isDark?'rgba(255,255,255,0.08)':'rgba(0,0,0,0.08)'};letter-spacing:0.1em;}
-
-        /* RESPONSIVE */
         @media(max-width:900px){
           .hero-inner{grid-template-columns:1fr;text-align:center;}
           .hero-actions{justify-content:center;}
@@ -482,12 +264,13 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
           }
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <a href="#cta" className="nav-cta">{ai?.cta_text ?? 'お問い合わせ'}</a>
+          <a href="#cta" className="nav-cta">
+            {isContactMode ? '無料相談する' : (ai?.cta_text ?? 'お問い合わせ')}
+          </a>
           <span className="nav-credit">Powered by NEXTGAME</span>
         </div>
       </nav>
 
-      {/* HERO */}
       <section className="hero">
         {isDark ? (
           <>
@@ -502,11 +285,10 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
             <div className="hero-overlay" />
           </>
         )}
-
         <div className="hero-inner">
           <div className="hero-text">
             {logoUrl && (
-              <img src={logoUrl} alt={site.title} style={{ height: 44, objectFit: 'contain', marginBottom: 24, display: isDark ? 'block' : 'block', margin: isDark ? '0 auto 24px' : '0 0 24px' }} className="fade-up" />
+              <img src={logoUrl} alt={site.title} style={{ height: 44, objectFit: 'contain', marginBottom: 24, display: 'block', margin: isDark ? '0 auto 24px' : '0 0 24px' }} className="fade-up" />
             )}
             <div className="hero-tag fade-up">
               <span className="hero-tag-dot" />
@@ -514,15 +296,9 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
             </div>
             <h1 className="hero-h1 fade-up d1">
               {site.sub_title.includes('。') ? (
-                <>
-                  {site.sub_title.split('。')[0]}。<br />
-                  <em>{site.sub_title.split('。').slice(1).join('。')}</em>
-                </>
+                <>{site.sub_title.split('。')[0]}。<br /><em>{site.sub_title.split('。').slice(1).join('。')}</em></>
               ) : site.sub_title.includes('、') ? (
-                <>
-                  {site.sub_title.split('、')[0]}、<br />
-                  <em>{site.sub_title.split('、').slice(1).join('、')}</em>
-                </>
+                <>{site.sub_title.split('、')[0]}、<br /><em>{site.sub_title.split('、').slice(1).join('、')}</em></>
               ) : (
                 <em>{site.sub_title}</em>
               )}
@@ -530,27 +306,20 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
             <p className="hero-desc fade-up d2">{ai?.original ?? ''}</p>
             <div className="hero-actions fade-up d3">
               <a href="#cta" className="btn-primary">
-                {ai?.cta_text ?? 'お問い合わせ'}
+                {isContactMode ? '無料相談する' : (ai?.cta_text ?? 'お問い合わせ')}
                 <span dangerouslySetInnerHTML={{ __html: getIcon('ArrowRight', '#fff') }} />
               </a>
               <a href="#features" className="btn-ghost">詳しく見る</a>
             </div>
-            {ai?.features && (
-              <div className="hero-stats fade-up d4">
-                {[
-                  { v: '初期費用', l: '0円' },
-                  { v: '最短', l: '3日' },
-                  { v: '解約', l: 'いつでも' },
-                ].map((s, i) => (
-                  <div key={i} className="hero-stat">
-                    <div className="hero-stat-val">{s.l}</div>
-                    <div className="hero-stat-label">{s.v}</div>
-                  </div>
-                ))}
-              </div>
-            )}
+            <div className="hero-stats fade-up d4">
+              {[{ v: '初期費用', l: '0円' }, { v: '最短', l: '3日' }, { v: '解約', l: 'いつでも' }].map((s, i) => (
+                <div key={i} className="hero-stat">
+                  <div className="hero-stat-val">{s.l}</div>
+                  <div className="hero-stat-label">{s.v}</div>
+                </div>
+              ))}
+            </div>
           </div>
-
           {!isDark && imageUrl && (
             <div className="hero-visual fade-up d2">
               <img src={imageUrl} alt={site.title} />
@@ -565,7 +334,6 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
 
       <div className="divider" />
 
-      {/* FEATURES */}
       {ai?.features && ai.features.length > 0 && (
         <section className="section" style={{ background: 'var(--bg2)' }} id="features">
           <div className="section-inner">
@@ -589,7 +357,6 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
 
       <div className="divider" />
 
-      {/* SERVICES */}
       {ai?.services && ai.services.length > 0 && (
         <section className="section" style={{ background: 'var(--bg)' }} id="services">
           <div className="section-inner">
@@ -600,7 +367,7 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
             </div>
             <div className="services-grid">
               {ai.services.map((s, i) => (
-                <div key={i} className="service-card" style={{ background: i === 1 ? a.grad : `${a.grad.replace('135deg', `${135 + i * 15}deg`)}` }}>
+                <div key={i} className="service-card" style={{ background: a.grad }}>
                   <div className="service-num">SERVICE {String(i + 1).padStart(2, '0')}</div>
                   <div className="service-icon" dangerouslySetInnerHTML={{ __html: getIcon(s.icon_name, '#fff') }} />
                   <div className="service-name">{s.name}</div>
@@ -615,7 +382,6 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
 
       <div className="divider" />
 
-      {/* REASONS */}
       {ai?.reasons && ai.reasons.length > 0 && (
         <section className="section" style={{ background: 'var(--bg2)' }} id="reasons">
           <div className="section-inner">
@@ -642,7 +408,6 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
 
       <div className="divider" />
 
-      {/* REVIEWS */}
       {ai?.reviews && ai.reviews.length > 0 && (
         <section className="section" style={{ background: 'var(--bg)' }} id="reviews">
           <div className="section-inner">
@@ -674,7 +439,6 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
 
       <div className="divider" />
 
-      {/* FLOW */}
       {ai?.flow && ai.flow.length > 0 && (
         <section className="section" style={{ background: 'var(--bg2)' }} id="flow">
           <div className="section-inner" style={{ maxWidth: 700 }}>
@@ -700,7 +464,6 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
 
       <div className="divider" />
 
-      {/* FAQ */}
       {ai?.faq && ai.faq.length > 0 && (
         <section className="section" style={{ background: 'var(--bg)' }} id="faq">
           <div className="section-inner" style={{ maxWidth: 800 }}>
@@ -724,16 +487,13 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
         </section>
       )}
 
-      {/* CLOSING */}
       {ai?.closing && (
         <>
           <div className="divider" />
           <div className="closing">
             <div className="closing-inner">
               <span className="section-label" style={{ display: 'block', textAlign: 'center', marginBottom: 16 }}>MESSAGE</span>
-              <h2 className="closing-title">
-                <em>{ai.closing.title}</em>
-              </h2>
+              <h2 className="closing-title"><em>{ai.closing.title}</em></h2>
               <p className="closing-body">{ai.closing.body}</p>
               {ai.closing.guarantee && (
                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 36 }}>
@@ -743,10 +503,12 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
                   </span>
                 </div>
               )}
-              <a href="#cta" className="btn-primary" style={{ margin: '0 auto' }}>
-                {ai.cta_text ?? 'まずは相談する'}
-                <span dangerouslySetInnerHTML={{ __html: getIcon('ArrowRight', '#fff') }} />
-              </a>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <a href="#cta" className="btn-primary">
+                  {isContactMode ? '無料相談する' : (ai.cta_text ?? 'まずは相談する')}
+                  <span dangerouslySetInnerHTML={{ __html: getIcon('ArrowRight', '#fff') }} />
+                </a>
+              </div>
             </div>
           </div>
         </>
@@ -754,16 +516,41 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
 
       <div className="divider" />
 
-      {/* CTA */}
       <section className="cta-section" id="cta">
         <div className="cta-inner">
           <span className="section-label" style={{ display: 'block', marginBottom: 16 }}>CONTACT</span>
-          <h2 className="cta-title">{ai?.cta_text ?? 'お問い合わせ'}</h2>
-          <p className="cta-sub">{ai?.cta_sub ?? 'お気軽にご相談ください'}</p>
-          <a href="mailto:" className="btn-primary" style={{ margin: '0 auto' }}>
-            {ai?.cta_text ?? 'お問い合わせ'}
-            <span dangerouslySetInnerHTML={{ __html: getIcon('ArrowRight', '#fff') }} />
-          </a>
+          <h2 className="cta-title">
+            {isContactMode ? 'このモックアップで相談する' : (ai?.cta_text ?? 'お問い合わせ')}
+          </h2>
+          <p className="cta-sub">
+            {isContactMode
+              ? '診断結果とモックアップをセットでご提案します。まずはお気軽にご相談ください。'
+              : (ai?.cta_sub ?? 'お気軽にご相談ください')}
+          </p>
+          {isContactMode ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 400, margin: '0 auto' }}>
+              <a href={'/contact?' + contactParams} className="btn-primary" style={{ justifyContent: 'center' }}>
+                無料相談・お問い合わせ
+                <span dangerouslySetInnerHTML={{ __html: getIcon('ArrowRight', '#fff') }} />
+              </a>
+              <a
+                href="https://lin.ee/SJDJXQv"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '15px 32px', background: '#06C755', borderRadius: '100px', color: '#fff', fontSize: '0.95rem', fontWeight: 700, textDecoration: 'none', boxShadow: '0 8px 32px rgba(6,199,85,0.35)' }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z"/></svg>
+                LINEで相談する
+              </a>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <a href="mailto:" className="btn-primary">
+                {ai?.cta_text ?? 'お問い合わせ'}
+                <span dangerouslySetInnerHTML={{ __html: getIcon('ArrowRight', '#fff') }} />
+              </a>
+            </div>
+          )}
           <p className="cta-note">※ 相談・見積もり無料　※ しつこい営業は一切しません</p>
         </div>
       </section>
