@@ -112,6 +112,14 @@ const IconMail = () => (
   </svg>
 );
 
+const IconArrow = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="5" y1="12" x2="19" y2="12"/>
+    <polyline points="12 5 19 12 12 19"/>
+  </svg>
+);
+
+
 const REASONS = [
   {
     Icon: IconAI,
@@ -326,6 +334,95 @@ export default function Page() {
       </section>
 
       <div className="divider" />
+
+{/* サンプルLP */}
+<section className="section" style={{ background: bg }}>
+  <div className="inner-w">
+    <FadeIn>
+      <div style={{ textAlign: 'center', marginBottom: 40 }}>
+        <span className="sec-label">SAMPLE</span>
+        <h2 className="sec-title">実際に<span style={{ color: cyan }}>生成されたLP</span></h2>
+        <p className="sec-sub">業種・ターゲット・デザインを選ぶだけ。30秒で本格LPが完成します。</p>
+      </div>
+    </FadeIn>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      {[
+        { slug: 'lp-xob6wt', label: '美容サロン', title: 'LUXE BEAUTY SALON', desc: '他店の失敗を知っているから、丁寧が違う' },
+        { slug: 'lp-5nu8z9', label: '整体院', title: 'からだ整体院', desc: '痛みの原因から断つ、本質的な施術' },
+        { slug: 'lp-2bcaik', label: '税理士', title: '山田税理士事務所', desc: 'スピードと正確さで、あなたの経営を支える' },
+      ].map((s, i) => (
+        <FadeIn key={i} delay={i * 0.1}>
+          <div style={{ background: bg2, border: `1px solid ${border}`, borderRadius: 16, overflow: 'hidden' }}>
+            <div style={{ padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `1px solid ${border}` }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ fontSize: '0.65rem', color: gold, border: `1px solid ${borderGold}`, padding: '2px 10px', borderRadius: 2, letterSpacing: '0.1em', fontWeight: 700 }}>{s.label}</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#fff' }}>{s.title}</span>
+              </div>
+              <a
+                href={'/lp/' + s.slug}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ fontSize: '0.75rem', color: cyan, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}
+              >
+                見る
+                <IconArrow />
+              </a>
+            </div>
+            {/* iPhoneモックアップ */}
+            <div style={{ padding: '20px', display: 'flex', justifyContent: 'center' }}>
+              <div style={{ position: 'relative', width: 200, flexShrink: 0 }}>
+                <svg viewBox="0 0 200 412" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 2, pointerEvents: 'none', filter: 'drop-shadow(0 8px 24px rgba(0,0,0,0.5))' }}>
+                  <rect x="1" y="1" width="198" height="410" rx="32" ry="32" fill="#1c1c1e" stroke="#3a3a3c" strokeWidth="1"/>
+                  <rect x="7" y="7" width="186" height="398" rx="27" ry="27" fill="#000"/>
+                  <rect x="68" y="11" width="64" height="18" rx="9" ry="9" fill="#000"/>
+                  <rect x="198" y="80" width="3" height="48" rx="1.5" fill="#3a3a3c"/>
+                  <rect x="198" y="140" width="3" height="36" rx="1.5" fill="#3a3a3c"/>
+                  <rect x="0" y="76" width="3" height="24" rx="1.5" fill="#3a3a3c"/>
+                  <rect x="0" y="108" width="3" height="44" rx="1.5" fill="#3a3a3c"/>
+                  <rect x="0" y="160" width="3" height="44" rx="1.5" fill="#3a3a3c"/>
+                  <rect x="72" y="396" width="56" height="3" rx="1.5" fill="#3a3a3c"/>
+                </svg>
+                <div style={{ position: 'relative', zIndex: 1, margin: '7px', borderRadius: 27, overflow: 'hidden', height: 398, background: '#fff' }}>
+                  <iframe
+                    src={'/lp/' + s.slug}
+                    style={{ width: '390px', height: '100%', border: 'none', display: 'block', transform: 'scale(0.487)', transformOrigin: 'top left', pointerEvents: 'none' }}
+                    title={s.title}
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+              <div style={{ flex: 1, padding: '0 0 0 20px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 12 }}>
+                <p style={{ fontSize: '0.78rem', color: muted, lineHeight: 1.7 }}>{s.desc}</p>
+                <a
+                  href={'/lp/' + s.slug}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '0.78rem', color: gold, fontWeight: 700, textDecoration: 'none', border: `1px solid ${borderGold}`, padding: '8px 14px', borderRadius: 6 }}
+                >
+                  フルページで見る
+                  <IconArrow />
+                </a>
+              </div>
+            </div>
+          </div>
+        </FadeIn>
+      ))}
+    </div>
+    <FadeIn>
+      <div style={{ textAlign: 'center', marginTop: 32 }}>
+        <p style={{ fontSize: '0.85rem', color: muted, marginBottom: 16 }}>あなたのビジネスのLPも30秒で生成できます</p>
+        <button
+          onClick={() => router.push('/lp/new')}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '15px 32px', background: `linear-gradient(135deg,${gold},#e8d48a)`, border: 'none', borderRadius: 100, color: '#000', fontSize: '0.95rem', fontWeight: 900, cursor: 'pointer' }}
+        >
+          無料でLP生成を試す
+          <IconArrow />
+        </button>
+      </div>
+    </FadeIn>
+  </div>
+</section>
+
 
       {/* なぜNEXTGAMEか */}
       <section className="section" style={{ background: bg }}>
