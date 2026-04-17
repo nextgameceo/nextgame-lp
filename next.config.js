@@ -9,10 +9,31 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'images.microcms-assets.io',
       },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
     ],
   },
   async headers() {
     return [
+      {
+        source: '/lp/:path*',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: "frame-ancestors 'self';",
+          },
+        ],
+      },
       {
         source: '/(.*)',
         headers: [
