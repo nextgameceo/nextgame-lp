@@ -1,30 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.microcms-assets.io',
-      },
-      {
-        protocol: 'https',
-        hostname: 'res.cloudinary.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-    ],
-  },
-
   async headers() {
     return [
       {
-        source: '/(.*)',
+        source: '/(.*)', // ← 全ページ対象（ここ重要）
         headers: [
           {
             key: 'Content-Security-Policy',
@@ -35,7 +14,12 @@ const nextConfig = {
               style-src 'self' 'unsafe-inline' https:;
               font-src 'self' data: https:;
               frame-src 'self' https:;
-              frame-ancestors 'self' https://nextgameceo.github.io;
+              frame-ancestors 
+                'self'
+                https://nextgame-limited.com
+                https://www.nextgame-limited.com
+                https://nextgameceo.github.io
+                https://nextgame-lp.vercel.app;
               connect-src 'self' https:;
             `.replace(/\n/g, ''),
           },
