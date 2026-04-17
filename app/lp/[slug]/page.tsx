@@ -104,22 +104,25 @@ export default async function LpPage({
     ai = JSON.parse(raw);
   } catch { ai = null; }
 
-  const themeKey: ThemeKey = ai?.theme ?? "light";
-  const accentKey: AccentKey = ai?.accent_color ?? "blue";
-  const t = THEME[themeKey];
-  const a = ACCENT[accentKey];
-  const isDark = themeKey === "dark";
-  const imageUrl = ai?.image_url ?? "";
-  const logoUrl = ai?.logo_url ?? "";
+const validThemes: ThemeKey[] = ['light', 'dark'];
+const validAccents: AccentKey[] = ['blue', 'green', 'orange', 'red', 'purple'];
+const themeKey: ThemeKey = validThemes.includes(ai?.theme as ThemeKey) ? (ai?.theme as ThemeKey) : 'light';
+const accentKey: AccentKey = validAccents.includes(ai?.accent_color as AccentKey) ? (ai?.accent_color as AccentKey) : 'blue';
+const t = THEME[themeKey];
+const a = ACCENT[accentKey];
+const isDark = themeKey === "dark";
+const imageUrl = ai?.image_url ?? "";
+const logoUrl = ai?.logo_url ?? "";
 
-  const contactParams = new URLSearchParams({
-    diag_url: diagUrl,
-    diag_score: diagScore,
-    diag_company: diagCompany || site.title,
-    diag_prompt: diagPrompt,
-    mockup_url: mockupUrl,
-    is_redesign: 'true',
-  }).toString();
+const contactParams = new URLSearchParams({
+  diag_url: diagUrl,
+  diag_score: diagScore,
+  diag_company: diagCompany || site.title,
+  diag_prompt: diagPrompt,
+  mockup_url: mockupUrl,
+  is_redesign: 'true',
+}).toString();
+
 
   return (
     <>
