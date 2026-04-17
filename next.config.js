@@ -28,10 +28,6 @@ const nextConfig = {
             key: 'X-Frame-Options',
             value: 'SAMEORIGIN',
           },
-          {
-            key: 'Content-Security-Policy',
-            value: "frame-ancestors 'self';",
-          },
         ],
       },
       {
@@ -39,7 +35,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://w.soundcloud.com https://soundcloud.com; connect-src 'self' https://generativelanguage.googleapis.com;",
+            value: "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; frame-ancestors 'self'; connect-src 'self' https://generativelanguage.googleapis.com;",
           },
           {
             key: 'Cache-Control',
