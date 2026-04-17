@@ -336,16 +336,20 @@ export default function Page() {
       <div className="divider" />
 
 {/* サンプルLP */}
-<section className="section" style={{ background: bg }}>
-  <div className="inner-w">
+<section className="section" style={{ background: bg, paddingLeft: 0, paddingRight: 0 }}>
+  <div style={{ maxWidth: 860, margin: '0 auto', paddingLeft: 20, paddingRight: 20 }}>
     <FadeIn>
-      <div style={{ textAlign: 'center', marginBottom: 40 }}>
+      <div style={{ textAlign: 'center', marginBottom: 36 }}>
         <span className="sec-label">SAMPLE</span>
         <h2 className="sec-title">実際に<span style={{ color: cyan }}>生成されたLP</span></h2>
         <p className="sec-sub">業種・ターゲット・デザインを選ぶだけ。30秒で本格LPが完成します。</p>
       </div>
     </FadeIn>
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+  </div>
+
+  {/* 横スクロールカード */}
+  <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollSnapType: 'x mandatory', paddingLeft: 20, paddingBottom: 12 }}>
+    <div style={{ display: 'flex', gap: 14, width: 'max-content', paddingRight: 20 }}>
       {[
         {
           slug: 'lp-xob6wt',
@@ -355,6 +359,7 @@ export default function Page() {
           desc: '爪が傷みやすい、デザインがすぐ崩れる。そんなサロン難民の声から生まれたLUXE。',
           img: 'https://images.unsplash.com/photo-1572387263462-c596296d68a8?w=600&q=80',
           accent: '#8b5cf6',
+          theme: 'light',
         },
         {
           slug: 'lp-5nu8z9',
@@ -364,6 +369,7 @@ export default function Page() {
           desc: 'デスクワークで蓄積した痛みや疲労感。その原因を徹底分析し改善します。',
           img: 'https://images.unsplash.com/photo-1687436874174-977fdd9e2cb8?w=600&q=80',
           accent: '#10b981',
+          theme: 'light',
         },
         {
           slug: 'lp-2bcaik',
@@ -373,65 +379,109 @@ export default function Page() {
           desc: '個人事業主・フリーランス専門の税理士が、経営判断を税務面からサポート。',
           img: 'https://images.unsplash.com/photo-1589153954649-9ebab5ddefed?w=600&q=80',
           accent: '#3b82f6',
+          theme: 'light',
+        },
+        {
+          slug: 'lp-ymsrwj',
+          label: 'IT・Web',
+          title: 'NEXTGAME',
+          catch: '制作費0円。Web運用の常識を変える。',
+          desc: 'AIが診断し、プロが運用。月額サブスクで集客を加速させる新しいWebの形。',
+          img: 'https://images.unsplash.com/photo-1677469684112-5dfb3aa4d3df?w=600&q=80',
+          accent: '#00D1FF',
+          theme: 'dark',
         },
       ].map((s, i) => (
-        <FadeIn key={i} delay={i * 0.1}>
-          <div style={{ background: bg2, border: `1px solid ${border}`, borderRadius: 16, overflow: 'hidden', display: 'flex', flexDirection: 'row' }}>
-            {/* 画像 */}
-            <div style={{ width: 140, flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
-              <img
-                src={s.img}
-                alt={s.title}
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-              />
-              <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(135deg,${s.accent}44,transparent)` }} />
-              {/* ミニブラウザ風バー */}
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 20, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', padding: '0 6px', gap: 4 }}>
-                <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#ef4444' }} />
-                <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#f59e0b' }} />
-                <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#10b981' }} />
-              </div>
+        <div
+          key={i}
+          style={{
+            width: 260,
+            flexShrink: 0,
+            scrollSnapAlign: 'start',
+            background: s.theme === 'dark' ? '#0a0a0a' : '#fff',
+            border: `1px solid ${s.accent}33`,
+            borderRadius: 16,
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+            transition: 'transform 0.2s, box-shadow 0.2s',
+          }}
+        >
+          {/* 画像エリア */}
+          <div style={{ position: 'relative', height: 160, overflow: 'hidden' }}>
+            <img
+              src={s.img}
+              alt={s.title}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            />
+            {/* オーバーレイ */}
+            <div style={{ position: 'absolute', inset: 0, background: s.theme === 'dark' ? 'rgba(0,0,0,0.5)' : `linear-gradient(to bottom,transparent 40%,rgba(0,0,0,0.3))` }} />
+            {/* ブラウザ風バー */}
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 22, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', padding: '0 8px', gap: 5 }}>
+              <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#ef4444' }} />
+              <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#f59e0b' }} />
+              <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981' }} />
+              <div style={{ flex: 1, height: 12, background: 'rgba(255,255,255,0.1)', borderRadius: 6, marginLeft: 6 }} />
             </div>
-            {/* テキスト */}
-            <div style={{ flex: 1, padding: '18px 16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                  <span style={{ fontSize: '0.6rem', color: s.accent, border: `1px solid ${s.accent}44`, padding: '2px 8px', borderRadius: 2, letterSpacing: '0.1em', fontWeight: 700 }}>{s.label}</span>
-                </div>
-                <p style={{ fontSize: '0.78rem', fontWeight: 700, color: '#fff', marginBottom: 6, lineHeight: 1.5 }}>{s.catch}</p>
-                <p style={{ fontSize: '0.72rem', color: muted, lineHeight: 1.6 }}>{s.desc}</p>
-              </div>
-              <a
-                href={'/lp/' + s.slug}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '0.75rem', color: gold, fontWeight: 700, textDecoration: 'none', border: `1px solid ${borderGold}`, padding: '7px 12px', borderRadius: 6, marginTop: 12, alignSelf: 'flex-start' }}
-              >
-                フルページで見る
-                <IconArrow />
-              </a>
+            {/* 業種バッジ */}
+            <div style={{ position: 'absolute', bottom: 10, left: 10 }}>
+              <span style={{ fontSize: '0.6rem', color: '#fff', background: s.accent, padding: '3px 10px', borderRadius: 100, fontWeight: 700, letterSpacing: '0.05em' }}>{s.label}</span>
             </div>
           </div>
-        </FadeIn>
+
+          {/* テキストエリア */}
+          <div style={{ padding: '16px 16px 18px', flex: 1, display: 'flex', flexDirection: 'column', gap: 8, background: s.theme === 'dark' ? '#0a0a0a' : '#fff' }}>
+            <p style={{ fontSize: '0.68rem', color: s.accent, fontWeight: 700, letterSpacing: '0.05em' }}>{s.title}</p>
+            <p style={{ fontSize: '0.88rem', fontWeight: 900, color: s.theme === 'dark' ? '#fff' : '#0f172a', lineHeight: 1.45 }}>{s.catch}</p>
+            <p style={{ fontSize: '0.72rem', color: s.theme === 'dark' ? '#555' : '#888', lineHeight: 1.65, flex: 1 }}>{s.desc}</p>
+            <a
+              href={'/lp/' + s.slug}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 6,
+                padding: '10px 14px',
+                background: s.accent,
+                borderRadius: 8,
+                color: '#fff',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                textDecoration: 'none',
+                marginTop: 4,
+              }}
+            >
+              フルページで見る
+              <IconArrow />
+            </a>
+          </div>
+        </div>
       ))}
     </div>
-    <FadeIn>
-      <div style={{ textAlign: 'center', marginTop: 32 }}>
-        <p style={{ fontSize: '0.85rem', color: muted, marginBottom: 16 }}>あなたのビジネスのLPも30秒で生成できます</p>
-        <button
-          onClick={() => router.push('/lp/new')}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '15px 32px', background: `linear-gradient(135deg,${gold},#e8d48a)`, border: 'none', borderRadius: 100, color: '#000', fontSize: '0.95rem', fontWeight: 900, cursor: 'pointer' }}
-        >
-          無料でLP生成を試す
-          <IconArrow />
-        </button>
-      </div>
-    </FadeIn>
   </div>
+
+  {/* スワイプヒント */}
+  <div style={{ textAlign: 'center', marginTop: 12, paddingLeft: 20, paddingRight: 20 }}>
+    <p style={{ fontSize: '0.68rem', color: '#333', letterSpacing: '0.05em' }}>← スワイプして見る →</p>
+  </div>
+
+  <FadeIn>
+    <div style={{ textAlign: 'center', marginTop: 28, paddingLeft: 20, paddingRight: 20 }}>
+      <p style={{ fontSize: '0.85rem', color: muted, marginBottom: 16 }}>あなたのビジネスのLPも30秒で生成できます</p>
+      <button
+        onClick={() => router.push('/lp/new')}
+        style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '15px 32px', background: `linear-gradient(135deg,${gold},#e8d48a)`, border: 'none', borderRadius: 100, color: '#000', fontSize: '0.95rem', fontWeight: 900, cursor: 'pointer' }}
+      >
+        無料でLP生成を試す
+        <IconArrow />
+      </button>
+    </div>
+  </FadeIn>
 </section>
 
 <div className="divider" />
-
 
 
       {/* なぜNEXTGAMEか */}
