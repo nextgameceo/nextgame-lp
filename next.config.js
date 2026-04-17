@@ -3,6 +3,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+
   images: {
     remotePatterns: [
       {
@@ -19,23 +20,34 @@ const nextConfig = {
       },
     ],
   },
+
   async headers() {
     return [
+      // LPページ（必要なら残す）
       {
         source: '/lp/:path*',
         headers: [
-          {
-            key: 'X-Frame-Options',
-            value: 'SAMEORIGIN',
-          },
+          // ⚠️ 削除 or コメントアウト推奨
+          // SAMEORIGINだと外部iframe完全ブロック
+          // {
+          //   key: 'X-Frame-Options',
+          //   value: 'SAMEORIGIN',
+          // },
         ],
       },
+
+      // 全体設定
       {
         source: '/(.*)',
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; frame-ancestors 'self'; connect-src 'self' https://generativelanguage.googleapis.com;",
+            value: `
+              default-src 'self';
+              frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com;
+              frame-ancestors 'self' https://nextgameceo.github.io;
+              connect-src 'self' https://generativelanguage.googleapis.com;
+            `.replace(/\n/g, ''),
           },
           {
             key: 'Cache-Control',
