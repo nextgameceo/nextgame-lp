@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+　import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {
   try {
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
       });
       const html = await res.text();
       const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
-      siteTitle = titleMatch ? titleMatch[1].trim() : '';
+      siteTitle = titleMatch?.[1]?.trim() ?? '';
       siteContent = html
         .replace(/<script[\s\S]*?<\/script>/gi, '')
         .replace(/<style[\s\S]*?<\/style>/gi, '')
@@ -26,56 +26,52 @@ export async function POST(req: Request) {
       siteContent = 'サイトの取得に失敗しました。';
     }
 
-    const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+        'x-api-key': process.env.ANTHROPIC_API_KEY!,
+        'anthropic-version': '2023-06-01',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        temperature: 0.7,
+        model: 'claude-haiku-4-5',
+        max_tokens: 1500,
         messages: [
           {
-            role: 'system',
-            content: `あなたはWebサイト診断とリデザインの専門家です。既存サイトを深く分析し、改善版LPのための詳細なプロンプトを生成してください。JSONのみ返答。マークダウン・コードブロック不要。`,
-          },
-          {
             role: 'user',
-            content: `以下の既存Webサイトを診断し、リデザイン用の詳細プロンプトを生成してください。
+            content: `あなたはWebサイト診断とリデザインの専門家です。以下の既存Webサイトを診断し、リデザイン用の詳細プロンプトを生成してください。JSONのみ返答。マークダウン不要。
 
 URL: ${url}
 タイトル: ${siteTitle}
 コンテンツ: ${siteContent}
 
-診断のポイント：
-- 現在のサイトのターゲット顧客は誰か
-- 提供しているサービス・商品は何か
-- 現在の強み・差別化ポイントは何か
-- 改善すべき点（コピー・構成・デザイン）
-- リデザインで強調すべきポイント
+【重要】既存サイトの内容・業種・ターゲット・サービスを深く分析して、改善版LPのプロンプトを生成してください。
 
 以下のJSON形式で返答：
 {
   "score": 0から100の整数（現在のサイトの総合評価）,
   "company": "会社名またはサービス名",
-  "industry": "飲食店/美容サロン/歯科クリニック/整体院・整骨院/不動産/学習塾/EC・通販/IT・Web/建設・工務店/コンサルタント/士業/医療・クリニック/フィットネス/その他 から最も近いもの",
+  "industry": "飲食店/美容サロン/歯科クリニック/整体院・整骨院/不動産/学習塾/EC・通販/IT・Web/建設・工務店/コンサルタント/士業/医療・クリニック/フィットネス/その他",
   "problems": [
     {"title": "問題点タイトル（15文字以内）", "desc": "具体的な説明（60文字以内）"},
     {"title": "問題点タイトル（15文字以内）", "desc": "具体的な説明（60文字以内）"},
     {"title": "問題点タイトル（15文字以内）", "desc": "具体的な説明（60文字以内）"}
   ],
   "suggestion": "改善提案のまとめ（100文字以内・具体的に）",
-  "prompt": "リデザイン用プロンプト（200文字以上300文字以内）：現在のサービス内容・ターゲット顧客・強み・課題・改善方向性・デザインの雰囲気を具体的に記述。例：名古屋市の整体院のリデザイン。現在は腰痛・肩こり専門で30〜50代のビジネスマンがメイン顧客。強みは完全予約制プライベート空間と国家資格保有スタッフ3名。現状サイトは情報過多でCTAが弱く新規集客に課題。リデザインでは予約導線を最優先にし、口コミ・料金を前面に出す。清潔感ある白基調にシンプルなデザインで信頼感を演出したい。"
+  "prompt": "リデザイン用プロンプト（200文字以上・以下を全て含める：①業種と具体的なサービス内容 ②ターゲット顧客の悩みと属性 ③既存サイトの強み ④改善すべき課題 ⑤希望するデザイン方向性 ⑥強調したいメッセージ）"
 }`,
           },
         ],
       }),
     });
 
-    if (!groqRes.ok) throw new Error('Groq API error');
-    const groqData = await groqRes.json();
-    const rawText = groqData.choices[0].message.content.trim();
+    if (!claudeRes.ok) {
+      const errText = await claudeRes.text();
+      throw new Error('Claude API error: ' + errText);
+    }
+
+    const claudeData = await claudeRes.json();
+    const rawText = claudeData.content[0].text.trim();
 
     let result;
     try {
