@@ -1,36 +1,54 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 
-const LINE_URL = "https://lin.ee/SJDJXQv"
+const CONTACT_URL = "/contact"
 
 const PLANS = [
   {
     name: 'STARTER', price: '29,800円', note: '/月（税込32,780円）',
     target: '個人事業主・小規模店舗',
-    features: ['Webサイト制作（LP）込み・制作費0円','月2回コンテンツ更新','月次アクセスレポート','LINE即レスサポート','最低契約3ヶ月・以降月単位'],
+    features: ['Webサイト制作（LP）込み・制作費0円', '月2回コンテンツ更新', '月次アクセスレポート', 'LINE即レスサポート', '最低契約3ヶ月・以降月単位'],
     featured: false, badge: '',
   },
   {
     name: 'GROWTH', price: '59,800円', note: '/月（税込65,780円）',
     target: '中小企業・複数店舗オーナー',
-    features: ['Webサイト制作（複数P）込み・制作費0円','週1回コンテンツ更新','SEO対策・検索順位改善','月次改善提案レポート','LINE即レスサポート','最低契約3ヶ月・以降月単位'],
+    features: ['Webサイト制作（複数P）込み・制作費0円', '週1回コンテンツ更新', 'SEO対策・検索順位改善', '月次改善提案レポート', 'LINE即レスサポート', '最低契約3ヶ月・以降月単位'],
     featured: true, badge: '人気No.1',
   },
   {
     name: 'SCALE', price: '99,800円', note: '/月（税込109,780円）',
     target: '成長企業・EC・複数事業',
-    features: ['フルWebサイト制作込み・制作費0円','無制限コンテンツ更新','SEO・AI自動化・広告連携','専任担当者アサイン','週次戦略MTG','最低契約3ヶ月・以降月単位'],
+    features: ['フルWebサイト制作込み・制作費0円', '無制限コンテンツ更新', 'SEO・AI自動化・広告連携', '専任担当者アサイン', '週次戦略MTG', '最低契約3ヶ月・以降月単位'],
     featured: false, badge: 'フルサポート',
   },
 ];
 
 const REVIEWS = [
-  { star: 5, text: '制作費0円で本格的なサイトが3日で完成。問い合わせが月2件から12件に増えました。', name: '山田 太郎', role: '整体院オーナー', icon: '🏥' },
-  { star: 5, text: '他社は制作費30万円と言われたのに月額だけ。半年でGoogle1位を取れました。', name: '佐藤 花子', role: '美容サロン経営者', icon: '💅' },
-  { star: 5, text: 'LINEで気軽に相談できて営業感ゼロ。AIでLP生成を体験したら即決しました。', name: '鈴木 一郎', role: '不動産会社 代表', icon: '🏢' },
+  {
+    star: 5,
+    text: '制作費0円で本格的なサイトが3日で完成。問い合わせが月2件から12件に増えました。費用対効果が段違いです。',
+    name: '山田 太郎',
+    role: '整体院オーナー',
+    initial: '山',
+  },
+  {
+    star: 5,
+    text: '他社は制作費30万円と言われたのに月額だけ。半年でGoogle1位を取れました。運用してくれるから成果が出続けます。',
+    name: '佐藤 花子',
+    role: '美容サロン経営者',
+    initial: '佐',
+  },
+  {
+    star: 5,
+    text: 'LINEで気軽に相談できて営業感ゼロ。AIでLP生成を体験したら即決しました。スピードと品質に驚きました。',
+    name: '鈴木 一郎',
+    role: '不動産会社 代表',
+    initial: '鈴',
+  },
 ];
 
 const FAQ = [
@@ -41,13 +59,89 @@ const FAQ = [
   { q: '相談だけでも大丈夫ですか？', a: 'もちろんです。相談・見積もりは完全無料。しつこい営業は一切しません。' },
 ];
 
+const IconAI = () => (
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="3" width="20" height="14" rx="2"/>
+    <path d="M8 21h8"/>
+    <path d="M12 17v4"/>
+    <path d="M7 8h.01"/>
+    <path d="M17 8h.01"/>
+    <path d="M9 12s.5 1 3 1 3-1 3-1"/>
+  </svg>
+);
+
+const IconMoney = () => (
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M12 6v2"/>
+    <path d="M12 16v2"/>
+    <path d="M8.5 9.5A3.5 1.5 0 0 1 12 8a3.5 1.5 0 0 1 3.5 1.5c0 2-3.5 3-3.5 3s-3.5 1-3.5 3A3.5 1.5 0 0 0 12 17a3.5 1.5 0 0 0 3.5-1.5"/>
+  </svg>
+);
+
+const IconRefresh = () => (
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+    <path d="M3 3v5h5"/>
+  </svg>
+);
+
+const IconCheck = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="20 6 9 17 4 12"/>
+  </svg>
+);
+
+const IconChevron = ({ open }: { open: boolean }) => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(45deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
+    <line x1="12" y1="5" x2="12" y2="19"/>
+    <line x1="5" y1="12" x2="19" y2="12"/>
+  </svg>
+);
+
+const IconStar = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+  </svg>
+);
+
+const IconMail = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+    <polyline points="22,6 12,13 2,6"/>
+  </svg>
+);
+
+const REASONS = [
+  {
+    Icon: IconAI,
+    title: 'AIが診断・生成',
+    desc: 'URLを入れるだけでサイトの問題点を自動分析。改善版LPをその場で生成します。他社では数週間かかる作業が30秒で完了。',
+  },
+  {
+    Icon: IconMoney,
+    title: '初期費用・制作費0円',
+    desc: '従来50〜200万円かかる制作費が完全無料。月額サブスクのみで運用できるため、キャッシュフローを圧迫しません。',
+  },
+  {
+    Icon: IconRefresh,
+    title: '運用し続けるから成果が出る',
+    desc: '作って終わりではなく、毎月改善・更新・レポートを提供。サイトは運用することで初めて集客ツールになります。',
+  },
+];
+
 function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
-  const ref = (el: HTMLDivElement | null) => {
+  useEffect(() => {
+    const el = ref.current;
     if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setInView(true); obs.disconnect(); } }, { threshold: 0.1 });
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { setInView(true); obs.disconnect(); }
+    }, { threshold: 0.1 });
     obs.observe(el);
-  };
+    return () => obs.disconnect();
+  }, []);
   return (
     <div ref={ref} style={{ opacity: inView ? 1 : 0, transform: inView ? 'translateY(0)' : 'translateY(24px)', transition: `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s` }}>
       {children}
@@ -55,13 +149,28 @@ function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
   );
 }
 
-function LineBtn({ text = 'LINEで無料相談する', full = false }: { text?: string; full?: boolean }) {
-  return (
-    <a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10, background: '#06C755', color: '#fff', fontWeight: 900, fontSize: '1rem', padding: '16px 28px', borderRadius: 8, textDecoration: 'none', boxShadow: '0 4px 24px rgba(6,199,85,0.35)', width: full ? '100%' : 'auto' }}>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z"/></svg>
-      {text}
-    </a>
-  );
+function CountUp({ target, suffix = '' }: { target: number; suffix?: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        obs.disconnect();
+        let start = 0;
+        const step = target / (1500 / 16);
+        const timer = setInterval(() => {
+          start += step;
+          if (start >= target) { setCount(target); clearInterval(timer); }
+          else setCount(Math.floor(start));
+        }, 16);
+      }
+    }, { threshold: 0.5 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [target]);
+  return <div ref={ref}>{count}{suffix}</div>;
 }
 
 export default function Page() {
@@ -93,7 +202,7 @@ export default function Page() {
     }
     setUrlError('');
     const normalizedUrl = url.startsWith('http') ? url : 'https://' + url;
-    router.push(`/lp/diagnose?url=${encodeURIComponent(normalizedUrl)}`);
+    router.push('/lp/diagnose?url=' + encodeURIComponent(normalizedUrl));
   };
 
   return (
@@ -102,15 +211,16 @@ export default function Page() {
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700;900&display=swap');
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
         html{scroll-behavior:smooth;}
-        @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
         @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+        .fade-up{animation:fadeUp 0.5s ease forwards;}
         .fixed-cta{position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:10px 16px 18px;background:linear-gradient(to top,rgba(0,0,0,0.98) 60%,transparent);pointer-events:none;}
-        .fixed-cta a{pointer-events:all;display:flex;align-items:center;justify-content:center;gap:10px;background:#06C755;color:#fff;font-weight:900;font-size:0.95rem;padding:15px 24px;border-radius:8px;text-decoration:none;box-shadow:0 4px 24px rgba(6,199,85,0.4);animation:bounce 3s ease-in-out infinite;max-width:480px;margin:0 auto;width:100%;}
+        .fixed-cta a{pointer-events:all;display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,#c8a84a,#e8d48a);color:#000;font-weight:900;font-size:0.95rem;padding:15px 24px;border-radius:8px;text-decoration:none;box-shadow:0 4px 24px rgba(200,168,74,0.3);animation:bounce 3s ease-in-out infinite;max-width:480px;margin:0 auto;width:100%;}
         .section{padding:72px 20px;}
         .inner{max-width:560px;margin:0 auto;}
         .inner-w{max-width:860px;margin:0 auto;}
-        .sec-label{font-size:0.65rem;letter-spacing:0.3em;color:#c8a84a;font-weight:700;margin-bottom:10px;text-transform:uppercase;}
+        .sec-label{font-size:0.65rem;letter-spacing:0.3em;color:#c8a84a;font-weight:700;margin-bottom:10px;text-transform:uppercase;display:block;}
         .sec-title{font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:900;color:#fff;line-height:1.3;margin-bottom:12px;}
         .sec-sub{font-size:0.9rem;color:#666;line-height:1.9;margin-bottom:36px;}
         .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(200,168,74,0.12),transparent);}
@@ -119,24 +229,27 @@ export default function Page() {
         .inp::placeholder{color:#2a2a2a;}
         .plan-card{background:#0a0a0a;border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:32px 24px;}
         .plan-card.featured{border:1.5px solid #6dbed6;background:rgba(109,190,214,0.03);}
-        .check-item{display:flex;align-items:flex-start;gap:10px;font-size:0.85rem;color:#888;line-height:1.6;margin-bottom:9px;}
-        .check-icon{color:#c8a84a;font-weight:900;flex-shrink:0;margin-top:2px;}
         .faq-item{background:#111;border:1px solid rgba(255,255,255,0.07);border-radius:10px;overflow:hidden;cursor:pointer;margin-bottom:8px;}
         .faq-q{padding:18px 20px;font-size:0.9rem;font-weight:700;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:12px;}
         .faq-a{padding:0 20px 18px 20px;font-size:0.85rem;color:#666;line-height:1.8;}
+        .reason-card{background:#0a0a0a;border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:28px 24px;display:flex;flex-direction:column;gap:16px;transition:border-color 0.2s,box-shadow 0.2s;}
+        .reason-card:hover{border-color:rgba(200,168,74,0.3);box-shadow:0 8px 32px rgba(200,168,74,0.06);}
+        .stat-card{padding:20px 16px;text-align:center;border-right:1px solid rgba(200,168,74,0.15);}
+        .stat-card:last-child{border-right:none;}
         @media(max-width:768px){
           .section{padding:52px 16px;}
           .plans-grid{grid-template-columns:1fr !important;}
           .stats-grid{grid-template-columns:repeat(2,1fr) !important;}
+          .reasons-grid{grid-template-columns:1fr !important;}
           .hero-pad{padding-top:90px !important;padding-bottom:60px !important;}
         }
       `}</style>
 
       {/* 固定CTA */}
       <div className="fixed-cta">
-        <a href={LINE_URL} target="_blank" rel="noopener noreferrer">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.27 2 11.5c0 2.91 1.42 5.5 3.64 7.28L5 22l3.45-1.82C9.56 20.7 10.75 21 12 21c5.52 0 10-4.27 10-9.5S17.52 2 12 2z"/></svg>
-          無料相談する（LINE）
+        <a href={CONTACT_URL}>
+          <IconMail />
+          無料相談・お問い合わせ
         </a>
       </div>
 
@@ -189,24 +302,71 @@ export default function Page() {
 
       <div className="divider" />
 
+      {/* 実績スタッツ */}
+      <section style={{ padding: '0 20px', background: bg2 }}>
+        <div style={{ maxWidth: 860, margin: '0 auto' }}>
+          <FadeIn>
+            <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', border: `1px solid ${borderGold}`, borderRadius: 12, overflow: 'hidden' }}>
+              {[
+                { target: 14, suffix: '+', label: '対応業種' },
+                { target: 3, suffix: '日', label: '最短納期' },
+                { target: 0, suffix: '円', label: '初期費用' },
+                { target: 100, suffix: '%', label: '営業電話なし' },
+              ].map((s, i) => (
+                <div key={i} className="stat-card">
+                  <div style={{ fontFamily: 'monospace', fontSize: 'clamp(1.4rem,3vw,2rem)', fontWeight: 900, color: gold, lineHeight: 1, marginBottom: 6 }}>
+                    <CountUp target={s.target} suffix={s.suffix} />
+                  </div>
+                  <div style={{ fontSize: '0.65rem', color: muted, letterSpacing: '0.05em' }}>{s.label}</div>
+                </div>
+              ))}
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      <div className="divider" />
+
+      {/* なぜNEXTGAMEか */}
+      <section className="section" style={{ background: bg }}>
+        <div className="inner-w">
+          <FadeIn>
+            <div style={{ textAlign: 'center', marginBottom: 40 }}>
+              <span className="sec-label">WHY NEXTGAME</span>
+              <h2 className="sec-title">選ばれる<span style={{ color: cyan }}>3つの理由</span></h2>
+              <p className="sec-sub">他社との明確な差別化ポイント</p>
+            </div>
+          </FadeIn>
+          <div className="reasons-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
+            {REASONS.map((r, i) => (
+              <FadeIn key={i} delay={i * 0.1}>
+                <div className="reason-card">
+                  <div style={{ width: 52, height: 52, borderRadius: 14, background: 'rgba(200,168,74,0.1)', border: '1px solid rgba(200,168,74,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: gold }}>
+                    <r.Icon />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '1rem', fontWeight: 700, color: '#fff', marginBottom: 8 }}>{r.title}</div>
+                    <div style={{ fontSize: '0.85rem', color: muted, lineHeight: 1.8 }}>{r.desc}</div>
+                  </div>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="divider" />
+
       {/* サブスク説明 */}
       <section className="section" style={{ background: bg2, textAlign: 'center' }}>
         <div className="inner">
           <FadeIn>
-            <p className="sec-label">AI × WEB SUBSCRIPTION</p>
+            <span className="sec-label">AI × WEB SUBSCRIPTION</span>
             <h2 className="sec-title" style={{ fontSize: 'clamp(1.5rem,4vw,2.5rem)' }}>
               サイトは作った瞬間から<br />
               <span style={{ color: cyan }}>劣化する。</span>
             </h2>
             <p className="sec-sub">運用し続けるから、成果が出る。Web制作・運用・改善をまるごと月額サブスクで。<span style={{ color: gold }}>初期費用0円・制作費0円。</span></p>
-            <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 0, border: `1px solid ${borderGold}`, borderRadius: 10, overflow: 'hidden' }}>
-              {[{ v: '0円', l: '初期費用' },{ v: '3日', l: '最短納期' },{ v: '月3社', l: '受付上限' },{ v: '3ヶ月', l: '最低契約' }].map((item, i) => (
-                <div key={i} style={{ padding: '16px 8px', textAlign: 'center', borderRight: i < 3 ? `1px solid ${borderGold}` : 'none' }}>
-                  <div style={{ fontFamily: 'monospace', fontSize: '1.1rem', fontWeight: 900, color: gold }}>{item.v}</div>
-                  <div style={{ fontSize: '0.65rem', color: muted, marginTop: 4 }}>{item.l}</div>
-                </div>
-              ))}
-            </div>
           </FadeIn>
         </div>
       </section>
@@ -218,7 +378,7 @@ export default function Page() {
         <div className="inner-w">
           <FadeIn>
             <div style={{ textAlign: 'center', marginBottom: 40 }}>
-              <p className="sec-label">PRICING</p>
+              <span className="sec-label">PRICING</span>
               <h2 className="sec-title">シンプルな<span style={{ color: cyan }}>サブスクプラン</span></h2>
               <p className="sec-sub">初期費用0円・制作費0円・最低3ヶ月・以降月単位で解約自由</p>
             </div>
@@ -235,9 +395,14 @@ export default function Page() {
                   <div style={{ fontSize: '0.7rem', color: muted, marginBottom: 4 }}>{plan.note}</div>
                   <div style={{ fontSize: '0.75rem', color: cyan, marginBottom: 20, paddingBottom: 20, borderBottom: `1px solid rgba(255,255,255,0.07)` }}>{plan.target}</div>
                   <div style={{ marginBottom: 24 }}>
-                    {plan.features.map((f, j) => <div key={j} className="check-item"><span className="check-icon">✓</span>{f}</div>)}
+                    {plan.features.map((f, j) => (
+                      <div key={j} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: '0.85rem', color: '#888', lineHeight: 1.6, marginBottom: 9 }}>
+                        <span style={{ color: gold, flexShrink: 0, marginTop: 2 }}><IconCheck /></span>
+                        {f}
+                      </div>
+                    ))}
                   </div>
-                  <a href={LINE_URL} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '14px', background: 'transparent', border: `1px solid rgba(200,168,74,0.2)`, borderRadius: 8, color: gold, fontSize: '0.88rem', fontWeight: 700, textDecoration: 'none' }}>
+                  <a href={CONTACT_URL} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '14px', background: 'transparent', border: `1px solid rgba(200,168,74,0.2)`, borderRadius: 8, color: gold, fontSize: '0.88rem', fontWeight: 700, textDecoration: 'none' }}>
                     相談する
                   </a>
                 </div>
@@ -254,7 +419,7 @@ export default function Page() {
       <section className="section" style={{ background: bg2 }} id="reviews">
         <div className="inner">
           <FadeIn>
-            <p className="sec-label">REVIEWS</p>
+            <span className="sec-label">REVIEWS</span>
             <h2 className="sec-title">お客様の<span style={{ color: cyan }}>声</span></h2>
           </FadeIn>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -262,11 +427,15 @@ export default function Page() {
               <FadeIn key={i} delay={i * 0.08}>
                 <div style={{ background: bg3, border: `1px solid rgba(255,255,255,0.07)`, borderRadius: 12, padding: '22px 20px' }}>
                   <div style={{ display: 'flex', gap: 2, marginBottom: 10 }}>
-                    {Array.from({ length: r.star }).map((_, j) => <span key={j} style={{ color: gold, fontSize: '0.9rem' }}>★</span>)}
+                    {Array.from({ length: r.star }).map((_, j) => (
+                      <span key={j} style={{ color: gold }}><IconStar /></span>
+                    ))}
                   </div>
-                  <p style={{ fontSize: '0.9rem', color: textColor, lineHeight: 1.8, marginBottom: 14 }}>{r.text}</p>
+                  <p style={{ fontSize: '0.9rem', color: textColor, lineHeight: 1.8, marginBottom: 16 }}>{r.text}</p>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(200,168,74,0.08)', border: `1px solid rgba(200,168,74,0.2)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', flexShrink: 0 }}>{r.icon}</div>
+                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: `linear-gradient(135deg,${gold},#e8d48a)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', fontWeight: 900, color: '#000', flexShrink: 0 }}>
+                      {r.initial}
+                    </div>
                     <div>
                       <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#fff' }}>{r.name}</div>
                       <div style={{ fontSize: '0.72rem', color: muted }}>{r.role}</div>
@@ -285,7 +454,7 @@ export default function Page() {
       <section className="section" style={{ background: bg }} id="faq">
         <div className="inner">
           <FadeIn>
-            <p className="sec-label">FAQ</p>
+            <span className="sec-label">FAQ</span>
             <h2 className="sec-title">よくある<span style={{ color: cyan }}>質問</span></h2>
           </FadeIn>
           <div style={{ marginBottom: 48 }}>
@@ -294,7 +463,7 @@ export default function Page() {
                 <div className="faq-item" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
                   <div className="faq-q">
                     <span><span style={{ color: gold, marginRight: 10, fontWeight: 900 }}>Q</span>{f.q}</span>
-                    <span style={{ color: gold, fontSize: '1.2rem', flexShrink: 0, transition: 'transform 0.2s', transform: openFaq === i ? 'rotate(45deg)' : 'rotate(0deg)', display: 'inline-block' }}>+</span>
+                    <span style={{ color: gold, flexShrink: 0 }}><IconChevron open={openFaq === i} /></span>
                   </div>
                   {openFaq === i && <div className="faq-a">{f.a}</div>}
                 </div>
@@ -302,7 +471,6 @@ export default function Page() {
             ))}
           </div>
 
-          {/* CTA */}
           <FadeIn>
             <div style={{ background: bg2, border: `1px solid ${borderGold}`, borderRadius: 16, padding: '32px 24px', textAlign: 'center' }}>
               <Image src="/logo.png" alt="NEXTGAME株式会社" width={120} height={30} style={{ objectFit: 'contain', marginBottom: 20, opacity: 0.9 }} />
@@ -312,8 +480,14 @@ export default function Page() {
               <p style={{ fontSize: '0.85rem', color: muted, marginBottom: 24, lineHeight: 1.8 }}>
                 相談・見積もり完全無料。しつこい営業は一切しません。
               </p>
-              <LineBtn text="LINEで無料相談する" full />
-              <p style={{ fontSize: '0.7rem', color: '#333', marginTop: 12 }}>初期費用0円　制作費0円　最短3日　3ヶ月後は自由解約</p>
+              <a
+                href={CONTACT_URL}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '17px', background: `linear-gradient(135deg,${gold},#e8d48a)`, borderRadius: 8, color: '#000', fontSize: '1rem', fontWeight: 900, textDecoration: 'none', marginBottom: 12 }}
+              >
+                <IconMail />
+                無料相談・お問い合わせ
+              </a>
+              <p style={{ fontSize: '0.7rem', color: '#333' }}>初期費用0円　制作費0円　最短3日　3ヶ月後は自由解約</p>
             </div>
           </FadeIn>
         </div>
